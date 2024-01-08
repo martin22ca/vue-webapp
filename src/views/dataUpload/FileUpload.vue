@@ -7,12 +7,7 @@
         :toggle-modal="() => { modalControl.status = !modalControl.status; toggleModal() }">
         <span v-if="modalControl.loading" class="loading loading-dots loading-lg bg-primary"></span>
     </MCModal>
-    <div class="toast toast-end" v-if="toastControl.status">
-        <div class="alert alert-info">
-            <span>{{ toastControl.text }}</span>
-            <button @click="toggleToast()" class="btn btn-ghost btn-sm ">✕</button>
-        </div>
-    </div>
+    <Toast :toast-open="toastControl.status" :toast-text="toastControl.text" :toggle-toast="toggleToast" />
     <div class="card card-compact w-auto bg-base-100 shadow-md basis-1/2 m-2 ">
         <div class="card-body">
             <h2 class="card-title">{{ props.cardT }}</h2>
@@ -48,6 +43,7 @@
 </template>
 
 <script setup>
+import Toast from '@/components/Toast.vue';
 import MCModal from '@/components/Modals/MCModal.vue';
 import * as XLSX from 'xlsx';
 import ConfigData from '@/views/dataUpload/ConfigData.vue';

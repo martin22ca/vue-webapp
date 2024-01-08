@@ -54,7 +54,6 @@ router.beforeEach(async (to, from) => {
   try {
     let authenticated = false
     const store = userDataStore()
-
     if (store.token != '') {
       const response = await isAuth(store.token)
       if (!response.data) {
@@ -69,6 +68,7 @@ router.beforeEach(async (to, from) => {
         return false
       }
     } else {
+      store.$reset()
       if (to.name != 'Login') {
         router.push('/login')
         return false

@@ -178,7 +178,10 @@ const setOrder = (index, order, name) => {
 }
 
 const removeHeader = (index) => {
-    headers.value.splice(index, 1)
+    headers.value[index].remove = true
+    setTimeout(() => {
+        headers.value.splice(index, 1)
+    }, 300);
 }
 
 

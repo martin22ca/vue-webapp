@@ -92,9 +92,12 @@ import { useField, useForm } from 'vee-validate'
 
 const props = defineProps({
     user: { default: null, type: Object },
+    toggleModal: { default: null, type: Function }
 });
 
 const update = ref(false)
+
+console.log(props.user)
 
 if (props.user) {
     update.value = true
@@ -114,8 +117,8 @@ const validationSchema = Yup.object().shape({
     phone_alt: Yup.number().nullable(),
     user_name: Yup.string().required('El Username es requerido').min(4, 'El Username debe contener al menos 4 digitos'),
     user_pass: Yup.string()
-        .min(8, 'La contraseña debe contener al menos 8 caracteres')
-        .matches(/(?=.*[a-z])(?=.*[A-Z]).{8,}/, 'Debe tener al menos una mayúscula y una minúscula')
+        .min(4, 'La contraseña debe contener al menos 4 caracteres')
+        .matches(/(?=.*[a-z])(?=.*[A-Z]).{4,}/, 'Debe tener al menos una mayúscula y una minúscula')
         .when('isBig', {
             is: false,
             then: (schema) => schema.required('La contraseña es requerida'),
@@ -177,7 +180,6 @@ if (props.user) {
 }
 
 const submit = handleSubmit(async (values) => {
-    console.log('entre')
     for (const i in values) {
         if (Object.hasOwnProperty.call(values, i)) {
             const element = values[i];
@@ -187,5 +189,6 @@ const submit = handleSubmit(async (values) => {
         }
     }
     const { data } = await registerUser(values)
+    props.toggleModal()
 });
 </script>

@@ -36,13 +36,7 @@ export const Items: Array<MenuItem> = [
                 children: undefined
             },
             {
-                title: 'Carga Digital',
-                icon: 'ic:round-log-in',
-                route: '/input/recordsInfo',
-                children: undefined
-            },
-            {
-                title: 'Carga Fisico',
+                title: 'Carga Manual',
                 icon: 'mdi:land-plots',
                 route: '/input/manual',
                 children: undefined

@@ -1,6 +1,6 @@
 <template>
-    <div :class="'flex-col'">
-        <p :class="'text-center'">{{ this.model[this.prop] }} %</p>
+    <div class="flex-col">
+        <p class="text-center">{{ this.model[this.prop] }} %</p>
         <progress :class="colorClass" :value="this.model[this.prop]" :max="100"></progress>
     </div>
 </template>
@@ -12,17 +12,17 @@ export default {
     computed: {
         colorClass() {
             const num = parseFloat(this.model[this.prop])
-            let color = 'neutral'
+            let color = 'progress progress-neutral'
             if (num != null) {
                 if (num < 50) {
-                    color = 'warning'
+                    color = 'progress progress-warning'
                 } else if (num > 100) {
-                    color = 'error'
-                } else color = 'success'
+                    color = 'progress progress-error'
+                } else color = 'progress progress-success'
             } else {
-                color = 'secondary'
-            }
-            return 'progress progress-' + color
+                color = 'progress progress-secondary'
+            } 
+            return color
         }
     },
 

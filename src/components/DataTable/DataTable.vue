@@ -1,147 +1,157 @@
 <template>
-  <MCModal :modal-open="columnDialog" modal-title="Selecionar Columnas"
-    :toggle-modal="() => { columnDialog = !columnDialog; applyFilters() }">
-    <div className="grid grid-cols-2 grid-rows-1 gap-3">
-      <div>
-        <h2 class="text-xl mb-2">Columnas disponibles</h2>
-        <draggable class="dragArea list-group" :list="baseCols" :group="{ name: 'columns', pull: 'clone', put: false }"
-          item-key="prop" :clone="cloneCol">
-          <template #item="{ element }">
-            <div class="list-group-item">
-              <div class="my-1 p-2 bg-base-200 rounded-lg justify-between flex flex-row">
-                <div>
-                  <Icon icon="mdi:drag" class="text-2xl handle" />
+  <div>
+    <MCModal :modal-open="columnDialog" modal-title="Selecionar Columnas"
+      :toggle-modal="() => { columnDialog = !columnDialog; applyFilters() }">
+      <div className="grid grid-cols-2 grid-rows-1 gap-3">
+        <div>
+          <h2 class="text-xl mb-2">Columnas disponibles</h2>
+          <draggable class="dragArea list-group" :list="baseCols" :group="{ name: 'columns', pull: 'clone', put: false }"
+            item-key="prop" :clone="cloneCol">
+            <template #item="{ element }">
+              <div class="list-group-item">
+                <div class="my-1 p-2 bg-base-200 rounded-lg justify-between flex flex-row">
+                  <div>
+                    <Icon icon="mdi:drag" class="text-2xl handle" />
+                  </div>
+                  <div>
+                    {{ element.name }}
+                  </div>
+                  <button class="" />
                 </div>
-                <div>
-                  {{ element.name }}
+              </div>
+            </template>
+          </draggable>
+        </div>
+        <div>
+          <h2 class="text-xl text-end mb-2">Columnas Selecionadas</h2>
+          <draggable class="dragArea list-group h-3/4" :list="selectedCols" group="columns" item-key="prop">
+            <template #item="{ element, index }">
+              <div class="list-group-item">
+                <div
+                  :class="'my-1 p-1 bg-base-200 rounded-lg jus justify-between flex flex-row ' + (colsToRemove.includes(element.prop) && 'opacity-50')">
+                  <div>
+                    <Icon icon="mdi:drag" class="text-2xl handle" />
+                  </div>
+                  <div>
+                    {{ element.name }}
+                  </div>
+                  <button class="btn btn-error btn-circle btn-sm mr-2" @click="colsToRemove.push(element.prop)">
+                    ✕
+                  </button>
                 </div>
-                <button class="" />
               </div>
-            </div>
-          </template>
-        </draggable>
-      </div>
-      <div>
-        <h2 class="text-xl text-end mb-2">Columnas Selecionadas</h2>
-        <draggable class="dragArea list-group h-3/4" :list="selectedCols" group="columns" item-key="prop">
-          <template #item="{ element, index }">
-            <div class="list-group-item">
-              <div
-                :class="'my-1 p-1 bg-base-200 rounded-lg jus justify-between flex flex-row ' + (colsToRemove.includes(element.prop) && 'opacity-50')">
-                <div>
-                  <Icon icon="mdi:drag" class="text-2xl handle" />
-                </div>
-                <div>
-                  {{ element.name }}
-                </div>
-                <button class="btn btn-error btn-circle btn-sm mr-2" @click="colsToRemove.push(element.prop)">
-                  ✕
-                </button>
-              </div>
-            </div>
-          </template>
-        </draggable>
-      </div>
-    </div>
-    <div class="card-actions flex flex-row pt-4 justify-end">
-      <button class="btn btn-secondary " @click="cancelCols()">
-        Reset
-      </button>
-      <button class="btn btn-primary" @click="removeCols()">
-        Guardar
-      </button>
-    </div>
-  </MCModal>
-  <MCModal :modal-open="filtersDialog" modal-title="Filtros" :toggle-modal="() => { filtersDialog = !filtersDialog }">
-    <div>
-      <div v-for="(filter, index) in appliedFilters" class="my-4 bg-base-100 p-2 rounded-xl">
-        <div class="flex flex-row gap-4 overflow-y-auto">
-          <div class="m-auto">
-            <label class="form-control w-full max-w-xs">
-              <div class="label">
-                <span class="label-text">Columna </span>
-              </div>
-              <select v-model="filter.col" @change="handleCol(index, $event)" class="select select-primary">
-                <option disabled selected>Selecionar Columna</option>
-                <option v-for="col, colIndex in selectedCols" :value="col.prop">
-                  {{ col.name }}
-                </option>
-              </select>
-            </label>
-          </div>
-          <div v-if="filter.col" class="m-auto basis-1/3 text-center">
-            <label class="form-control w-full max-w-xs">
-              <div class="label">
-                <span class="label-text">Condicion</span>
-              </div>
-              <select class="select select-primary" @change="handleFilter(index, $event)">
-                <option disabled selected>Selecionar Filtro</option>
-                <option v-for="(filterOptions, filterIndex) in filters" :value="filterIndex">
-                  {{ filterOptions.name }}
-                </option>
-              </select>
-            </label>
-          </div>
-          <span class="grow"></span>
-          <div v-if="filter.filterOpt?.values_needed > 0 && filter.filterOpt" class="m-auto grow justify-end">
-            <label class="form-control w-full max-w-xs text-end">
-              <div class="label">
-                <span class="label-text">Valor</span>
-              </div>
-              <input v-model="filter.val" :type="filter.valType" placeholder="Valor..."
-                class="input input-primary input-md w-full " />
-            </label>
-          </div>
-          <button class="btn btn-circle btn-sm my-auto btn-error mx-2 self-end" @click="removeFilter(filter.id)">
-            X
-          </button>
+            </template>
+          </draggable>
         </div>
       </div>
-      <div class="my-4 bg-base-200 p-2 rounded-xl ">
-        <label class="form-control w-full max-w-xs">
-          <div class="label">
-            <span class="label-text">Nuevo Filtro</span>
-          </div>
-          <select class="select select-primary" @change="createNewFilter($event)">
-            <option disabled selected>Selecionar Filtro</option>
-            <option v-for="col, index in selectedCols" :value="index">
-              {{ col.name }}
-            </option>
-          </select>
-        </label>
+      <div class="card-actions flex flex-row pt-4 justify-end">
+        <button class="btn btn-secondary " @click="cancelCols()">
+          Reset
+        </button>
+        <button class="btn btn-primary" @click="removeCols()">
+          Guardar
+        </button>
       </div>
-    </div>
-    <div class="card-actions">
-      <button class="btn btn-primary right-0 ml-auto mr-0" @click="applyFilters()">
-        Guardar
-      </button>
-    </div>
-  </MCModal>
-  <div class="table-wrapper bg-base-100">
-    <div class="flex flex-row p-4 gap-2 bg-base-100 sticky top-0">
-      <button class="btn btn-primary" @click="columnDialog = true">
-        Columnas
-        <Icon icon="material-symbols:arrow-drop-down" class="text-xl text-neutral rounded-xl cursor-pointer" />
-      </button>
-      <button class="btn btn-primary mx-2" @click="filtersDialog = true">
-        Filtros
-        <Icon icon="material-symbols:cleaning-services" class="text-xl text-neutral rounded-xl cursor-pointer" />
-      </button>
-      <button class="btn  btn-primary mx-2" @click="downloadExcel">
-        Exportar
-        <Icon icon="mdi:file-export" class="text-xl" />
-      </button>
-      <div class="grow"></div>
-      <!-- Extra button Cols-->
+    </MCModal>
+    <MCModal :modal-open="filtersDialog" modal-title="Filtros" :toggle-modal="() => { filtersDialog = !filtersDialog }">
       <div>
-        <slot name="table_options"></slot>
+        <div v-for="(filter, index) in appliedFilters" class="my-4 bg-base-100 p-2 rounded-xl">
+          <div class="flex flex-row gap-4 overflow-y-auto">
+            <div class="m-auto">
+              <label class="form-control w-full max-w-xs">
+                <div class="label">
+                  <span class="label-text">Columna </span>
+                </div>
+                <select v-model="filter.col" @change="handleCol(index, $event)" class="select select-primary">
+                  <option disabled selected>Selecionar Columna</option>
+                  <option v-for="col, colIndex in selectedCols" :value="col.prop">
+                    {{ col.name }}
+                  </option>
+                </select>
+              </label>
+            </div>
+            <div v-if="filter.col" class="m-auto basis-1/3 text-center">
+              <label class="form-control w-full max-w-xs">
+                <div class="label">
+                  <span class="label-text">Condicion</span>
+                </div>
+                <select class="select select-primary" @change="handleFilter(index, $event)">
+                  <option disabled selected>Selecionar Filtro</option>
+                  <option v-for="(filterOptions, filterIndex) in filters" :value="filterIndex">
+                    {{ filterOptions.name }}
+                  </option>
+                </select>
+              </label>
+            </div>
+            <span class="grow"></span>
+            <div v-if="filter.filterOpt?.values_needed > 0 && filter.filterOpt" class="m-auto grow justify-end">
+              <label class="form-control w-full max-w-xs text-end">
+                <div class="label">
+                  <span class="label-text">Valor</span>
+                </div>
+                <input v-model="filter.val" :type="filter.valType" placeholder="Valor..."
+                  class="input input-primary input-md w-full " />
+              </label>
+            </div>
+            <button class="btn btn-circle btn-sm my-auto btn-error mx-2 self-end" @click="removeFilter(filter.id)">
+              X
+            </button>
+          </div>
+        </div>
+        <div class="my-4 bg-base-200 p-2 rounded-xl ">
+          <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text">Nuevo Filtro</span>
+            </div>
+            <select class="select select-primary" @change="createNewFilter($event)">
+              <option disabled selected>Selecionar Filtro</option>
+              <option v-for="col, index in selectedCols" :value="index">
+                {{ col.name }}
+              </option>
+            </select>
+          </label>
+        </div>
       </div>
-    </div>
-    <v-grid v-if="!props.loading && refresh" id="datagrid" theme="compact" :source="props.rows" :columns="selectedCols"
-      class="MCGrid" resize="true" editors="text" range="true" autoSizeColumn="true" :row-size="props.rowSize"
-      :columnTypes='props.columnTypes'></v-grid>
-    <div class="flex flex-1 justify-center py-40 " v-else>
-      <Loader />
+      <div class="card-actions">
+        <button class="btn btn-primary right-0 ml-auto mr-0" @click="applyFilters()">
+          Guardar
+        </button>
+      </div>
+    </MCModal>
+    <div class="table-wrapper bg-base-100">
+      <div class="flex flex-row p-4 gap-2 bg-base-100 sticky top-0">
+        <button class="btn btn-primary" @click="columnDialog = true">
+          Columnas
+          <Icon icon="material-symbols:arrow-drop-down" class="text-xl text-neutral rounded-xl cursor-pointer" />
+        </button>
+        <button class="btn btn-primary mx-2" @click="filtersDialog = true">
+          Filtros
+          <Icon icon="material-symbols:cleaning-services" class="text-xl text-neutral rounded-xl cursor-pointer" />
+        </button>
+        <button class="btn  btn-primary mx-2" @click="downloadExcel">
+          Exportar
+          <Icon icon="mdi:file-export" class="text-xl" />
+        </button>
+        <div class="grow"></div>
+        <!-- Extra button Cols-->
+        <div>
+          <slot name="table_options"></slot>
+        </div>
+      </div>
+      <v-grid v-if="!props.loading && refresh && props.rows.length > 0" id="datagrid" theme="compact" :source="props.rows"
+        :columns="selectedCols" class="MCGrid" resize="true" editors="text" range="true" autoSizeColumn="true"
+        :row-size="props.rowSize" :columnTypes='props.columnTypes' @beforeedit="gridAfterEdit"></v-grid>
+      <div v-else class="flex flex-1 justify-center py-40 ">
+        <Loader v-if="props.loading" />
+        <div v-else class="flex flex-col flex-1 justify-center pt-40">
+          <div>
+            <h1 class="text-4xl text-center">
+              No Hay elementos ...
+              <img src="@/assets/pig.png" width="200" class="m-auto pt-2">
+            </h1>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -152,12 +162,11 @@ import draggable from 'vuedraggable'
 import { getfilters } from '@/services/config'
 import Loader from '@/components/Loader.vue'
 import * as XLSX from 'xlsx';
-import { ref, watch, onMounted } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 import { Icon } from "@iconify/vue";
 import VGrid from "@revolist/vue3-datagrid";
 
-let filterIdCounter = 0;
-
+let filterIdCounter = 0
 const refresh = ref(true);
 const filtersDialog = ref(false)
 const columnDialog = ref(false);
@@ -173,7 +182,8 @@ const props = defineProps({
   loading: { default: true, type: Boolean },
   cols: { default: null },
   rows: { default: null },
-  rowSize: { default: '50' }
+  rowSize: { default: '50' },
+  customEdit: { default: () => { }, type: Function }
 });
 
 const emits = defineEmits(['updateFilters'])
@@ -221,13 +231,12 @@ const cloneCol = (col) => {
 }
 
 const refreshData = () => {
-  console.log(selectedCols.value)
   refresh.value = false
-  setTimeout(() => { refresh.value = true }, 300)
+  setTimeout(() => { refresh.value = true }, 1)
 }
 
 const handleCol = (index, event) => {
-  const colIndex = selectedCols.value.findIndex((item) => { item.prop == event.target.value })
+  const colIndex = selectedCols.value.findIndex((item) => item.prop === event.target.value)
   const col = selectedCols.value[colIndex]
   appliedFilters.value[index]['col'] = col.prop
   appliedFilters.value[index]['valType'] = col.valType
@@ -240,7 +249,6 @@ const handleFilter = (index, event) => {
 
 const createNewFilter = (event) => {
   const col = selectedCols.value[event.target.value]
-  console.log(col)
   const newFilter = {
     'id': filterIdCounter,
     'col': col.prop,
@@ -278,7 +286,7 @@ const applyFilters = () => {
 
 
 const manageCols = () => {
-  if (!props.cols || props.rows.length <= 0) {
+  if (!props.cols || props.rows.length < 0) {
     const firstRow = props.rows[0];
     const cols = Object.keys(firstRow).map((key, index) => ({
       prop: key,
@@ -292,14 +300,17 @@ const manageCols = () => {
   }
 }
 
-watch(
-  () => props.loading,
-  (newValue) => {
-    if (newValue == false) {
-      manageCols()
-    }
-  }
-);
+const gridAfterEdit = (e) => {
+  props.customEdit(e)
+}
+
+
+watchEffect(() => {
+  if (props.loading == false) { manageCols() }
+  if (props.rows.length > 0) { refreshData() }
+});
+
+
 
 onMounted(async () => {
   const response = await getfilters()
@@ -353,5 +364,12 @@ onMounted(async () => {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.center {
+  padding-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

@@ -61,7 +61,7 @@ export async function getfilters() {
 export async function postAssignment(formData) {
     try {
         return await axiosClient({
-            url: BASE_URL + '/assigment',
+            url: BASE_URL + '/assignment',
             method: 'POST',
             timeout: 60000,
             headers: { 'Content-Type': 'multipart/form-data' },

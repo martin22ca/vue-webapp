@@ -1,7 +1,6 @@
 <template>
     <div>
-
-        <div class="float-right">
+        <div class="">
             <button class="btn btn-primary mx-2" @click="sendColsConfig(initiAsignaciones, 4)">
                 Asignaciones
             </button>
@@ -12,14 +11,21 @@
                 Reset
             </button>
         </div>
+        <div class="m-8 bg-neutral p-40">
+            <Autocomplete :items="options" v-model="selectedItem"  />
+        </div>
     </div>
 </template>
 
 
 <script setup>
+import Autocomplete from '@/components/Autocomplete.vue';
 import { setCols, getConfigId } from '@/services/config';
 import { onBeforeMount, ref } from 'vue';
 
+
+const options = ref(['Apple', 'Orange', 'Banana', 'Mango', 'Grapes', 'Pineapple', 'Strawberry'])
+const selectedItem = ref('')
 const headers = ref([]);
 const headersOr = ref([]);
 const configs = ref(null)
@@ -59,7 +65,7 @@ const initiAsignaciones = {
     record_type: { name: 'Tipo Expediente', order: 13, modified: false, lastCol: '' },
     record_state: { name: 'Estado Expediente', order: 14, modified: false, lastCol: '' },
     provider_priority: { name: 'Condicion Prestador', order: 15, modified: false, lastCol: '' },
-    provider_peculiarity: { name: 'Particularidad Prestador', order: 16, modified: false, lastCol: '' },
+    provider_particularity: { name: 'Particularidad Prestador', order: 16, modified: false, lastCol: '' },
     entry_way: { name: 'Via Ingreso', order: 17, modified: false, lastCol: '' },
     entry_user: { name: 'Usuario Ingreso Actividad', order: 18, modified: false, lastCol: '' },
     audit_group: { name: 'Codigo Grupo Asignado', order: 21, modified: false, lastCol: '' },

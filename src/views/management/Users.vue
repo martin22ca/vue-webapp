@@ -1,14 +1,9 @@
 <template>
     <defaultLayout>
-        <dialog class="modal" :open="modalVisible" style="background-color: oklch(var(--b3)/.8);">
-            <div class="modal-box max-w-7xl bg-base-200">
-                <form method="dialog">
-                    <button @click="modalVisible = false; fetchResources()"
-                        class="btn btn-sm btn-circle btn-error absolute right-2 top-2">✕</button>
-                </form>
-                <ModalUser v-if="modalVisible" :user="selectedUser" />
-            </div>
-        </dialog>
+        <Toast :toast-open="toastVal" toast-text="Test"  :toggle-toast="() => { toastVal = !toastVal }"></Toast>
+        <MCModal :modalOpen="userModal" modalTitle="Usuario" :toggleModal="() => { userModal = !userModal }">
+            <modalUser v-if="userModal" :user="userData" :toggleModal="() => { userModal = !userModal }" />
+        </MCModal>
         <div class="bg-base-300 h-auto">
             <div class="text-sm breadcrumbs p-2">
                 <ul>
@@ -22,7 +17,7 @@
             <DataTable rowSize="50" :rows="users" :cols="headers" :loading="loading" :columnTypes="columnTypes"
                 @updateFilters="updateFilters">
                 <template #table_options>
-                    <button class="btn btn-secondary mx-2" @click="manageUser(null)">
+                    <button class="btn btn-secondary mx-2" @click="addUser()">
                         <Icon icon="material-symbols:add" class="text-xl text-neutral" /> Usuario
                     </button>
                     <button class="btn btn-secondary mx-2">
@@ -36,10 +31,15 @@
 
 
 <script setup>
+import Toast from "@/components/Toast.vue";
+import MCModal from "@/components/Modals/MCModal.vue";
+import { VGridVueTemplate } from "@revolist/vue3-datagrid";
+import modalUser from '@/components/Modals/modalUser.vue'
+import DataTableUser from "@/components/DataTable/DataTableUser.vue";
+import { usetableStore } from "@/store/tableStore";
 import Plugin from "@revolist/revogrid-column-date";
-import ModalUser from "@/components/Modals/ModalUser.vue";
 import { Icon } from "@iconify/vue";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { getUsers } from '@/services/users'
 import DataTable from '@/components/DataTable/DataTable.vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
@@ -57,14 +57,16 @@ const headers = [
     { prop: 'phone_alt', name: 'Telefono Alt' },
     { prop: 'start_date', name: "Fecha Comienzo", size: 150, columnType: 'date' },
     { prop: 'end_date', name: 'Fecha Fin', columnType: 'date' },
-    { name: 'Acciones' },
+    { name: 'Acciones', cellTemplate: VGridVueTemplate(DataTableUser), readonly: true },
 ]
 
+const userModal = ref(false)
+const toastVal = ref(true)
+const store = usetableStore()
 const columnTypes = { 'date': new Plugin() };
 const loading = ref(true)
 const users = ref([])
-const modalVisible = ref(false)
-const selectedUser = ref(null)
+const userData = ref(null)
 let filters = []
 
 const fetchResources = async () => {
@@ -84,15 +86,21 @@ const updateFilters = (appliedFilters) => {
     fetchResources()
 }
 
-const manageUser = (userRow) => {
-    if (!userRow) {
-        selectedUser.value = null
-    } else {
-
-        selectedUser.value = userRow
-    }
-    console.log(selectedUser.value)
-    modalVisible.value = true
+const addUser = () => {
+    userData.value = null
+    userModal.value = true
 }
 
+
+watch(
+    () => store.id,
+    (newValue) => {
+        if (newValue != -1) {
+            console.log('newVal', store.data)
+            userData.value = store.data
+            userModal.value = true
+            store.$reset()
+        }
+    }
+);
 </script>

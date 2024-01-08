@@ -35,7 +35,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import defaultLayout from '@/layouts/defaultLayout.vue'
-import FileUpload from '@/components/FileUpload.vue'
+import FileUpload from './FileUpload.vue'
 import { ref, onMounted } from 'vue';
 import { getConfig } from '@/services/config'
 
