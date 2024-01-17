@@ -11,7 +11,7 @@
                 <h3>Columnas:</h3>
                 <div class="flex my-2 p-2 overflow-auto border-2 border-neutral rounded-xl ">
                     <div v-for="(header, index) in headers"
-                        :class="'m-2 text-center bg-base-100 rounded-lg px-4 border-2 border-transparent  hover:border-accent ' + (header?.remove && 'slide')"
+                        :class="'m-2 text-center bg-base-300 rounded-lg px-4 border-2 border-transparent  hover:border-accent ' + (header?.remove && 'slide')"
                         :key="index" @click="">
                         <div class="flex flex-col w-32 h-64 justify-between">
                             <div class="basis-1/3">Col:
@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div v-else class="hero bg-base-100 rounded-xl">
+            <div v-else class="hero bg-base-300 rounded-xl">
                 <div class="hero-content text-center">
                     <div class="max-w-md">
                         <h1 class="text-4xl font-bold">Configuracion Correcta</h1>
@@ -50,8 +50,12 @@
             <div v-if="configs != null">
                 <h3>Columnas DB:</h3>
                 <div class="flex flex-row my-2 p-4 overflow-auto rounded-xl gap-4">
+                    <button class="btn btn-accent my-2" @click="currentConfig = currentConfig - 1"
+                        :disabled="!exists(currentConfig - 1)">
+                        <Icon icon="mdi:arrow-left" class="text-4xl"></Icon>
+                    </button>
                     <div v-if="exists(currentConfig - 1)"
-                        :class="'basis-1/3 p-4 text-center rounded-lg bg-base-100 ' + (configs[currentConfig - 1]?.modified ? 'opacity-50' : '')">
+                        :class="'basis-1/3 p-4 text-center rounded-lg bg-base-200 ' + (configs[currentConfig - 1]?.modified ? 'opacity-50' : '')">
                         <p>Col:
                         <div class="badge badge-lg badge-neutral">{{ configs[currentConfig - 1]?.name }} </div>
                         </p>
@@ -59,13 +63,9 @@
                         <div class="badge badge-lg badge-secondary my-2">{{ configs[currentConfig - 1].order != null ?
                             configs[currentConfig - 1].order : 'NULL' }} </div>
                         </p>
-                        <button class="btn btn-wide btn-accent my-2" @click="currentConfig = currentConfig - 1"
-                            :disabled="!exists(currentConfig - 1)">
-                            <Icon icon="mdi:arrow-left" class="text-4xl"></Icon>
-                        </button>
                     </div>
                     <div
-                        :class="'grow p-4 bg-base-100 text-center rounded-lg border-2 border-accent ' + (configs[currentConfig]?.modified ? 'opacity-50' : '')">
+                        :class="'grow p-4 bg-base-200 text-center rounded-lg border-2 border-accent ' + (configs[currentConfig]?.modified ? 'opacity-50' : '')">
                         <p>Col:
                         <div class="badge badge-lg badge-neutral">{{ configs[currentConfig].name }} </div>
                         </p>
@@ -79,7 +79,7 @@
                         </button>
                     </div>
                     <div v-if="exists(currentConfig + 1)"
-                        :class="'basis-1/3 p-4 text-center rounded-lg bg-base-100 ' + (configs[currentConfig + 1]?.modified ? 'opacity-50' : '')">
+                        :class="'basis-1/3 p-4 text-center rounded-lg bg-base-200 ' + (configs[currentConfig + 1]?.modified ? 'opacity-50' : '')">
                         <p>Col:
                         <div class="badge badge-lg badge-neutral">{{ configs[currentConfig + 1]?.name }} </div>
                         </p>
@@ -87,11 +87,11 @@
                         <div class="badge badge-lg badge-secondary my-2">{{ configs[currentConfig + 1].order != null ?
                             configs[currentConfig + 1].order : 'NULL' }} </div>
                         </p>
-                        <button class="btn btn-accent btn-wide my-2" @click="currentConfig = currentConfig + 1"
-                            :disabled="!exists(currentConfig + 1)">
-                            <Icon icon="mdi:arrow-right" class="text-4xl"></Icon>
-                        </button>
                     </div>
+                    <button class="btn btn-accent my-2 " @click="currentConfig = currentConfig + 1"
+                        :disabled="!exists(currentConfig + 1)">
+                        <Icon icon="mdi:arrow-right" class="text-4xl"></Icon>
+                    </button>
                 </div>
             </div>
 

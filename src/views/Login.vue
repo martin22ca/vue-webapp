@@ -2,12 +2,19 @@
     <MCModal :modalOpen="modalControl.status" :toggleModal="toggleModal" :modalText="modalControl.text"
         :modalTitle="modalControl.tile" :modalSucces="modalControl.success" />
     <div class="flex h-screen bg-base-300 ">
-        <div class="w-1/3 flex items-center justify-center left-wrapper h-full">
-            <div class="uppercase font-title inline-flex text-lg md:text-6xl text-accent bg-neutral p-2 rounded-xl mb-64">
-                G-<span class="salud text-base-content">Soft</span>
+        <div class="flex left-wrapper h-full" :class="!screenSaverActive ? 'w-1/3' : 'w-full'">
+            <div class="flex flex-col w-full">
+                <button class="btn btn-sm rounded-xl bg-base-200 self-end mx-2 mt-2" @click="setScreen()">
+                    <Icon icon="ic:baseline-fullscreen" class="w-6 h-6" />
+                </button>
+                <div :class="!screenSaverActive ? 'm-auto' : 'mt-auto ml-auto mb-4 mr-4 text-sm'"
+                    class="slide uppercase font-title inline-flex text-lg md:text-6xl text-accent bg-neutral p-2 rounded-xl ">
+                    G-<span class="salud text-neutral-content">Soft</span>
+                </div>
             </div>
         </div>
-        <div class="w-2/3 flex items-center justify-center card infoAnim">
+        <div v-if="!screenSaverActive" class="flex items-center justify-center card infoAnim"
+            :class="!screenSaverActive && 'w-2/3'">
             <div v-if="failedOnce"
                 class="infoAnim self-center badge p-4 py-8 badge-neutral text-center border-2 border-accent">
                 Si no recuerda su contraseña y/o usuario comuníquese con un administrador para realizar un cambio de
@@ -30,13 +37,13 @@
                         class="btn btn-secondary self-end" @click="modalControl.state = true">Limpiar</button>
                 </div>
             </form>
-
         </div>
     </div>
 </template>
   
 
 <script setup>
+import { Icon } from '@iconify/vue';
 import MCInput from '@/components/MCInput.vue';
 import MCModal from '@/components/Modals/MCModal.vue';
 import { useRouter } from 'vue-router'
@@ -46,6 +53,7 @@ import { loginUser } from '@/services/admission'
 import * as Yup from "yup";
 import { useField, useForm } from 'vee-validate'
 
+const screenSaverActive = ref(false);
 const store = userDataStore()
 const router = useRouter()
 
@@ -98,14 +106,22 @@ const submit = handleSubmit(async (values) => {
         modalControl.value.status = true
         console.log(modalControl.value.status)
     }
-
 });
 
+const setScreen = () => {
+    screenSaverActive.value = !screenSaverActive.value
+    console.log(screenSaverActive.value)
+}
 
 </script>
 
 
 <style scoped>
+
+
+.slide{
+    transition: margin 0.5s ease-in-out;
+} 
 .left-wrapper {
     border-right: solid 2px oklch(var(--a));
     margin: auto;
@@ -115,6 +131,7 @@ const submit = handleSubmit(async (values) => {
     animation: gradient 15s ease infinite;
     background-size: 400% 400%;
     background-attachment: fixed;
+    transition: width 0.5s ease-in-out;
 }
 
 @keyframes gradient {

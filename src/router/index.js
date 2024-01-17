@@ -31,12 +31,12 @@ const routes = [
   {
     path: '/input/load',
     name: 'UploadDB',
-    component: () => import('@/views/dataUpload/DailyUpload.vue'),
+    component: () => import('@/views/dataEntry/DailyUpload.vue'),
   },
   {
     path: '/input/manual',
     name: 'UploadData',
-    component: () => import('@/views/dataUpload/ManualUpload.vue'),
+    component: () => import('@/views/dataEntry/ManualUpload.vue'),
   },
   {
     path: '/test',

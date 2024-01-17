@@ -4,7 +4,7 @@
             :toggle-modal="() => { configXlS = !configXlS }"></ConfigData>
     </MCModal>
     <MCModal :modal-open="modalControl.status" :modal-text="modalControl.text" :modal-title="modalControl.title"
-        :toggle-modal="() => { modalControl.status = !modalControl.status; toggleModal() }">
+        :toggle-modal="() => { toggleModal()}">
         <span v-if="modalControl.loading" class="loading loading-dots loading-lg bg-primary"></span>
     </MCModal>
     <Toast :toast-open="toastControl.status" :toast-text="toastControl.text" :toggle-toast="toggleToast" />
@@ -46,7 +46,7 @@
 import Toast from '@/components/Toast.vue';
 import MCModal from '@/components/Modals/MCModal.vue';
 import * as XLSX from 'xlsx';
-import ConfigData from '@/views/dataUpload/ConfigData.vue';
+import ConfigData from '@/views/dataEntry/ConfigData.vue';
 import { Icon } from '@iconify/vue';
 import { ref } from 'vue';
 import { postAssignment, postDb } from '@/services/config'
