@@ -1,9 +1,9 @@
 <template>
-    <div class="flex flex-row h-screen w-screen bg-base-200">
+    <div class="flex flex-row h-screen w-screen">
         <div :class="'duration-200 ease-out ' + (drawerStatus ? 'w-60' : 'w-0')">
             <Drawer v-if="drawerStatus" :drawer-open="drawerStatus" />
         </div>
-        <div class="w-full" :style="contentStyles">
+        <div class="w-full bg-base-200" :style="contentStyles">
             <NavBar :toggle-drawer="toggleDrawer" />
             <div class="p-2">
                 <slot></slot>

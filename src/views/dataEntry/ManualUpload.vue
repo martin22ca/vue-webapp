@@ -1,7 +1,7 @@
 <template>
     <defaultLayout>
         <Toast :duration="1" :toastOpen="toastOpen" :toggleToast="() => { toastOpen = !toastOpen }" :toastText="toasText" />
-        <div class="bg-base-300 h-auto">
+        <div class="h-auto">
             <div class="text-sm breadcrumbs p-2">
                 <ul>
                     <li><a>Home</a></li>

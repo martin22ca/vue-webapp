@@ -37,8 +37,14 @@ export const Items: Array<MenuItem> = [
             },
             {
                 title: 'Carga Manual',
-                icon: 'mdi:land-plots',
+                icon: 'mdi:grid',
                 route: '/input/manual',
+                children: undefined
+            },
+            {
+                title: 'Lotes',
+                icon: 'mdi:land-plots',
+                route: '/input/lots',
                 children: undefined
             }
         ],

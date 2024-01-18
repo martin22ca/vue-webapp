@@ -7,9 +7,12 @@
                 <button class="btn btn-sm rounded-xl bg-base-200 self-end mx-2 mt-2" @click="setScreen()">
                     <Icon icon="ic:baseline-fullscreen" class="w-6 h-6" />
                 </button>
-                <div :class="!screenSaverActive ? 'm-auto' : 'mt-auto ml-auto mb-4 mr-4 text-sm'"
-                    class="slide uppercase font-title inline-flex text-lg md:text-6xl text-accent bg-neutral p-2 rounded-xl ">
-                    G-<span class="salud text-neutral-content">Soft</span>
+                <div :class="!screenSaverActive ? 'm-auto' : 'mt-auto ml-auto mb-4  text-sm'"
+                    class="slide">
+                    <img v-if="screenSaverActive" src="@/assets/Margarita_PIG.png" width="300" class="m-auto pt-2"/>
+                    <div class="uppercase  text-center text-lg md:text-6xl text-accent bg-neutral p-2 rounded-xl">
+                        G-<span class="salud text-neutral-content">Soft</span>
+                    </div>
                 </div>
             </div>
         </div>
