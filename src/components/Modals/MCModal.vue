@@ -1,13 +1,12 @@
 <template>
-    <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b3)/.8);">
-        <div class="modal-box modalAnim max-w-6xl bg-base-300">
+    <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
+        <div class="modal-box modalAnim max-w-6xl bg-base-100 max-h-screen">
             <button class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error'
                 @click="props.toggleModal()">✕</button>
             <div class="font-bold text-2xl flex flex-row">
                 <Icon :class="'mr-2 text-' + color" :icon="modalIcon" />
                 <h3>{{ props.modalTitle }}</h3>
             </div>
-            <span class="divider m-1" />
             <p v-if="props.modalText != null" class="py-4">{{ props.modalText }}</p>
             <slot></slot>
         </div>
@@ -50,3 +49,21 @@ onMounted(() => {
 
 </script>
 
+<style>
+.modalAnim{
+    animation: fadeBottom 0.5s ease 0s 1 normal forwards;
+}
+
+
+@keyframes fadeBottom {
+	0% {
+		opacity: 0;
+		transform: translateY(50px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+</style>

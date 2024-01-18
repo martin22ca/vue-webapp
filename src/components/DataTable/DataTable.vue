@@ -121,15 +121,15 @@
     <div class="table-wrapper bg-base-100">
       <div class="flex flex-row p-4 gap-2 bg-base-100 sticky top-0">
         <button class="btn btn-primary" @click="columnDialog = true">
-          Columnas
-          <Icon icon="material-symbols:arrow-drop-down" class="text-xl text-neutral rounded-xl cursor-pointer" />
+          Cols.
+          <Icon icon="material-symbols:arrow-drop-down" class="text-2xl text-neutral rounded-xl cursor-pointer" />
         </button>
         <button class="btn btn-primary mx-2" @click="filtersDialog = true">
           Filtros
-          <Icon icon="material-symbols:cleaning-services" class="text-xl text-neutral rounded-xl cursor-pointer" />
+          <Icon icon="mdi:filter" class="text-xl text-neutral rounded-xl cursor-pointer" />
         </button>
         <button class="btn  btn-primary mx-2" @click="downloadExcel">
-          Exportar
+          Exp.
           <Icon icon="mdi:file-export" class="text-xl" />
         </button>
         <div class="grow"></div>
@@ -335,7 +335,6 @@ onMounted(async () => {
 .MCGrid {
   height: 80vh;
   background-color: white;
-  animation: fadeBottom 1s ease 0s 1 normal forwards;
 }
 
 

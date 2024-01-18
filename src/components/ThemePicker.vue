@@ -14,12 +14,18 @@
 </template>
 
 <script setup lang="ts">
+import { onBeforeMount } from 'vue';
+import { usethemeStore } from '@/store/themeStore'
 import { Icon } from '@iconify/vue';
-import { themeChange } from 'theme-change'
+
+const store = usethemeStore()
 
 const setTheme = (newTheme: any) => {
     document.getElementsByTagName("html")[0].setAttribute('data-theme', newTheme);
+    store.setTheme(newTheme)
+    console.log(store.currentTheme)
 }
+
 const themes = [
     'system',
     'light',
@@ -52,4 +58,8 @@ const themes = [
     'coffee',
     'winter',
 ];
+
+onBeforeMount(() => {
+    document.getElementsByTagName("html")[0].setAttribute('data-theme', store.currentTheme);
+})
 </script>

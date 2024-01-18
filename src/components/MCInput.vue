@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="label">
-            <span class="label-text flex-row flex">
-                <Icon :icon="props.textIcon"  class="mx-2 text-2xl" />{{ props.textLabel }}
+            <span class="label-text flex-row flex ">
+                <Icon :icon="props.textIcon"  class="mx-2 text-2xl text-neutral" />{{ props.textLabel }}
             </span>
         </div>
         <slot></slot>
         <div class="label">
-            <span class="label-text-alt text-error"  id="error-text">{{ props.textError }}</span>
+            <span class="label-text-alt text-error pt-1"  id="error-text">{{ props.textError }}</span>
         </div>
     </div>
 </template>

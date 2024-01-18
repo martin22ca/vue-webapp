@@ -31,10 +31,6 @@ const props = defineProps({
 
 const progressBarWidth = ref('100%');
 
-const closeToast = () => {
-    props.toggleToast();
-};
-
 const startProgressBarAnimation = () => {
     let progress = 100;
     const interval = 100; // Interval for updating progress bar width
@@ -46,7 +42,7 @@ const startProgressBarAnimation = () => {
 
     setTimeout(() => {
         clearInterval(timer);
-        closeToast();
+        props.toggleToast();
     }, (props.duration * 1000));
 };
 
