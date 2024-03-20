@@ -1,7 +1,7 @@
 <template>
     <MCModal :modalOpen="props.modalOpen" modalTitle="Prestadores" :toggleModal="() => { props.toggleModal() }">
         <form @submit.prevent="submit">
-            <div class="header flex flex-row gap-4 bg-base-300 px-4 mt-2 rounded-xl">
+            <div class="header flex flex-row gap-4 bg-base-200 px-4 mt-2 rounded-xl">
                 <h2 v-if="update" class="card-title text-4xl py-4">
                     Prestador:
                     <div class="badge badge-lg badge-primary">{{ business_name.value.value }}</div>
@@ -14,8 +14,8 @@
                     <input v-model="id" class="input input-bordered w-full" disabled />
                 </MCInput>
             </div>
-            <span :class="'m-1 divider ' + (update ? 'divider-secondary' : 'divider-primary')"></span>
-            <div class="bg-base-300 px-4 rounded-xl overflow-y-auto" style="max-height: 70vh;"> <!--This DIV-->
+            <span class='m - 1 divider divider-neurtal '></span>
+            <div class="bg-base-200 px-4 rounded-xl overflow-y-auto" style="max-height: 70vh;"> <!--This DIV-->
                 <div class="flex flex-row gap-4 ">
                     <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Razon Social"
                         :textError="business_name.errorMessage.value">

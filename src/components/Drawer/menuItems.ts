@@ -13,9 +13,15 @@ export const Items: Array<MenuItem> = [
         children: undefined
     },
     {
+        title: 'DB Prevencion',
+        icon: 'mdi:database',
+        route: '/recordsDB',
+        children: undefined
+    },
+    {
         title: 'Expedientes',
         icon: 'bx:file',
-        route: '/records',
+        route: '/recordsMain',
         children: undefined
     },
     {
@@ -32,7 +38,7 @@ export const Items: Array<MenuItem> = [
             {
                 title: 'Carga DB',
                 icon: 'mingcute:upload-line',
-                route: '/input/load',
+                route: '/input/',
                 children: undefined
             },
             {
@@ -77,6 +83,12 @@ export const Items: Array<MenuItem> = [
                 title: 'Usuarios',
                 icon: 'ph:users',
                 route: '/management/users',
+                children: undefined
+            },
+            {
+                title: 'Roles',
+                icon: 'mdi:lock-pattern',
+                route: '/management/roles',
                 children: undefined
             },
         ]

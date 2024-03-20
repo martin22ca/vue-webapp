@@ -1,19 +1,18 @@
 <template>
-
   <div class='drawer w-60 fixed'>
     <input id="my-drawer" type="checkbox" class="drawer-toggle " />
     <aside class="w-60 h-screen bg-base-100 flex flex-col border-r-2 border-neutral sticky end-0">
       <div class="bg-base-100 z-20 hidden items-center gap-2 bg-opacity-90 px-4 py-2 backdrop-blur lg:flex ">
-        <a href="/" aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2">
-          <div class="uppercase font-title inline-flex text-lg md:text-2xl text-accent">G-<span
+        <a href="/" aria-current="page" aria-label="Homepage" class="flex-0 px-2">
+          <div class="uppercase font-bold inline-flex text-lg md:text-2xl text-accent">G-<span
               class="salud text-base-content">Salud</span>
           </div>
         </a>
       </div>
-      <ul class="menu p-2 pl-0 bg-base-100 text-base-content">
+      <div class="menu pl-0 bg-base-100 text-base-content oveflow-y-scroll" style="max-height: 70%;">
         <DrawerItem v-for="Item in itemArr" :title="Item.title" :icon="Item.icon" :route="Item.route"
           :children="Item.children" />
-      </ul>
+      </div>
       <div class="mt-auto items-center p-5">
         <div>
           <ThemePicker />

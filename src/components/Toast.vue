@@ -2,7 +2,11 @@
     <transition name="toast" mode="out-in">
         <div class="toast toast-end z-50 w-64" v-if="props.toastOpen">
             <div :class="'flex flex-col gap-0 alert alert-' + (props.toastSuccess ? 'info' : 'error')">
-                <div class="flex-initial progress-bar" :style="{ width: progressBarWidth }"></div>
+                <div class="flex-initial progress-bar" v-if="showProgressBar" :style="{ width: progressBarWidth }"></div>
+                <button class="btn btn-sm btn-rounded btn-error self-end" v-if="props.duration == null"
+                    @click="props.toggleToast()">
+                    <Icon icon="mdi:close"></Icon>
+                </button>
                 <span class="flex-initial">{{ props.toastText }}</span>
             </div>
         </div>
@@ -10,6 +14,7 @@
 </template>
   
 <script setup>
+import { Icon } from '@iconify/vue';
 import { ref, watch, onMounted } from 'vue';
 
 const props = defineProps({
@@ -25,11 +30,12 @@ const props = defineProps({
     },
     duration: {
         type: Number,
-        default: 3, // Default duration in milliseconds
+        default: null, // Default duration in seconds
     },
 });
 
 const progressBarWidth = ref('100%');
+const showProgressBar = ref(false);
 
 const startProgressBarAnimation = () => {
     let progress = 100;
@@ -47,13 +53,17 @@ const startProgressBarAnimation = () => {
 };
 
 watch(() => props.toastOpen, (newValue) => {
-    if (newValue) {
+    if (newValue && props.duration) {
         startProgressBarAnimation();
+    } else if (!newValue) {
+        showProgressBar.value = true; // Reset showProgressBar when closing
+    } else {
+        showProgressBar.value = false; // Manual closing, hide progress bar
     }
 });
 
 onMounted(() => {
-    if (props.toastOpen) {
+    if (props.toastOpen && props.duration != null) {
         startProgressBarAnimation();
     }
 });
@@ -73,15 +83,15 @@ onMounted(() => {
 }
 
 @keyframes fadeBack {
-	0% {
-		opacity: 1;
-		transform: translateY(0);
-	}
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-	100% {
-		opacity: 0;
-		transform: translateY(250px);
-	}
+    100% {
+        opacity: 0;
+        transform: translateY(250px);
+    }
 }
 
 .toast-enter-active,

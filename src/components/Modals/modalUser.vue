@@ -1,8 +1,8 @@
 <template>
     <MCModal :modalOpen="props.modalOpen" modalTitle="Usuario" :toggleModal="() => { props.toggleModal() }">
         <form @submit.prevent="submit">
-            <div class="header flex flex-row gap-4 bg-base-300 px-4 rounded-xl">
-                <h2 v-if="update" class="card-title text-4xl">
+            <div class="header flex flex-row gap-4 bg-base-200 px-4 rounded-xl">
+                <h2 v-if="update" class="card-title text-2xl">
                     Usuario:
                     <div class="badge badge-lg badge-primary">{{ props.user.user_name }}</div>
                 </h2>
@@ -12,75 +12,75 @@
                 <span class="grow"></span>
                 <MCInput textIcon="material-symbols:account-circle" textLabel="Fecha Inicio"
                     :textError="start_date.errorMessage.value">
-                    <input v-model="start_date.value.value" type="date" class="input input-bordered w-full"
+                    <input v-model="start_date.value.value" type="date" class="input input-sm input-bordered w-full"
                         :disabled="update" />
                 </MCInput>
                 <MCInput v-if="update" class="" textIcon="material-symbols:account-circle" textLabel="Fecha Fin"
                     :textError="end_date.errorMessage.value">
-                    <input v-model="end_date.value.value" type="date" class="input input-bordered w-full" />
+                    <input v-model="end_date.value.value" type="date" class="input input-sm input-bordered w-full" />
                 </MCInput>
             </div>
-            <span :class="'m-1 divider ' + (update ? 'divider-secondary' : 'divider-primary')"></span>
-            <div class="bg-base-300 px-4 rounded-xl">
+            <span class='m-1 divider divider-neurtal '></span>
+            <div class="bg-base-200 px-4 rounded-xl overflow-auto " style="max-height: 60vh;">
                 <div class="flex flex-row gap-4 ">
                     <MCInput class="basis-1/3" textIcon="material-symbols:account-circle" textLabel="Username"
                         :textError="user_name.errorMessage.value">
-                        <input v-model="user_name.value.value" class="input input-bordered w-full" />
+                        <input v-model="user_name.value.value" class="input input-sm input-bordered w-full" />
                     </MCInput>
                     <MCInput class="basis-1/3" textIcon="icon-park-outline:edit-name" textLabel="Nombre"
                         :textError="first_name.errorMessage.value">
-                        <input v-model="first_name.value.value" class="input input-bordered w-full" />
+                        <input v-model="first_name.value.value" class="input input-sm input-bordered w-full" />
                     </MCInput>
                     <MCInput class="basis-1/3" textIcon="icon-park-outline:edit-name" textLabel="Apellido"
                         :textError="last_name.errorMessage.value">
-                        <input v-model="last_name.value.value" class="input input-bordered w-full" />
+                        <input v-model="last_name.value.value" class="input input-sm input-bordered w-full" />
                     </MCInput>
                 </div>
                 <div class="flex flex-row gap-4">
                     <MCInput class="basis-1/3" textIcon="heroicons:identification-20-solid" textLabel="Cuil"
                         :textError="cuil.errorMessage.value">
-                        <input v-model="cuil.value.value" type="number" class="input input-bordered w-full" />
+                        <input v-model="cuil.value.value" type="number" class="input input-sm input-bordered w-full" />
                     </MCInput>
                     <MCInput class="basis-2/3" textIcon="material-symbols:location-on-outline" textLabel="Direccion"
                         :textError="address.errorMessage.value">
-                        <input v-model="address.value.value" class="input input-bordered w-full" />
+                        <input v-model="address.value.value" class="input input-sm input-bordered w-full" />
                     </MCInput>
                 </div>
                 <div class="flex flex-row gap-4">
                     <MCInput class="basis-1/2" textIcon="material-symbols:call-log" textLabel="Telefono ALT"
                         :textError="phone.errorMessage.value">
-                        <input v-model="phone.value.value" class="input input-bordered w-full" />
+                        <input v-model="phone.value.value" class="input input-sm input-bordered w-full" />
                     </MCInput>
                     <MCInput class="basis-1/2" textIcon="material-symbols:call-log" textLabel="Telefono ALT"
                         :textError="phone_alt.errorMessage.value">
-                        <input v-model="phone_alt.value.value" class="input input-bordered w-full" />
+                        <input v-model="phone_alt.value.value" class="input input-sm input-bordered w-full" />
                     </MCInput>
                 </div>
                 <div class="flex flex-row gap-4">
                     <MCInput class="basis-1/2" textIcon="ic:sharp-email" textLabel="Email Coorporativo"
                         :textError="email_corp.errorMessage.value">
-                        <input v-model="email_corp.value.value" class="input input-bordered w-full" />
+                        <input v-model="email_corp.value.value" class="input input-sm input-bordered w-full" />
                     </MCInput>
                     <MCInput class="basis-1/2" textIcon="ic:sharp-email" textLabel="Email Personal"
                         :textError="email_personal.errorMessage.value">
-                        <input v-model="email_personal.value.value" class="input input-bordered w-full" />
+                        <input v-model="email_personal.value.value" class="input input-sm input-bordered w-full" />
                     </MCInput>
                 </div>
                 <div class="flex flex-row gap-4">
                     <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Contraseña"
                         :textError="user_pass.errorMessage.value">
-                        <input v-model="user_pass.value.value" type="password" class="input input-bordered w-full" />
+                        <input v-model="user_pass.value.value" type="password" class="input input-sm input-bordered w-full" />
                     </MCInput>
                     <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Confirmar Contraseña"
                         :textError="passwordConfirmation.errorMessage.value">
                         <input v-model="passwordConfirmation.value.value" type="password"
-                            class="input input-bordered w-full" />
+                            class="input input-sm input-bordered w-full" />
                     </MCInput>
                 </div>
-                <div class="card-actions justify-end py-2">
-                    <button class="btn btn-primary " type="submit">Guardar</button>
-                    <button class="btn btn-primary ma-2" @click="handleReset">Limpiar</button>
-                </div>
+            </div>
+            <div class="card-actions justify-end py-2">
+                <button class="btn btn-primary " type="submit">Guardar</button>
+                <button class="btn btn-primary ma-2" @click="handleReset">Limpiar</button>
             </div>
         </form>
     </MCModal>
@@ -195,7 +195,7 @@ const submit = handleSubmit(async (values) => {
             }
         }
     }
-    values['user_id'] = id.value 
+    values['user_id'] = id.value
     if (update.value) {
         const { data } = await updateUser(values)
         console.log(data)

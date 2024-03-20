@@ -2,7 +2,7 @@
   <div>
     <MCModal :modal-open="columnDialog" modal-title="Selecionar Columnas"
       :toggle-modal="() => { columnDialog = !columnDialog; applyFilters() }">
-      <div className="grid grid-cols-2 grid-rows-1 gap-3">
+      <div className="grid grid-cols-2 grid-rows-1 gap-3 overflow-y-auto" style="max-height: 80vh;">
         <div>
           <h2 class="text-xl mb-2">Columnas disponibles</h2>
           <draggable class="dragArea list-group" :list="baseCols" :group="{ name: 'columns', pull: 'clone', put: false }"
@@ -118,18 +118,15 @@
         </button>
       </div>
     </MCModal>
-    <div class="table-wrapper bg-base-100">
+    <div class="table-wrapper ">
       <div class="flex flex-row p-4 gap-2 bg-base-100 sticky top-0">
-        <button class="btn btn-primary" @click="columnDialog = true">
-          Cols.
-          <Icon icon="material-symbols:arrow-drop-down" class="text-2xl text-neutral rounded-xl cursor-pointer" />
+        <button v-if="props.btnCols" class="btn btn-secondary mx-1" @click="columnDialog = true">
+          <Icon icon="mdi:format-columns" class="text-2xl text-neutral rounded-xl cursor-pointer" />
         </button>
-        <button class="btn btn-primary mx-2" @click="filtersDialog = true">
-          Filtros
+        <button v-if="props.btnFilters" class="btn btn-primary mx-1" @click="filtersDialog = true">
           <Icon icon="mdi:filter" class="text-xl text-neutral rounded-xl cursor-pointer" />
         </button>
-        <button class="btn  btn-primary mx-2" @click="downloadExcel">
-          Exp.
+        <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="downloadExcel">
           <Icon icon="mdi:file-export" class="text-xl" />
         </button>
         <div class="grow"></div>
@@ -141,13 +138,13 @@
       <v-grid v-if="!props.loading && refresh && props.rows.length > 0" id="datagrid" theme="compact" :source="props.rows"
         :columns="selectedCols" class="MCGrid" resize="true" editors="text" range="true" autoSizeColumn="true"
         :row-size="props.rowSize" :columnTypes='props.columnTypes' @beforeedit="gridAfterEdit"></v-grid>
-      <div v-else class="flex flex-1 justify-center py-40 ">
+      <div v-else class="flex flex-1 justify-center mt-20 ">
         <Loader v-if="props.loading" />
-        <div v-else class="flex flex-col flex-1 justify-center pt-40">
-          <div>
-            <h1 class="text-4xl text-center">
+        <div v-else class="flex flex-col flex-1 justify-center ">
+          <div class="m-auto flex  mt-20">
+            <h1 class="text-4xl text-center mx-24">
               No Hay elementos ...
-              <img src="@/assets/pig.png" width="200" class="m-auto pt-2">
+              <img src="@/assets/pig.png" width="200" class="m-auto ">
             </h1>
           </div>
         </div>
@@ -180,6 +177,9 @@ const props = defineProps({
   selectedRow: { default: null, },
   columnTypes: { default: {} },
   loading: { default: true, type: Boolean },
+  btnCols: { default: true, type: Boolean },
+  btnFilters: { default: true, type: Boolean },
+  btnExport: { default: true, type: Boolean },
   cols: { default: null },
   rows: { default: null },
   rowSize: { default: '50' },
@@ -210,6 +210,7 @@ const removeCols = () => {
     selectedCols.value.splice(index, 1)
   }
   refreshData()
+  colsToRemove.value = []
   columnDialog.value = false
 }
 
@@ -286,7 +287,7 @@ const applyFilters = () => {
 
 
 const manageCols = () => {
-  if (!props.cols || props.rows.length < 0) {
+  if (!props.cols && props.rows.length > 0) {
     const firstRow = props.rows[0];
     const cols = Object.keys(firstRow).map((key, index) => ({
       prop: key,
@@ -295,8 +296,13 @@ const manageCols = () => {
     selectedCols.value = [...cols]; // Create a copy of cols
     baseCols.value = [...cols]; // Create a copy of cols
   } else {
-    selectedCols.value = [...props.cols]; // Create a copy of props.cols
-    baseCols.value = [...props.cols];
+    if (props.rows.length > 0) {
+      selectedCols.value = [...props.cols]; // Create a copy of props.cols
+      baseCols.value = [...props.cols];
+    } else {
+      selectedCols.value = [];
+      baseCols.value = [];
+    }
   }
 }
 
@@ -320,19 +326,20 @@ onMounted(async () => {
   
 <style>
 .table-wrapper {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   max-width: 99%;
   overflow-x: auto;
   margin-left: 10px;
   margin-right: 20px;
   margin-bottom: 10px;
-  border: 2px solid oklch(var(--n));
-  height: 90vh;
+  height: 80vh;
   overflow-y: auto;
   border-radius: 10px;
 }
 
 
 .MCGrid {
+  z-index: 10;
   height: 80vh;
   background-color: white;
 }
@@ -348,6 +355,7 @@ onMounted(async () => {
 }
 
 .rgCell {
+  font-size: smaller;
   border-right: 1px solid oklch(var(--nc));
 }
 

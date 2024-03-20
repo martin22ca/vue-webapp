@@ -1,13 +1,13 @@
 <template>
-    <div :class="'dropdown dropdown-bottom dropdown-' + (location)">
+    <div :class="'dropdown dropdown-bottom dropdown-' + (location)" style="z-index: 999;">
         <div tabindex="0" role="button" class="btn btn-primary flex flex-row gap-2 ">
             {{ buttonText }}
             <Icon :icon="iconName" class="text-xl bg-accent-content text-primary rounded-xl cursor-pointer" />
         </div>
-        <ul tabindex="0"
-                class="dropdown-content show z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52 h-64 overflow-auto">
+        <div tabindex="10"
+                class="dropdown-content show p-2 shadow-2xl bg-base-300 rounded-box w-52 h-64 overflow-auto ">
             <slot></slot>
-        </ul>
+    </div>
     </div>
 </template>
   
