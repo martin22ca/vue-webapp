@@ -20,16 +20,26 @@ const routes = [
     component: () => import('@/views/Providers.vue'),
   },
   {
-    path: '/Records',
-    name: 'Records',
-    component: () => import('@/views/Records.vue'),
+    path: '/RecordsDB',
+    name: 'RecordsDB',
+    component: () => import('@/views/RecordsDatabase.vue'),
+  },
+  {
+    path: '/RecordsMain',
+    name: 'RecordsMain',
+    component: () => import('@/views/RecordsMain.vue'),
   }, {
     path: '/management/users',
     name: 'Users',
     component: () => import('@/views/management/Users.vue'),
   },
   {
-    path: '/input/load',
+    path: '/management/roles',
+    name: 'Roles',
+    component: () => import('@/views/management/Roles.vue'),
+  },
+  {
+    path: '/input',
     name: 'UploadDB',
     component: () => import('@/views/dataEntry/DailyUpload.vue'),
   },

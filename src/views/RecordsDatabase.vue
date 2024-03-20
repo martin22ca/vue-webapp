@@ -1,19 +1,15 @@
 <template>
     <defaultLayout>
-        <div class="text-sm breadcrumbs p-2">
-            <ul>
-                <li><a>Home</a></li>
-                <li><a>Expedientes</a></li>
-            </ul>
-        </div>
-        <h1 class="text-2xl p-2">Expedientes</h1>
-        <DataTable :rows="records" :cols="headers" :loading="loading" @updateFilters="updateFilters" class="w-full mr-2"
+        <Breadcrumbs/>
+        <h1 class="text-2xl p-2">DB Prevencion</h1>
+        <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters" class="w-full mr-2"
             :rowSize="60" >
         </DataTable>
     </defaultLayout>
 </template>
 
 <script setup>
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { onMounted, ref } from 'vue';

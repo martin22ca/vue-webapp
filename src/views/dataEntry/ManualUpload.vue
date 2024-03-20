@@ -1,25 +1,31 @@
 <template>
     <defaultLayout>
-        <Toast :duration="1" :toastOpen="toastOpen" :toggleToast="() => { toastOpen = !toastOpen }" :toastText="toasText" />
+        <MCModal :modal-open="infoModal" :modal-text="infoModalText" :modal-title="infoModalTitle"
+            :toggle-modal="() => { infoModal = !infoModal; }" class="text-xl">
+            <div class="float-right">
+                <button class=" m-2 btn btn-primary" @click="infoModal = false">
+                    Cancelar
+                </button>
+                <button class="m-2 btn btn-error" @click="removeAssigned()">
+                    Eliminar
+                </button>
+            </div>
+        </MCModal>
+        <Toast :toastOpen="toastOpen" :toggleToast="() => { toastOpen = !toastOpen }" :toastText="toasText" />
         <div class="h-auto">
-            <div class="text-sm breadcrumbs p-2">
-                <ul>
-                    <li><a>Home</a></li>
-                    <li><a>Ingreso</a></li>
-                    <li><a>Entrada Manual</a></li>
-                </ul>
-            </div>
-            <div>
-                <h1 class="text-2xl p-2">Entrada Manual</h1>
-            </div>
-            <DataTable :rows="getRows()" :cols="headers" :loading="loading" :columnTypes="columnTypes"
+            <Breadcrumbs />
+            <h1 class="p-2" style="font-size: 3.3vh ;">Entrada Manual</h1>
+            <DataTable :rows="mergedRows" :cols="headers" :loading="loading" :columnTypes="columnTypes"
                 :customEdit="changeRecordNum" @updateFilters="updateFilters">
                 <template #table_options>
                     <button class="btn btn-secondary mx-2" @click="addNewRecord()">
-                        <Icon icon="material-symbols:add" class="text-xl text-neutral" />
+                        <Icon icon="mdi:plus" class="text-xl text-neutral" />
                     </button>
                     <button class="btn btn-primary mx-2" @click="saveChanges()">
-                        <Icon icon="material-symbols:save" class="text-xl text-neutral" />
+                        <Icon icon="mdi:content-save" class="text-xl text-neutral" />
+                    </button>
+                    <button v-if="editedRecords.length > 0" class="fadeRight btn btn-error mx-2" @click="clearEdited()">
+                        <Icon icon="mdi:delete" class="text-xl text-neutral" />
                     </button>
                 </template>
             </DataTable>
@@ -29,19 +35,23 @@
 
 
 <script setup>
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
+import MCModal from "@/components/Modals/MCModal.vue";
 import Toast from '@/components/Toast.vue';
 import { Icon } from '@iconify/vue';
 import { userDataStore } from '@/store/userStore';
 import { usetableStore } from '@/store/tableStore';
 import { useUserRecords } from '@/store/userRecordsStore';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
+import DataTableInfoDelete from '@/components/DataTable/DataTableInfoDelete.vue';
 import DataTableCheckbox from '@/components/DataTable/DataTableCheckbox.vue'
 import Plugin from "@revolist/revogrid-column-date";
 import DataTable from "@/components/DataTable/DataTable.vue";
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
-import { addRecordtoUser, updateRecordsUser, getRecordsInfoUser, saveRecordsUser } from '@/services/records';
+import { addRecordtoUser, updateRecordsUser, getRecordsInfoUser, saveRecordsUser, removeRecordUser } from '@/services/records';
 
+const columnTypes = { 'date': new Plugin() };
 const headers = [
     { prop: 'id_record', name: 'Nro Expediente', pin: 'colPinStart', valType: 'number', size: 100 },
     { prop: 'worked_on', name: 'Activo', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
@@ -52,22 +62,29 @@ const headers = [
     { prop: 'lot_key', name: 'Lote', valType: 'number' },
     { prop: 'id_user', name: 'Usuario Asignado', valType: 'number', size: 200 },
     { prop: 'record_total', name: 'Monto Total', valType: 'number' },
-    { prop: 'date_entry_digital', name: 'Fecha Entrada Digital', valType: 'date', size: 150 },
-    { prop: 'date_entry_physical', name: 'Fecha Entrada Fisico', valType: 'date', size: 150 },
+    { prop: 'date_entry_digital', name: 'Fecha Digital', valType: 'date', size: 150 },
+    { prop: 'date_entry_physical', name: 'Fecha Fisico', valType: 'date', size: 150 },
     { prop: 'seal_number', name: 'Nro Precinto', valType: 'number' },
     { prop: 'observation', name: 'Observacion', valType: 'text', size: 300 },
-    { prop: 'info', name: 'Info', valType: 'bool', readonly: true },
+    { prop: 'info', name: 'Info', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableInfoDelete), size: 150, readonly: true },
 ]
+
+const infoModal = ref(false)
+const infoModalText = ref('')
+const infoModalTitle = ref('')
+const toastOpen = ref(false)
+const toasText = ref('')
+const loading = ref(true)
 
 const userStore = userDataStore()
 const tableStore = usetableStore()
 const userRecordsStore = useUserRecords()
-const columnTypes = { 'date': new Plugin() };
-const loading = ref(true)
+
 const editedRecords = ref(userRecordsStore.elements)
 const dbRecords = ref([])
-const toastOpen = ref(false)
-const toasText = ref('')
+const mergedRows = ref([])
+
+let removeRecord = null
 let websocket = null;
 let filters = []
 
@@ -86,6 +103,7 @@ const fetchResources = async () => {
             dbRecords.value.push(data[i]);
         }
     }
+    mergedRows.value = getRows()
     setTimeout(() => {
         loading.value = false
     }, 500)
@@ -99,9 +117,13 @@ const updateFilters = (appliedFilters) => {
 const addNewRecord = () => {
     var emptyRow = {}
     dbRecords.value.push(emptyRow)
+    mergedRows.value = getRows()
 }
 
 const saveChanges = async () => {
+    if (toastOpen.value) {
+        toastOpen.value = false
+    }
 
     const saveRows = getRows()
     const reqData = {
@@ -110,8 +132,7 @@ const saveChanges = async () => {
     }
     if (reqData.values.length > 0) {
         const data = await saveRecordsUser(reqData)
-        editedRecords.value = []
-        userRecordsStore.$reset()
+        clearEdited()
         console.log(data)
         toasText.value = 'Valores Guardados'
         toastOpen.value = true
@@ -124,21 +145,52 @@ const saveChanges = async () => {
 
 }
 
+const removeAssigned = async () => {
+    if (toastOpen.value) {
+        toastOpen.value = false
+    }
+    const data = {
+        'id_uxri': removeRecord.uxri_id,
+        'token': userStore.token
+    }
+    const id = editedRecords.value.findIndex((item) => item.id_record == removeRecord.id_record)
+    if (id != -1) {
+        editedRecords.value.splice(id, 1)
+    }
+    infoModal.value = false
+
+    const res = await removeRecordUser(data)
+    console.log(res)
+    if (res.success) {
+        toasText.value = res.data.message
+        toastOpen.value = true
+    } else {
+        toasText.value = res.data.error
+        toastOpen.value = true
+    }
+    fetchResources()
+}
+
 const changeRecordNum = async (e) => {
+    if (toastOpen.value) {
+        toastOpen.value = false
+    }
+
     if (e.detail.prop == 'id_record') {
         e.preventDefault()
         const rowIndex = e.detail.rowIndex
         var res
+        var data
         if (Object.keys(dbRecords.value[rowIndex]).length === 0 && dbRecords.value[rowIndex].constructor === Object) {
             // New Record in the rows
-            const data = {
+            data = {
                 'id_record': Number(e.detail.val),
                 'token': userStore.token
             }
             res = await addRecordtoUser(data)
         }
         else {
-            const data = {
+            data = {
                 'id_record_new': Number(e.detail.val),
                 'id_record_old': dbRecords.value[rowIndex]['id_record'],
                 'token': userStore.token
@@ -146,13 +198,13 @@ const changeRecordNum = async (e) => {
             res = await updateRecordsUser(data)
         }
         if (res.data.success) {
-            console.log(res.data.message)
             toasText.value = res.data.message
             toastOpen.value = true
             fetchResources()
         } else {
             toasText.value = res.data.error
             toastOpen.value = true
+            data
         }
     } else {
         if (!e.detail.model.worked_on) {
@@ -161,10 +213,14 @@ const changeRecordNum = async (e) => {
             let element = dbRecords.value.splice(rowIndex, 1)[0];
             element['worked_on'] = true
             editedRecords.value.push(element)
-        } else {
-
         }
     }
+}
+
+const clearEdited = () => {
+    editedRecords.value = []
+    userRecordsStore.$reset()
+    fetchResources()
 }
 
 const getRows = () => {
@@ -196,11 +252,39 @@ onUnmounted(() => {
 watch(
     () => tableStore.id,
     (newValue) => {
-        if (newValue != -1) {
+        if (newValue == 1) {
             console.log('newVal', newValue)
+            console.log(tableStore.data)
+            tableStore.$reset()
+        }
+        else if (newValue == 2) {
+            console.log(tableStore.data.uxri_id)
+            removeRecord = tableStore.data
+            infoModal.value = true
+            infoModalTitle.value = 'Remover Expediente:  ' + tableStore.data.id_record
+            infoModalText.value = 'Este Expediente sera desasignado pero se conservaran los datos. Esta seguro que quiere continuar?'
             tableStore.$reset()
         }
     }
 );
 
 </script>
+
+
+<style>
+.fadeRight {
+    animation: fadeRight 0.5s ease 0s 1 normal forwards;
+}
+
+@keyframes fadeRight {
+    0% {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+</style>

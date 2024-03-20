@@ -17,3 +17,31 @@ export async function getLots(data = null) {
         throw error;
     }
 }
+
+export async function popRecordFromLot(data = null) {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/removefromlot',
+            method: 'DELETE',
+            timeout: 5000,
+            data: data,
+        });
+    } catch (error) {
+        console.error('Error fetching lots:', error);
+        throw error;
+    }
+}
+
+export async function updateLot(data = null) {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/update',
+            method: 'PUT',
+            timeout: 5000,
+            data: data,
+        });
+    } catch (error) {
+        console.error('Error fetching lots:', error);
+        throw error;
+    }
+}

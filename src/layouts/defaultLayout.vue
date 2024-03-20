@@ -1,11 +1,12 @@
 <template>
+    <title>G-SOFT</title>
     <div class="flex flex-row h-screen w-screen">
-        <div :class="'duration-200 ease-out ' + (drawerStatus ? 'w-60' : 'w-0')">
+        <div :class="'duration-200 ease-out  ' + (drawerStatus ? 'w-60' : 'w-0')">
             <Drawer v-if="drawerStatus" :drawer-open="drawerStatus" />
         </div>
-        <div class="w-full bg-base-200" :style="contentStyles">
+        <div class="bg-base-300 w-full " :style="contentStyles">
             <NavBar :toggle-drawer="toggleDrawer" />
-            <div class="p-2">
+            <div class="p-2 bg-base-300  ">
                 <slot></slot>
             </div>
         </div>
@@ -52,4 +53,10 @@ const contentStyles = computed(() => {
     return { 'max-width': `${contentWidth.value}px` };
 });
 </script>
-  
+
+<style>
+.shadow{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+</style>

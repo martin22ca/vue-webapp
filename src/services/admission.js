@@ -19,6 +19,7 @@ export async function isAuth(tokenData) {
 
 export async function loginUser(data) {
     try {
+        
         return await axiosClient({
             url: BASE_URL + '/login',
             method: 'POST',

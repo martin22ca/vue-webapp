@@ -18,14 +18,31 @@ export async function getRecords(data = null) {
     }
 }
 
-export async function getRecordsInfo(data = null) {
+
+export async function getRecordsMain(data = null) {
+    try {
+        const stringifiedData = JSON.stringify(data);
+
+        return await axiosClient({
+            url: BASE_URL + '/main',
+            method: 'GET',
+            timeout: 5000,
+            params: { filters: stringifiedData }
+        })
+    } catch (error) {
+        console.error('Error fetching records:', error);
+        throw error
+    }
+}
+
+export async function getRecordsInfo(data = null, idLot = null) {
     try {
         const stringifiedData = JSON.stringify(data);
         return await axiosClient({
             url: BASE_URL + '/info',
             method: 'GET',
             timeout: 5000,
-            params: { filters: stringifiedData }
+            params: { filters: stringifiedData, 'id_lot': idLot }
         })
     } catch (error) {
         console.error('Error fetching records:', error);
@@ -89,3 +106,19 @@ export async function saveRecordsUser(data = null) {
         throw error
     }
 }
+
+
+export async function removeRecordUser(data = null) {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/removeuserecord',
+            method: 'PUT',
+            timeout: 5000,
+            data: data
+        })
+    } catch (error) {
+        console.error('Error updating records:', error);
+        throw error
+    }
+}
+removeRecordUser

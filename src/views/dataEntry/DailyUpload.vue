@@ -1,13 +1,17 @@
 <template>
     <defaultLayout>
+        <Breadcrumbs />
+        <h1 class="p-2">Carga de datos</h1>
         <div class="flex flex-col">
             <div class="top">
                 <div class="card w-auto bg-base-100 shadow-md m-2">
                     <div class="card-title flex flex-row text-center p-4">
                         <ul class="steps w-full">
                             <li class="step step-success">Carga Prevencion</li>
-                            <li :class="'step ' + (state1 ? 'step-success' : '')">Carga Asignacion</li>
-                            <li :class="'step ' + ((state1 && state2) ? 'step-success' : '')">Carga Manual</li>
+                            <li :class="'step ' + (state1 ? 'step-success' : '')">Carga
+                                Asignacion</li>
+                            <li :class="'step ' + ((state1 && state2) ? 'step-success' : '')">
+                                Carga Manual</li>
                         </ul>
                     </div>
                 </div>
@@ -20,19 +24,13 @@
                         description="Segundo se deben cargar las asignaciones recibidas por correo de Prevencion. Esta debe estar en formato CSV" />
                 </div>
             </div>
-            <div class="card bg-base-100 m-2 p-4 shadow-md">
-                <h2 class="card-title">3. Carga Manual de Datos</h2>
-                <p>Una vez cargados los datos se pueden ver y modificar los expedientes</p>
-                <div class="card-actions justify-end">
-                    <button class="btn btn-primary my-2" @click="goTo()">ver Expedientes</button>
-                </div>
-            </div>
         </div>
     </defaultLayout>
 </template>
 
 
 <script setup>
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { useRouter } from 'vue-router';
 import defaultLayout from '@/layouts/defaultLayout.vue'
 import FileUpload from './FileUpload.vue'
@@ -48,7 +46,7 @@ const lastLoad2 = ref(null)
 const Now = new Date()
 Now.setHours(0, 0, 0, 0);
 
-const goTo = () =>{
+const goTo = () => {
     console.log(router)
     router.push('/records')
 }

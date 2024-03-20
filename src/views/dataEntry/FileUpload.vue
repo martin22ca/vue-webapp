@@ -4,27 +4,30 @@
             :toggle-modal="() => { configXlS = !configXlS }"></ConfigData>
     </MCModal>
     <MCModal :modal-open="modalControl.status" :modal-text="modalControl.text" :modal-title="modalControl.title"
-        :toggle-modal="() => { toggleModal()}">
+        :toggle-modal="() => { toggleModal() }">
         <span v-if="modalControl.loading" class="loading loading-dots loading-lg bg-primary"></span>
     </MCModal>
     <Toast :toast-open="toastControl.status" :toast-text="toastControl.text" :toggle-toast="toggleToast" />
     <div class="card card-compact w-auto bg-base-100 shadow-md basis-1/2 m-2 ">
         <div class="card-body">
-            <h2 class="card-title">{{ props.cardT }}</h2>
-            <p>{{ props.description }}</p>
-            <p class="py-2 text-lg">
+            <h2 class="card-title" style="font-size: 2.5vh ;">{{ props.cardT }}</h2>
+            <p style="font-size: 1.7vh ;">{{ props.description }}</p>
+            <p class="py-2 " style="font-size: 2vh ;">
                 Ulitma carga:
                 <span
-                    :class="'badge p-4 px-10 text-lg ' + (state ? 'bg-success text-success-content' : 'bg-warning text-warning-content')">
-                    <Icon icon="material-symbols:calendar-month" class="text-xl mx-2" />{{ lastLoad }}
+                    :class="'badge badge-sm p-4 px-5  ' + (state ? 'bg-success text-success-content' : 'bg-warning text-warning-content')">
+                    <Icon icon="material-symbols:calendar-month" class="mx-2" style="font-size: 1.5vh ;" />
+                    {{ lastLoad }}
                 </span>
             </p>
             <div class="card bg-base-100 m-2 flex flex-row">
-                <div v-if="props.state" class="badge badge-lg bg-success w-full h-10 text-success-content">
+                <div v-if="props.state" class="bbadge badge-sm p-4 px-5 bg-success  h-10 text-success-content"
+                    style="font-size: 1.5vh ;">
                     Estado: Cargado
                     <Icon class="text-2xl ml-4" icon="icon-park-solid:success" />
                 </div>
-                <div v-else class="badge badge-lg bg-warning w-full h-10 text-warning-content">
+                <div v-else class="badge badge-sm p-4 px-5 bg-warning  h-10 text-warning-content"
+                    style="font-size: 1.5vh ;">
                     Estado: Esperando
                     <span class="ml-4 loading loading-dots loading-md" />
                 </div>

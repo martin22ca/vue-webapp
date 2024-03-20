@@ -3,7 +3,7 @@
         <div class="flex flex-col flex-grow">
             <div class="grid grid-cols-7 grid-rows-6 gap-4 m-4">
                 <div class="col-span-2 row-span-2">
-                    <div class="stat bg-base-100 rounded-lg h-full">
+                    <div class="stat bg-base-100 shadow rounded-lg h-full">
                         <div class="stat-figure text-primary">
                             Wow!
                         </div>

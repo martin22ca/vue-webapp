@@ -55,6 +55,12 @@ import { userDataStore } from '@/store/userStore'
 import { loginUser } from '@/services/admission'
 import * as Yup from "yup";
 import { useField, useForm } from 'vee-validate'
+import { onBeforeMount } from 'vue';
+import { usethemeStore } from '@/store/themeStore'
+
+const themeStore = usethemeStore()
+
+
 
 const screenSaverActive = ref(false);
 const store = userDataStore()
@@ -115,6 +121,10 @@ const setScreen = () => {
     screenSaverActive.value = !screenSaverActive.value
     console.log(screenSaverActive.value)
 }
+
+onBeforeMount(() => {
+    document.getElementsByTagName("html")[0].setAttribute('data-theme', themeStore.currentTheme);
+})
 
 </script>
 

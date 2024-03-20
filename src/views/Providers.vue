@@ -1,12 +1,7 @@
 <template>
     <defaultLayout>
         <div class="h-auto">
-            <div class="text-sm breadcrumbs p-2">
-                <ul>
-                    <li><a>Home</a></li>
-                    <li><a>Prestadores</a></li>
-                </ul>
-            </div>
+            <Breadcrumbs/>
             <div>
                 <h1 class="text-2xl p-2">Prestadores</h1>
             </div>
@@ -26,6 +21,7 @@
 </template>
 
 <script setup>
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import Toast from "@/components/Toast.vue";
 import modalProvider from "@/components/Modals/modalProvider.vue";
 import { Icon } from "@iconify/vue";

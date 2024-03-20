@@ -14,7 +14,7 @@
         <Toast :toast-open="toastVal" :toast-text="toastText" :toast-success="toastSuccess"
             :toggle-toast="() => { toastVal = !toastVal }"></Toast>
         <modalUser v-if="userModal" :modal-open="userModal" :user="userData"
-            :toggleModal="() => { userModal = !userModal; toastText = 'Usuario Actualizado/Creado'; toastSuccess = true; toastVal = !toastVal; fetchResources() }" />
+            :toggleModal="() => { userModal = !userModal; fetchResources() }" />
         <div class="h-auto">
             <div class="text-sm breadcrumbs p-2">
                 <ul>
