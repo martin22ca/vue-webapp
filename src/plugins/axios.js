@@ -1,13 +1,10 @@
 import axios from 'axios'
-const API_HOST = import.meta.env.VITE_API_HOST
-const PORT = import.meta.env.VITE_PORT
-const PROTOCOL = 'http://';
+
+const API_BASE_URL = '/api';
 
 const createAxiosClient = () => {
-    console.log('test');
-    console.log(`${PROTOCOL}${API_HOST}:${PORT}`);
     return axios.create({
-        baseURL: `${PROTOCOL}${API_HOST}:${PORT}`,
+        baseURL: API_BASE_URL,
     });
 }
 export const axiosClient = createAxiosClient();
