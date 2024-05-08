@@ -9,7 +9,7 @@ export async function getUsers(data) {
         return await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
             params: { filters: stringifiedData }
         })
     } catch (error) {
@@ -24,7 +24,7 @@ export async function registerUser(data) {
         return await axiosClient({
             url: BASE_URL + '/register',
             method: 'POST',
-            timeout: 5000,
+            timeout: 10000,
             data: data
         })
     } catch (error) {
@@ -39,7 +39,7 @@ export async function updateUser(data) {
         return await axiosClient({
             url: BASE_URL + '/update',
             method: 'PUT',
-            timeout: 5000,
+            timeout: 10000,
             data: data
         })
     } catch (error) {
@@ -53,7 +53,7 @@ export async function removeUser(data) {
         return await axiosClient({
             url: BASE_URL + '/remove',
             method: 'DELETE',
-            timeout: 5000,
+            timeout: 10000,
             data: data
         })
     } catch (error) {

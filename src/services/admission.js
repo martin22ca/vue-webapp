@@ -8,7 +8,7 @@ export async function isAuth(tokenData) {
         return await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
-            timeout: 1000,
+            timeout: 5000,
             params: { token: tokenData }
         })
     } catch (error) {

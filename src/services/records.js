@@ -9,7 +9,7 @@ export async function getRecords(data = null) {
         return await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
             params: { filters: stringifiedData }
         })
     } catch (error) {
@@ -26,7 +26,7 @@ export async function getRecordsMain(data = null) {
         return await axiosClient({
             url: BASE_URL + '/main',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
             params: { filters: stringifiedData }
         })
     } catch (error) {
@@ -41,7 +41,7 @@ export async function getRecordsInfo(data = null, idLot = null) {
         return await axiosClient({
             url: BASE_URL + '/info',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
             params: { filters: stringifiedData, 'id_lot': idLot }
         })
     } catch (error) {
@@ -56,7 +56,7 @@ export async function getRecordsInfoUser(token, data = null) {
         return await axiosClient({
             url: BASE_URL + '/userInfo',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
             params: { token: token, filters: stringifiedData }
         })
     } catch (error) {
@@ -70,7 +70,7 @@ export async function addRecordtoUser(data = null) {
         return await axiosClient({
             url: BASE_URL + '/addrecord',
             method: 'POST',
-            timeout: 5000,
+            timeout: 10000,
             data: data
         })
     } catch (error) {
@@ -84,7 +84,7 @@ export async function updateRecordsUser(data = null) {
         return await axiosClient({
             url: BASE_URL + '/updaterecord',
             method: 'PUT',
-            timeout: 5000,
+            timeout: 10000,
             data: data
         })
     } catch (error) {
@@ -98,7 +98,7 @@ export async function saveRecordsUser(data = null) {
         return await axiosClient({
             url: BASE_URL + '/saverecords',
             method: 'PUT',
-            timeout: 5000,
+            timeout: 10000,
             data: data
         })
     } catch (error) {
@@ -113,7 +113,7 @@ export async function removeRecordUser(data = null) {
         return await axiosClient({
             url: BASE_URL + '/removeuserecord',
             method: 'PUT',
-            timeout: 5000,
+            timeout: 10000,
             data: data
         })
     } catch (error) {

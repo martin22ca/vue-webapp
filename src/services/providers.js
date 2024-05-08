@@ -9,7 +9,7 @@ export async function getProviders(data = null) {
         return await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
             params: { filters: stringifiedData },
         });
     } catch (error) {

@@ -9,7 +9,7 @@ export async function getLots(data = null) {
         return await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
             params: { filters: stringifiedData },
         });
     } catch (error) {
@@ -23,7 +23,7 @@ export async function popRecordFromLot(data = null) {
         return await axiosClient({
             url: BASE_URL + '/removefromlot',
             method: 'DELETE',
-            timeout: 5000,
+            timeout: 10000,
             data: data,
         });
     } catch (error) {
@@ -37,7 +37,7 @@ export async function updateLot(data = null) {
         return await axiosClient({
             url: BASE_URL + '/update',
             method: 'PUT',
-            timeout: 5000,
+            timeout: 10000,
             data: data,
         });
     } catch (error) {

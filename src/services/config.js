@@ -9,7 +9,7 @@ export async function getConfig() {
         return await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
         })
     } catch (error) {
         console.error('Error fetching configuration:', error);
@@ -21,7 +21,7 @@ export async function setCols(data, idCol) {
         return await axiosClient({
             url: BASE_URL + '/setCols',
             method: 'POST',
-            timeout: 5000,
+            timeout: 10000,
             data: { data: data, id: idCol }
         })
     } catch (error) {
@@ -35,7 +35,7 @@ export async function getConfigId(idCol) {
         return await axiosClient({
             url: BASE_URL + '/cols',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
             params: {id: idCol }
         })
     } catch (error) {
@@ -49,7 +49,7 @@ export async function getfilters() {
         return await axiosClient({
             url: BASE_URL + '/filters',
             method: 'GET',
-            timeout: 5000,
+            timeout: 10000,
 
         })
     } catch (error) {
