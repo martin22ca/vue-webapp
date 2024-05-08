@@ -63,7 +63,7 @@ export async function postAssignment(formData) {
         return await axiosClient({
             url: BASE_URL + '/assignment',
             method: 'POST',
-            timeout: 60000,
+            timeout: 120000,
             headers: { 'Content-Type': 'multipart/form-data' },
             data: formData
         })
@@ -78,7 +78,7 @@ export async function postDb(formData) {
         return await axiosClient({
             url: BASE_URL + '/db',
             method: 'POST',
-            timeout: 120000,
+            timeout: 1200000,
             headers: { 'Content-Type': 'multipart/form-data' },
             data: formData
         })
