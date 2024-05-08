@@ -34,6 +34,11 @@ const routes = [
     component: () => import('@/views/management/Users.vue'),
   },
   {
+    path: '/management/setroles',
+    name: 'SetRoles',
+    component: () => import('@/views/management/Roles.vue'),
+  },
+  {
     path: '/management/roles',
     name: 'Roles',
     component: () => import('@/views/management/Roles.vue'),
