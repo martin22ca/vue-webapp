@@ -10,30 +10,28 @@
     <Toast :toast-open="toastControl.status" :toast-text="toastControl.text" :toggle-toast="toggleToast" />
     <div class="card card-compact w-auto bg-base-100 shadow-md basis-1/2 m-2 ">
         <div class="card-body">
-            <h2 class="card-title" style="font-size: 2.5vh ;">{{ props.cardT }}</h2>
-            <p style="font-size: 1.7vh ;">{{ props.description }}</p>
-            <p class="py-2 " style="font-size: 2vh ;">
+            <h3 class="card-title">{{ props.cardT }}</h3>
+            <p>{{ props.description }}</p>
+            <p class="py-2 ">
                 Ulitma carga:
                 <span
-                    :class="'badge badge-sm p-4 px-5  ' + (state ? 'bg-success text-success-content' : 'bg-warning text-warning-content')">
-                    <Icon icon="material-symbols:calendar-month" class="mx-2" style="font-size: 1.5vh ;" />
+                    :class="'badge badge-sm p-4 px-5 text-md ' + (state ? 'bg-success text-success-content' : 'bg-warning text-warning-content')">
+                    <Icon icon="material-symbols:calendar-month" class="mx-2" style="font-size: 1rem;" />
                     {{ lastLoad }}
                 </span>
             </p>
             <div class="card bg-base-100 m-2 flex flex-row">
-                <div v-if="props.state" class="bbadge badge-sm p-4 px-5 bg-success  h-10 text-success-content"
-                    style="font-size: 1.5vh ;">
+                <div v-if="props.state" class="badge badge-sm p-4 px-5 bg-success  h-10 text-success-content">
                     Estado: Cargado
                     <Icon class="text-2xl ml-4" icon="icon-park-solid:success" />
                 </div>
-                <div v-else class="badge badge-sm p-4 px-5 bg-warning  h-10 text-warning-content"
-                    style="font-size: 1.5vh ;">
+                <div v-else class="badge badge-sm p-4 px-5 bg-warning  h-10 text-warning-content">
                     Estado: Esperando
                     <span class="ml-4 loading loading-dots loading-md" />
                 </div>
             </div>
-            <input ref="fileInputRef" @change="handleFileChange" type="file" class="w-full file-input file-input-bordered"
-                placeholder="buscar"
+            <input ref="fileInputRef" @change="handleFileChange" type="file"
+                class="w-full file-input file-input-bordered" placeholder="buscar"
                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                 size="" />
             <div class="card-actions justify-end">

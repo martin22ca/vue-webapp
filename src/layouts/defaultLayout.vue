@@ -12,7 +12,7 @@
         </div>
     </div>
 </template>
-  
+
 <script setup lang="ts">
 import Drawer from '@/components/Drawer/Drawer.vue'
 import NavBar from '@/components/NavBar.vue';
@@ -55,8 +55,24 @@ const contentStyles = computed(() => {
 </script>
 
 <style>
-.shadow{
+.shadow {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+h1 {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    /* Adjust the minimum and maximum values as needed */
+}
+
+h2 {
+    font-size: clamp(1.3rem, 3vw, 2rem);
+}
+
+h3 {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+}
+
+p {
+    font-size: 1rem;
+}
 </style>

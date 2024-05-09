@@ -2,9 +2,7 @@
     <defaultLayout>
         <div class="h-auto">
             <Breadcrumbs/>
-            <div>
-                <h1 class="text-2xl p-2">Prestadores</h1>
-            </div>
+            <h2 class="p-2">Prestadores</h2>
             <modalProvider v-if="providerModal" :modal-open="providerModal" :provider="providerData"
                 :toggleModal="() => { providerModal = !providerModal; toastText = 'Usuario Actualizado/Creado'; toastSuccess = true; toastVal = !toastVal; fetchResources() }" />
             <Toast :toast-open="toastVal" :toast-text="toastText" :toast-success="toastSuccess"

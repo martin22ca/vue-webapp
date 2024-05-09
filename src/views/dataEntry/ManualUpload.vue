@@ -161,7 +161,7 @@ const removeAssigned = async () => {
 
     const res = await removeRecordUser(data)
     console.log(res)
-    if (res.success) {
+    if (res.data.success) {
         toasText.value = res.data.message
         toastOpen.value = true
     } else {
@@ -208,9 +208,8 @@ const changeRecordNum = async (e) => {
         }
     } else {
         if (!e.detail.model.worked_on) {
-            const rowIndex = e.detail.rowIndex
-            console.log(rowIndex, dbRecords.value[rowIndex])
-            let element = dbRecords.value.splice(rowIndex, 1)[0];
+            const element_index = dbRecords.value.findIndex((item) => item.id_record == e.detail.model['id_record'])
+            let element = dbRecords.value.splice(element_index, 1)[0];
             element['worked_on'] = true
             editedRecords.value.push(element)
         }

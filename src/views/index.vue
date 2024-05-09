@@ -46,9 +46,7 @@
                 <div class="col-span-3 row-span-2 col-start-5 row-start-1">
                     <div class="bg-base-100 h-full text-center p-4">
                         <div class="flex-col lg:flex-row">
-                            <div>
-                                <h1 class="text-4xl font-bold text-center">Bienvenido, {{ name }}</h1>
-                            </div>
+                            <h2 class="font-bold text-center">Bienvenido, {{ name }}</h2>
                         </div>
                     </div>
                 </div>

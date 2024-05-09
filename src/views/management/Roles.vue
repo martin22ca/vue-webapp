@@ -14,35 +14,42 @@
         <Toast :toast-open="toastVal" :toast-text="toastText" :toast-success="toastSuccess"
             :toggle-toast="() => { toastVal = !toastVal }"></Toast>
         <Breadcrumbs />
-        <h2 class="text-2xl p-2">Roles</h2>
-        <div class="flex gap-2 m-2 max-w-full">
-            <div class="bg-base-200 rounded-xl" :class="currentRole != null ? ' basis-1/3' : 'w-full'">
-                <table class="table-auto w-full">
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-2">ID</th>
-                            <th class="px-4 py-2">Title</th>
-                            <th class="px-4 py-2">Description</th>
-                            <th class="px-4 py-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="role in roles" :key="role.id">
-                            <td class="border px-4 py-2">{{ role.id }}</td>
-                            <td class="border px-4 py-2">{{ role.title }}</td>
-                            <td class="border px-4 py-2">{{ role.description }}</td>
-                            <td class="border px-4 py-2">
-                                <button @click="viewConfig(role)"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    View Config
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div v-if="currentRole != null" class="bg-base-200 basis-2/3">
-                hola
+        <div class="flex justify-center items-center ">
+            <div class="max-w-3xl w-full p-8 bg-base-200 rounded-lg shadow">
+                <div v-if="currentRole === null">
+                    <h2 class="text-2xl font-bold mb-4">Selecionar Rol</h2>
+                    <ul>
+                        <li v-for="role in roles" :key="role.id" @click="currentRole = role"
+                            class="cursor-pointer py-2 px-4 mb-2 rounded-md bg-blue-500 text-white hover:bg-blue-600">
+                            {{ role.name }}
+                        </li>
+                    </ul>
+                </div>
+
+                <div v-else>
+                    <h2 class="text-2xl font-bold mb-4">Detalles de {{ currentRole.name }} </h2>
+                    <div class="flex mb-8">
+                        <div class="w-1/2 pr-4">
+                            <p class="font-semibold">Descripcion:</p>
+                            <p>{{ currentRole.description }}</p>
+                            <p class="font-semibold mt-4">Permisos:</p>
+                            <p>{{ currentRole.permissions }}</p>
+                            <!-- Add more role details as needed -->
+                        </div>
+
+                        <div class="w-1/2 pl-4 border-l">
+                            <h3 class="text-lg font-semibold mb-2">Users with {{ currentRole.name }} Role</h3>
+                            <ul>
+                                <li v-for="user in currentRole.users" :key="user.id"
+                                    class="py-2 px-4 mb-2 rounded-md bg-gray-200">
+                                    {{ user.name }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Add edit role and manage users buttons or components here -->
+                </div>
             </div>
         </div>
 
@@ -67,8 +74,14 @@ const toastSuccess = ref(false)
 const toastVal = ref(false)
 const toastText = ref('')
 const loading = ref(true)
-const roles = ref(null)
+const rolesx = ref(null)
 const currentRole = ref(null)
+
+const roles = [
+    { id: 1, name: 'Admin', description: 'Admin role', permissions: 'All', users: [{ id: 1, name: 'User 1' }, { id: 2, name: 'User 2' }] },
+    { id: 2, name: 'Editor', description: 'Editor role', permissions: 'Limited', users: [{ id: 3, name: 'User 3' }] },
+    // Add more roles as needed
+]
 
 const fetchRoles = async () => {
     const { data } = await getRoles()

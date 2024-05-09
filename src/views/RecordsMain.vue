@@ -1,7 +1,7 @@
 <template>
     <defaultLayout>
         <Breadcrumbs />
-        <h1 class="text-2xl p-2">Expedientes</h1>
+        <h2 class="p-2">Expedientes</h2>
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
             class="w-full mr-2" :rowSize="60">
         </DataTable>

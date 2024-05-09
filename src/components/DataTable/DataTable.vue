@@ -119,7 +119,7 @@
       </div>
     </MCModal>
     <div class="table-wrapper ">
-      <div class="flex flex-row p-4 gap-2 bg-base-100 sticky top-0">
+      <div class="flex flex-row p-4 gap-2 bg-base-100 top-0">
         <button v-if="props.btnCols" class="btn btn-secondary mx-1" @click="columnDialog = true">
           <Icon icon="mdi:format-columns" class="text-2xl text-neutral rounded-xl cursor-pointer" />
         </button>
@@ -332,7 +332,6 @@ onMounted(async () => {
   margin-left: 10px;
   margin-right: 20px;
   margin-bottom: 10px;
-  height: 80vh;
   overflow-y: auto;
   border-radius: 10px;
 }

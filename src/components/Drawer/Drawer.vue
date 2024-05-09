@@ -2,24 +2,23 @@
   <div class='drawer w-60 fixed'>
     <input id="my-drawer" type="checkbox" class="drawer-toggle " />
     <aside class="w-60 h-screen bg-base-100 flex flex-col border-r-2 border-neutral sticky end-0">
-      <div class="bg-base-100 z-20 hidden items-center gap-2 bg-opacity-90 px-4 py-2 backdrop-blur lg:flex ">
-        <a href="/" aria-current="page" aria-label="Homepage" class="flex-0 px-2">
-          <div class="uppercase font-bold inline-flex text-lg md:text-2xl text-accent">G-<span
-              class="salud text-base-content">Salud</span>
+      <div class="top">
+        <a href="/" aria-current="page" aria-label="Homepage">
+          <div class="uppercase font-bold text-3xl text-accent text-center bg-base-200 bg-rounded py-2 mx-4 rounded-xl">
+            G-<span class="salud text-base-content">Salud</span>
           </div>
         </a>
-      </div>
-      <div class="menu pl-0 bg-base-100 text-base-content oveflow-y-scroll" style="max-height: 70%;">
-        <DrawerItem v-for="Item in itemArr" :title="Item.title" :icon="Item.icon" :route="Item.route"
-          :children="Item.children" />
-      </div>
-      <div class="mt-auto items-center p-5">
-        <div>
-          <ThemePicker />
-          <button class="btn w-full" @click="logOut">
-            Log Out
-          </button>
+        <div class="menu menu-horizontal pl-0 bg-base-100 text-base-content overflow-y-scroll overflow-x-hidden center" style="max-height: 70vh;">
+          <DrawerItem v-for="Item in itemArr" :title="Item.title" :icon="Item.icon" :route="Item.route"
+            :children="Item.children" />
         </div>
+      </div>
+      <span class="my-auto"></span>
+      <div class="bottom mx-auto items-center p-2">
+        <ThemePicker class="m-aut" />
+        <button class="btn w-full" @click="logOut">
+          Log Out
+        </button>
       </div>
     </aside>
   </div>

@@ -7,12 +7,6 @@ export interface MenuItem {
 
 export const Items: Array<MenuItem> = [
     {
-        title: 'Home',
-        icon: 'bx:home',
-        route: '/',
-        children: undefined
-    },
-    {
         title: 'DB Prevencion',
         icon: 'mdi:database',
         route: '/recordsDB',
@@ -83,6 +77,12 @@ export const Items: Array<MenuItem> = [
                 title: 'Usuarios',
                 icon: 'ph:users',
                 route: '/management/users',
+                children: undefined
+            },
+            {
+                title: 'Set Roles',
+                icon: 'mdi:lock-pattern',
+                route: '/management/setroles',
                 children: undefined
             },
             {
