@@ -18,12 +18,12 @@ export async function getRecords(data = null) {
 }
 
 
-export async function getRecordsMain(data = null) {
+export async function getRecordsAssigned(data = null) {
     try {
         const stringifiedData = JSON.stringify(data);
 
         return await axiosClient({
-            url: BASE_URL + '/main',
+            url: BASE_URL + '/assigned',
             method: 'GET',
             params: { filters: stringifiedData }
         })

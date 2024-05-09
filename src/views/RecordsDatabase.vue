@@ -52,7 +52,7 @@ const headers = [
     { prop: 'date_vto_carga', name: 'fecha vto carga', valType: 'text' },
     { prop: 'status', name: 'Estado', valType: 'text' },
     { prop: 'assigned_user', name: 'Usuario', valType: 'text' },
-    { prop: 'avance', name: 'Avance', cellTemplate: VGridVueTemplate(DataTableProgres), size: 300, valType: 'number' },
+    { prop: 'avance', name: 'Avance', cellTemplate: VGridVueTemplate(DataTableProgres), size: 150, valType: 'number' },
 ]
 const records = ref([])
 let filters = []

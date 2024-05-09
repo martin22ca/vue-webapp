@@ -5,8 +5,8 @@
       <div className="grid grid-cols-2 grid-rows-1 gap-3 overflow-y-auto" style="max-height: 80vh;">
         <div>
           <h2 class="text-xl mb-2">Columnas disponibles</h2>
-          <draggable class="dragArea list-group" :list="baseCols" :group="{ name: 'columns', pull: 'clone', put: false }"
-            item-key="prop" :clone="cloneCol">
+          <draggable class="dragArea list-group" :list="baseCols"
+            :group="{ name: 'columns', pull: 'clone', put: false }" item-key="prop" :clone="cloneCol">
             <template #item="{ element }">
               <div class="list-group-item">
                 <div class="my-1 p-2 bg-base-200 rounded-lg justify-between flex flex-row">
@@ -35,7 +35,7 @@
                   <div>
                     {{ element.name }}
                   </div>
-                  <button class="btn btn-error btn-circle btn-sm mr-2" @click="colsToRemove.push(element.prop)">
+                  <button class="btn btn-error btn-circle btn-sm mr-2" @click="selectColDel(element.prop)">
                     ✕
                   </button>
                 </div>
@@ -135,9 +135,10 @@
           <slot name="table_options"></slot>
         </div>
       </div>
-      <v-grid v-if="!props.loading && refresh && props.rows.length > 0" id="datagrid" theme="compact" :source="props.rows"
-        :columns="selectedCols" class="MCGrid" resize="true" editors="text" range="true" autoSizeColumn="true"
-        :row-size="props.rowSize" :columnTypes='props.columnTypes' @beforeedit="gridAfterEdit"></v-grid>
+      <v-grid v-if="!props.loading && refresh && props.rows.length > 0" id="datagrid" theme="compact"
+        :source="props.rows" :columns="selectedCols" class="MCGrid" resize="true" editors="text" range="true"
+        autoSizeColumn="true" :row-size="props.rowSize" :columnTypes='props.columnTypes'
+        @beforeedit="gridAfterEdit"></v-grid>
       <div v-else class="flex flex-1 justify-center mt-20 ">
         <Loader v-if="props.loading" />
         <div v-else class="flex flex-col flex-1 justify-center ">
@@ -152,7 +153,7 @@
     </div>
   </div>
 </template>
-  
+
 <script setup>
 import MCModal from '../Modals/MCModal.vue';
 import draggable from 'vuedraggable'
@@ -213,6 +214,15 @@ const removeCols = () => {
   colsToRemove.value = []
   columnDialog.value = false
 }
+
+const selectColDel = (element) => {
+  const colIdx = colsToRemove.value.findIndex((col) => col === element);
+  if (colIdx === -1) {
+    colsToRemove.value.push(element);
+  } else {
+    colsToRemove.value.splice(colIdx, 1);
+  }
+};
 
 
 const cancelCols = () => {
@@ -323,7 +333,7 @@ onMounted(async () => {
   filters.value = response.data
 })
 </script>
-  
+
 <style>
 .table-wrapper {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;

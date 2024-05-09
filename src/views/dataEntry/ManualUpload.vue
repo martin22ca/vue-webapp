@@ -66,7 +66,7 @@ const headers = [
     { prop: 'date_entry_physical', name: 'Fecha Fisico', valType: 'date', size: 150 },
     { prop: 'seal_number', name: 'Nro Precinto', valType: 'number' },
     { prop: 'observation', name: 'Observacion', valType: 'text', size: 300 },
-    { prop: 'info', name: 'Info', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableInfoDelete), size: 150, readonly: true },
+    { prop: 'info', name: 'Info', pin: 'colPinEnd',valType: 'bool', cellTemplate: VGridVueTemplate(DataTableInfoDelete), size: 110, readonly: true },
 ]
 
 const infoModal = ref(false)

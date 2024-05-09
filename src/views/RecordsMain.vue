@@ -1,7 +1,7 @@
 <template>
     <defaultLayout>
         <Breadcrumbs />
-        <h2 class="p-2">Expedientes</h2>
+        <h2 class="p-2">Expedientes Asignados</h2>
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
             class="w-full mr-2" :rowSize="60">
         </DataTable>
@@ -14,15 +14,17 @@ import { VGridVueTemplate } from '@revolist/vue3-datagrid';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { onMounted, ref } from 'vue';
 import DataTableProgres from '@/components/DataTable/DataTableProgres.vue';
+import DataTableGroup from '@/components/DataTable/DataTableGroup.vue'
 import DataTable from '@/components/DataTable/DataTable.vue';
-import { getRecordsMain } from '@/services/records'
+import { getRecordsAssigned } from '@/services/records'
+import DataTableCheckbox from '@/components/DataTable/DataTableCheckbox.vue'
 
 const headers = [
-    { prop: 'id', name: 'Nro Exp', pin: 'colPinStart', valType: 'number' },
+    { prop: 'id_record', name: 'Nro Exp', pin: 'colPinStart', valType: 'number' },
     { prop: 'id_provider', name: 'Prestador', valType: 'number' },
-    { prop: 'date_liquid', name: 'fecha liquid', valType: 'date' },
-    { prop: 'date_recep', name: 'fecha recep', valType: 'date' },
-    { prop: 'date_audi_vto', name: 'fecha audi vto', valType: 'date' },
+    { prop: 'date_liquid', name: 'Fecha liquid', valType: 'date' },
+    { prop: 'date_recep', name: 'Fecha recep', valType: 'date' },
+    { prop: 'date_audi_vto', name: 'Fecha audi vto', valType: 'date' },
     { prop: 'date_period', name: 'Periodo', valType: 'date' },
     { prop: 'record_type', name: 'Tipo', valType: 'text' },
     { prop: 'totcal', name: 'Tot cal', valType: 'text' },
@@ -48,18 +50,28 @@ const headers = [
     { prop: 'cuenta', name: 'Cuenta', valType: 'text' },
     { prop: 'ambu_total', name: 'Ambu total', valType: 'text' },
     { prop: 'inter_total', name: 'Inter total', valType: 'text' },
-    { prop: 'audit_group', name: 'Grupo Auditor', valType: 'text' },
-    { prop: 'date_vto_carga', name: 'fecha vto carga', valType: 'text' },
-    { prop: 'status', name: 'Estado', valType: 'text' },
+    { prop: 'audit_group', name: 'Grupo Auditor',cellTemplate: VGridVueTemplate(DataTableGroup), valType: 'text' },
+    { prop: 'lot_key', name: 'LOTE', valType: 'text' },
+    { prop: 'date_vto_carga', name: 'Fecha vto carga', valType: 'text' },
+    { prop: 'date_assignment_case', name: 'Fecha asignamiento caso ', valType: 'text' },
+    { prop: 'date_entry_digital', name: 'Fecha Digital', valType: 'text' },
+    { prop: 'date_entry_physical', name: 'Fecha Fisico', valType: 'text' },
+    { prop: 'date_close', name: 'Fecha cierre', valType: 'text' },
+    { prop: 'seal_number', name: 'Precinto', valType: 'text' },
+    { prop: 'observation', name: 'Observacion', valType: 'text' },
+    { prop: 'lot_status', name: 'Estado Lote', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
+    { prop: 'date_assignment_lot', name: 'Fecha asignamiento lote', valType: 'text' },
+    { prop: 'date_return', name: 'Fecha retorno', valType: 'text' },
+    { prop: 'date_departure', name: 'Fecha salida', valType: 'text' },
     { prop: 'assigned_user', name: 'Usuario', valType: 'text' },
-    { prop: 'avance', name: 'Avance', cellTemplate: VGridVueTemplate(DataTableProgres), size: 300, valType: 'number' },
+    { prop: 'avance', name: 'Avance', cellTemplate: VGridVueTemplate(DataTableProgres), size: 150, valType: 'number' },
 ]
 const records = ref([])
 let filters = []
 const loading = ref(true)
 
 const fetchResources = async () => {
-    const { data } = await getRecordsMain(filters)
+    const { data } = await getRecordsAssigned(filters)
     records.value = data
     setTimeout(() => {
         loading.value = false
