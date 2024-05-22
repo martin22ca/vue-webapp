@@ -25,6 +25,18 @@ export const Items: Array<MenuItem> = [
         children: undefined
     },
     {
+        title: 'Auditor',
+        icon: 'mdi:face-agent',
+        route: '/audit',
+        children: [
+            {
+                title: 'Asignado',
+                icon: 'mdi:file-check-outline',
+                route: '/audit/',
+                children: undefined
+            }]
+    },
+    {
         title: 'Entradas',
         icon: 'ic:round-log-in',
         route: '/input',
@@ -77,12 +89,6 @@ export const Items: Array<MenuItem> = [
                 title: 'Usuarios',
                 icon: 'ph:users',
                 route: '/management/users',
-                children: undefined
-            },
-            {
-                title: 'Set Roles',
-                icon: 'mdi:lock-pattern',
-                route: '/management/setroles',
                 children: undefined
             },
             {

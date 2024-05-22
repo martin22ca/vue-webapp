@@ -11,9 +11,10 @@
                 </button>
             </div>
         </MCModal>
-        <Toast :duration="5" :toastOpen="toastOpen" :toggleToast="() => { toastOpen = !toastOpen }" :toastText="toasText" />
+        <Toast :duration="5" :toastOpen="toastOpen" :toggleToast="() => { toastOpen = !toastOpen }"
+            :toastText="toasText" />
         <div class="h-auto">
-            <Breadcrumbs/>
+            <Breadcrumbs />
             <div>
                 <h1 class="text-2xl p-2">Lotes</h1>
             </div>
@@ -21,16 +22,17 @@
                 <div v-if="currentLot == null" class="fadeRight w-full">
                     <DataTable :btnCols="false" :btnExport="false" :rows="lots" :cols="headerLots" :loading="loading">
                         <template #table_options>
-                            <h2 class="text-xl p-2 bg-neutral text-neutral-content p-2 rounded-xl">Lotes Disponibles</h2>
+                            <h2 class="text-xl p-2 bg-neutral text-neutral-content p-2 rounded-xl">Lotes Disponibles
+                            </h2>
                         </template>
                     </DataTable>
                 </div>
                 <div class="bg-base-300 basis-1/3 rounded-xl fadeRight " v-else>
-                    <modalLot :lot="currentLot" :clearLot="() => { currentLot = null }" />
+                    <lotEdit :lot="currentLot" :clearLot="() => { currentLot = null; fetchResources() }" />
                 </div>
                 <div v-if="currentLot != null" class="fadeLeft" style="max-width: 66%;">
-                    <DataTable v-if="recordsFromLot != null" class="w-full" :rows="recordsFromLot" :cols="headersRecords"
-                        :loading="loading">
+                    <DataTable v-if="recordsFromLot != null" class="w-full" :rows="recordsFromLot"
+                        :cols="headersRecords" :loading="loading">
                         <template #table_options>
                         </template>
                     </DataTable>
@@ -44,7 +46,7 @@
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import MCModal from '@/components/Modals/MCModal.vue';
-import modalLot from '@/components/Modals/modalLot.vue'
+import lotEdit from '@/components/CRUDs/LotEdit.vue';
 import DataTableCheckbox from '@/components/DataTable/DataTableCheckbox.vue';
 import DataTableInfo from '@/components/DataTable/DataTableInfo.vue';
 import DataTableInfoDelete from '@/components/DataTable/DataTableInfoDelete.vue';
@@ -72,14 +74,14 @@ let filtersLot = []
 let filtersLotRecords = []
 
 const headerLots = [
-    { prop: 'lot_key', name: 'Lote', valType: 'text' },
+    { prop: 'lot_key', pin: 'colPinStart', name: 'Lote', valType: 'text' },
     { prop: 'status', name: 'Activo', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
     { prop: 'total_records', name: 'Expedientes en el lote', valType: 'number', size: 200, readonly: true },
     { prop: 'user_name', name: 'Usuario Asignado', valType: 'text', size: 200, readonly: true },
     { prop: 'date_assigned', name: 'Fecha Asignacion', valType: 'date', size: 200, readonly: true },
     { prop: 'date_departure', name: 'Fecha Salida', valType: 'date', size: 200, readonly: true },
     { prop: 'date_return', name: 'Fecha retorno', valType: 'date', size: 200, readonly: true },
-    { name: 'Info', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true, size: 75 },
+    { name: 'Info', cellTemplate: VGridVueTemplate(DataTableInfo), pin: 'colPinEnd', readonly: true, size: 75 },
 ]
 
 const headersRecords = [
@@ -158,39 +160,3 @@ watch(
     }
 );
 </script>
-
-
-<style scoped>
-.fadeRight {
-    animation: fadeRight 0.5s ease 0s 1 normal forwards;
-}
-
-.fadeLeft {
-    animation: fadeLeft 0.5s ease 0s 1 normal forwards;
-}
-
-@keyframes fadeLeft {
-    0% {
-        opacity: 0;
-        transform: translateX(50px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes fadeRight {
-    0% {
-        opacity: 0;
-        transform: translateX(-50px);
-        /* Adjust the initial value to move left */
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-</style>

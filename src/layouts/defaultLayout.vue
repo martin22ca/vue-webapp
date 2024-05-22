@@ -69,10 +69,43 @@ h2 {
 }
 
 h3 {
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
 }
 
 p {
     font-size: 1rem;
+}
+
+.fadeRight {
+    animation: fadeRight 0.5s ease 0s 1 normal forwards;
+}
+
+.fadeLeft {
+    animation: fadeLeft 0.5s ease 0s 1 normal forwards;
+}
+
+@keyframes fadeLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeRight {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+        /* Adjust the initial value to move left */
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 </style>

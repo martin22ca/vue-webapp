@@ -4,7 +4,7 @@
     <aside class="w-60 h-screen bg-base-100 flex flex-col border-r-2 border-neutral sticky end-0">
       <div class="top">
         <a href="/" aria-current="page" aria-label="Homepage">
-          <div class="uppercase font-bold text-3xl text-accent text-center bg-base-200 bg-rounded py-2 mx-4 rounded-xl">
+          <div class="uppercase font-bold text-3xl text-accent text-center bg-base-200 bg-rounded py-2 mt-2 mx-4 rounded-xl">
             G-<span class="salud text-base-content">Salud</span>
           </div>
         </a>

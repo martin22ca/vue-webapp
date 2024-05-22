@@ -11,46 +11,43 @@
                 </button>
             </div>
         </MCModal>
+        <modalAddToRole v-if="userRoleModal" :modal-open="userRoleModal" :existing-users="userByRoles"
+            :toggle-modal="() => { userRoleModal = false;fetchUsersRoll() }"  :id-role="currentRole.id"/>
         <Toast :toast-open="toastVal" :toast-text="toastText" :toast-success="toastSuccess"
             :toggle-toast="() => { toastVal = !toastVal }"></Toast>
         <Breadcrumbs />
-        <div class="flex justify-center items-center ">
-            <div class="max-w-3xl w-full p-8 bg-base-200 rounded-lg shadow">
-                <div v-if="currentRole === null">
-                    <h2 class="text-2xl font-bold mb-4">Selecionar Rol</h2>
+
+        <h2 class="p-2" v-if="currentRole == null">Selecionar Rol</h2>
+        <div v-if="currentRole === null" class="fadeRight">
+            <div class="flex justify-center items-center ">
+                <div class="max-w-3xl w-full p-8 bg-base-200 rounded-lg shadow">
                     <ul>
-                        <li v-for="role in roles" :key="role.id" @click="currentRole = role"
-                            class="cursor-pointer py-2 px-4 mb-2 rounded-md bg-blue-500 text-white hover:bg-blue-600">
-                            {{ role.name }}
+                        <li v-for="role in sortedRoles" :key="role.id"
+                            class="py-2 px-4 mb-2 rounded-md bg-neutral text-white flex justify-between items-center">
+                            <div @click="currentRole = role">
+                                <h3>{{ role.id }} - {{ role.title }}</h3>
+                                <p class="truncate"> {{ role.description }}</p>
+                            </div>
+                            <button class="btn btn-primary" @click="selectRole(role)">Selecionar</button>
                         </li>
                     </ul>
                 </div>
-
-                <div v-else>
-                    <h2 class="text-2xl font-bold mb-4">Detalles de {{ currentRole.name }} </h2>
-                    <div class="flex mb-8">
-                        <div class="w-1/2 pr-4">
-                            <p class="font-semibold">Descripcion:</p>
-                            <p>{{ currentRole.description }}</p>
-                            <p class="font-semibold mt-4">Permisos:</p>
-                            <p>{{ currentRole.permissions }}</p>
-                            <!-- Add more role details as needed -->
-                        </div>
-
-                        <div class="w-1/2 pl-4 border-l">
-                            <h3 class="text-lg font-semibold mb-2">Users with {{ currentRole.name }} Role</h3>
-                            <ul>
-                                <li v-for="user in currentRole.users" :key="user.id"
-                                    class="py-2 px-4 mb-2 rounded-md bg-gray-200">
-                                    {{ user.name }}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Add edit role and manage users buttons or components here -->
-                </div>
             </div>
+        </div>
+        <div v-else class="fadeLeft flex">
+            <div style="width: 50%;">
+                <RoleEdit v-if="currentRole != null" :role="currentRole" 
+                    :clear-prop="() => { currentRole = null; fetchRoles() }" />
+            </div>
+            <DataTable v-if="currentRole != null" style="max-width: 50%;" :rows="userByRoles" :cols="userHeaders"
+                :loading="loading" >
+                <template #table_options>
+                    <button class="btn btn-secondary mx-2" @click="userRoleModal = true">
+                        <Icon icon="material-symbols:add" class="text-xl text-neutral" /> User
+                    </button>
+                </template>
+            </DataTable>
+
         </div>
 
     </defaultLayout>
@@ -58,35 +55,57 @@
 
 
 <script setup>
+import { computed, readonly } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import MCModal from "@/components/Modals/MCModal.vue";
+import modalAddToRole from '@/components/Modals/modalAddToRole.vue';
+import DataTable from '@/components/DataTable/DataTable.vue';
+import RoleEdit from '@/components/CRUDs/RoleEdit.vue';
 import Toast from "@/components/Toast.vue";
 import { Icon } from "@iconify/vue";
 import { ref, onMounted, watch } from 'vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { getRoles } from '@/services/roles'
+import { getUsersByRole } from '@/services/users'
 
 const infoModal = ref(false)
 const infoModalText = ref('')
 const infoModalTitle = ref('')
-const userModal = ref(false)
+const userRoleModal = ref(false)
 const toastSuccess = ref(false)
 const toastVal = ref(false)
 const toastText = ref('')
 const loading = ref(true)
-const rolesx = ref(null)
+const roles = ref([])
+const userByRoles = ref([])
 const currentRole = ref(null)
 
-const roles = [
-    { id: 1, name: 'Admin', description: 'Admin role', permissions: 'All', users: [{ id: 1, name: 'User 1' }, { id: 2, name: 'User 2' }] },
-    { id: 2, name: 'Editor', description: 'Editor role', permissions: 'Limited', users: [{ id: 3, name: 'User 3' }] },
-    // Add more roles as needed
+const userHeaders = [
+    { prop: 'id', name: 'ID', pin: 'colPinStart', size: 75 ,readonly:'true'},
+    { prop: 'user_name', size: 150, name: "Username" ,readonly:'true'},
+    { prop: 'first_name', size: 150, name: "Nombre" ,readonly:'true'},
+    { prop: 'last_name', size: 150, name: "Apellido" ,readonly:'true'},
 ]
+
+const sortedRoles = computed(() => {
+    return roles.value.slice().sort((a, b) => a.id - b.id);
+});
 
 const fetchRoles = async () => {
     const { data } = await getRoles()
     console.log(data)
     roles.value = data.data
+}
+
+const selectRole = (role) => {
+    currentRole.value = role
+    fetchUsersRoll()
+}
+
+const fetchUsersRoll = async () => {
+    const { data } = await getUsersByRole(currentRole.value['id'])
+    console.log(data)
+    userByRoles.value = data.data
     setTimeout(() => {
         loading.value = false
     }, 500)
@@ -97,3 +116,13 @@ onMounted(async () => {
 })
 
 </script>
+
+<style>
+.truncate {
+    width: 25vw;
+    /* Adjust the width as needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>

@@ -1,9 +1,9 @@
 <template>
     <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
-        <div class="modal-box modalAnim max-w-6xl bg-base-300 max-h-screen">
-            <button class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error'
+        <div class="modal-box modalAnim max-w-6xl bg-base-300 max-h-screen ">
+            <button class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
                 @click="props.toggleModal()">✕</button>
-            <div class="font-bold text-2xl flex flex-row">
+            <div class="font-bold text-2xl flex flex-row items-center">
                 <Icon :class="'mr-2 text-' + color" :icon="modalIcon" />
                 <h3>{{ props.modalTitle }}</h3>
             </div>

@@ -53,7 +53,7 @@ import DataTable from '@/components/DataTable/DataTable.vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 
 const headers = [
-    { prop: 'id', name: 'ID', size: 75 },
+    { prop: 'id', name: 'ID', pin: 'colPinStart', size: 75 },
     { prop: 'user_name', name: "Username" },
     { prop: 'first_name', name: "Nombre" },
     { prop: 'last_name', name: "Apellido" },
@@ -65,7 +65,7 @@ const headers = [
     { prop: 'phone_alt', name: 'Telefono Alt' },
     { prop: 'start_date', name: "Fecha Comienzo", size: 150, columnType: 'date' },
     { prop: 'end_date', name: 'Fecha Fin', columnType: 'date' },
-    { name: 'Acciones', size: 150, cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true },
+    { name: 'Acciones', size: 150, pin: 'colPinEnd', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true },
 ]
 const infoModal = ref(false)
 const infoModalText = ref('')

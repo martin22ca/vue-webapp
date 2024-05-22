@@ -18,6 +18,37 @@ export async function getUsers(data) {
     }
 }
 
+export async function getUsersByRole(id_role) {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/byrole',
+            method: 'GET',
+            timeout: 10000,
+            params: { 'id_role': id_role }
+        })
+    } catch (error) {
+        console.error('Error fetching Users:', error);
+        throw error
+    }
+}
+
+
+export async function updateUserRoles(data) {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/updaterole',
+            method: 'PUT',
+            timeout: 10000,
+            data: data
+        })
+    } catch (error) {
+        console.error('Error fetching Users:', error);
+        throw error
+    }
+}
+
+
+
 
 export async function registerUser(data) {
     try {
