@@ -59,11 +59,6 @@ const routes = [
     component: () => import('@/views/dataEntry/LotManagement.vue'),
   },
   {
-    path: '/input/uploadLots',
-    name: 'uploadlots',
-    component: () => import('@/views/dataEntry/LotUpload.vue'),
-  },
-  {
     path: '/test',
     name: 'Test',
     component: () => import('@/views/test.vue'),
