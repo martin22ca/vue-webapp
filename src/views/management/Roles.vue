@@ -12,11 +12,11 @@
             </div>
         </MCModal>
         <modalAddToRole v-if="userRoleModal" :modal-open="userRoleModal" :existing-users="userByRoles"
-            :toggle-modal="() => { userRoleModal = false;fetchUsersRoll() }"  :id-role="currentRole.id"/>
+            :toggle-modal="() => { userRoleModal = false; fetchUsersRoll() }" :id-role="currentRole.id" />
         <Toast :toast-open="toastVal" :toast-text="toastText" :toast-success="toastSuccess"
             :toggle-toast="() => { toastVal = !toastVal }"></Toast>
-        <Breadcrumbs />
 
+        <Breadcrumbs />
         <h2 class="p-2" v-if="currentRole == null">Selecionar Rol</h2>
         <div v-if="currentRole === null" class="fadeRight">
             <div class="flex justify-center items-center ">
@@ -36,11 +36,11 @@
         </div>
         <div v-else class="fadeLeft flex">
             <div style="width: 50%;">
-                <RoleEdit v-if="currentRole != null" :role="currentRole" 
+                <RoleEdit v-if="currentRole != null" :role="currentRole"
                     :clear-prop="() => { currentRole = null; fetchRoles() }" />
             </div>
             <DataTable v-if="currentRole != null" style="max-width: 50%;" :rows="userByRoles" :cols="userHeaders"
-                :loading="loading" >
+                :loading="loading">
                 <template #table_options>
                     <button class="btn btn-secondary mx-2" @click="userRoleModal = true">
                         <Icon icon="material-symbols:add" class="text-xl text-neutral" /> User
@@ -81,10 +81,10 @@ const userByRoles = ref([])
 const currentRole = ref(null)
 
 const userHeaders = [
-    { prop: 'id', name: 'ID', pin: 'colPinStart', size: 75 ,readonly:'true'},
-    { prop: 'user_name', size: 150, name: "Username" ,readonly:'true'},
-    { prop: 'first_name', size: 150, name: "Nombre" ,readonly:'true'},
-    { prop: 'last_name', size: 150, name: "Apellido" ,readonly:'true'},
+    { prop: 'id', name: 'ID', pin: 'colPinStart', size: 75, readonly: 'true' },
+    { prop: 'user_name', size: 150, name: "Username", readonly: 'true' },
+    { prop: 'first_name', size: 150, name: "Nombre", readonly: 'true' },
+    { prop: 'last_name', size: 150, name: "Apellido", readonly: 'true' },
 ]
 
 const sortedRoles = computed(() => {

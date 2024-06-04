@@ -8,6 +8,8 @@
             <NavBar :toggle-drawer="toggleDrawer" />
             <div class="p-2 bg-base-300  ">
                 <slot></slot>
+                <Toast :toast-open="notifications.open" :duration="notifications.duration" :state="notifications.state"
+                    :toast-text="notifications.message" :toggle-toast="() => { notifications.toggle() }" />
             </div>
         </div>
     </div>
@@ -16,9 +18,12 @@
 <script setup lang="ts">
 import Drawer from '@/components/Drawer/Drawer.vue'
 import NavBar from '@/components/NavBar.vue';
+import { notificationsStore } from "@/store/notificationsStore";
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
+import Toast from '@/components/Toast.vue';
 
 const drawerStatus = ref(true)
+const notifications = notificationsStore()
 
 const toggleDrawer = () => {
     drawerStatus.value = !drawerStatus.value
@@ -52,6 +57,7 @@ onBeforeUnmount(() => {
 const contentStyles = computed(() => {
     return { 'max-width': `${contentWidth.value}px` };
 });
+
 </script>
 
 <style>

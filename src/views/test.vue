@@ -7,29 +7,20 @@
             <button class="btn btn-primary mx-2" @click="sendColsConfig(initDB, 3)">
                 DB
             </button>
+            <button class="btn btn-primary mx-2" @click="sendColsConfig(initLots, 5)">
+                LOTE
+            </button>
             <button class="btn btn-secondary">
                 Reset
             </button>
-        </div>
-        <div class="m-8 bg-neutral p-40">
-            <Autocomplete :items="options" v-model="selectedItem"  />
         </div>
     </div>
 </template>
 
 
 <script setup>
-import Autocomplete from '@/components/Autocomplete.vue';
 import { setCols, getConfigId } from '@/services/config';
 import { onBeforeMount, ref } from 'vue';
-
-
-const options = ref(['Apple', 'Orange', 'Banana', 'Mango', 'Grapes', 'Pineapple', 'Strawberry'])
-const selectedItem = ref('')
-const headers = ref([]);
-const headersOr = ref([]);
-const configs = ref(null)
-const currentConfig = ref(0)
 
 const sendColsConfig = async (conf, idCol) => {
     const arrayOfObjects = Object.keys(conf).map(key => {
@@ -47,6 +38,10 @@ onBeforeMount(async () => {
     const response = await getConfigId(3)
     console.log(response)
 })
+const initLots = {
+    id_record: { name: 'Nro Expediente', order: 0, modified: false, lastCol: '' },
+    id_lot: { name: 'Nro Lote', order: 1, modified: false, lastCol: '' },
+};
 
 const initiAsignaciones = {
     id_record: { name: 'Nro Expediente', order: 0, modified: false, lastCol: '' },

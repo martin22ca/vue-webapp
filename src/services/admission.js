@@ -2,14 +2,13 @@ import { axiosClient } from '@/plugins/axios';
 
 const BASE_URL = '/admission'
 
-export async function isAuth(tokenData) {
+export async function isAuth(tokenData, route) {
     try {
-
         return await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
             timeout: 5000,
-            params: { token: tokenData }
+            params: { 'token': tokenData, 'path': route }
         })
     } catch (error) {
         console.error('Error in Auth:', error);
@@ -19,7 +18,7 @@ export async function isAuth(tokenData) {
 
 export async function loginUser(data) {
     try {
-        
+
         return await axiosClient({
             url: BASE_URL + '/login',
             method: 'POST',

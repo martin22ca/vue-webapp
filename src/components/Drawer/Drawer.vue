@@ -4,12 +4,14 @@
     <aside class="w-60 h-screen bg-base-100 flex flex-col border-r-2 border-neutral sticky end-0">
       <div class="top">
         <a href="/" aria-current="page" aria-label="Homepage">
-          <div class="uppercase font-bold text-3xl text-accent text-center bg-base-200 bg-rounded py-2 mt-2 mx-4 rounded-xl">
+          <div
+            class="uppercase font-bold text-3xl text-accent text-center bg-base-200 bg-rounded py-2 mt-2 mx-4 rounded-xl">
             G-<span class="salud text-base-content">Salud</span>
           </div>
         </a>
-        <div class="menu menu-horizontal pl-0 bg-base-100 text-base-content overflow-y-scroll overflow-x-hidden center" style="max-height: 70vh;">
-          <DrawerItem v-for="Item in itemArr" :title="Item.title" :icon="Item.icon" :route="Item.route"
+        <div class="menu menu-horizontal pl-0 bg-base-100 text-base-content overflow-y-scroll overflow-x-hidden center"
+          style="max-height: 70vh;">
+          <DrawerItem v-for="Item in itemsArr" :title="Item.title" :icon="Item.icon" :route="Item.route"
             :children="Item.children" />
         </div>
       </div>
@@ -24,25 +26,34 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import ThemePicker from '../ThemePicker.vue';
 import { useRouter } from 'vue-router';
 import { userDataStore } from '@/store/userStore'
 import DrawerItem from './DrawerItem.vue';
-import type { MenuItem } from './menuItems';
-import { Items } from './menuItems'
+import { Items as menuItems } from './menuItems'
+import { getRoleUser } from '@/services/roles'
+import { onMounted, ref, computed } from 'vue';
 
 
 const router = useRouter()
 const store = userDataStore()
-
+const itemsArr = ref([])
 const logOut = () => {
   router.push('/login')
   store.$reset()
   console.log('out')
 }
 
-const itemArr: Array<MenuItem> = Items
+const fetchRole = async () => {
+  const { data } = await getRoleUser()
+  const rolePermits = JSON.parse(data.data.configs)
+  const titlesInRolePermits = rolePermits.map(item => item.title);
+  itemsArr.value = menuItems.filter(item => titlesInRolePermits.includes(item.title));
+}
+onMounted(async () => {
+  fetchRole()
+})
 
 </script>
 

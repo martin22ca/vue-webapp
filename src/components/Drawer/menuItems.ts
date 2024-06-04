@@ -58,7 +58,7 @@ export const Items: Array<MenuItem> = [
                 icon: 'mdi:land-plots',
                 route: '/input/lots',
                 children: undefined
-            }
+            },
         ],
     },
     {

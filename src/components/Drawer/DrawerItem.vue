@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-full">
         <li v-if="hasChilds" class="rounded-lg">
             <a @click="showMenu" class="p-0 pr-4 menu-dropdown-toggle text-md ">
                 <button class="btn btn-ghost hover:bg-transparent">

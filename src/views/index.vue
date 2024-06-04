@@ -1,85 +1,41 @@
 <template>
     <defaultLayout>
-        <div class="flex flex-col flex-grow">
-            <div class="grid grid-cols-7 grid-rows-6 gap-4 m-4">
-                <div class="col-span-2 row-span-2">
-                    <div class="stat bg-base-100 shadow rounded-lg h-full">
-                        <div class="stat-figure text-primary">
-                            Wow!
-                        </div>
-                        <div class="stat-title">Total Likes</div>
-                        <div class="stat-value text-primary">25.6K</div>
-                        <div class="stat-desc">21% more than last month</div>
-                    </div>
-                </div>
-                <div class="col-span-2 row-span-2 col-start-3">
-                    <div class="stat bg-base-100 rounded-lg h-full">
-                        <div class="stat-figure text-secondary">
-                            Hola
-                        </div>
-                        <div class="stat-title">Page Views</div>
-                        <div class="stat-value text-secondary">2.6M</div>
-                        <div class="stat-desc">21% more than last month</div>
-                    </div>
-                </div>
-                <div class="col-span-2 row-span-2 col-start-1 row-start-3">
-                    <div class="stat bg-primary rounded-lg h-full">
-                        <div class="stat-figure text-primary-content">
-                            Nice!
-                        </div>
-                        <div class="stat-title">Tasks done</div>
-                        <div class="stat-value">86%</div>
-                        <div class="stat-desc text-primary-content">31 tasks remaining</div>
-                    </div>
-                </div>
-                <div class="col-span-2 row-span-2 col-start-3 row-start-3">
-                    <div class="stat bg-primary rounded-lg h-full">
-                        <div class="stat-figure text-primary-content">
-                            Nice!
-                        </div>
-                        <div class="stat-title">Tasks done</div>
-                        <div class="stat-value">86%</div>
-                        <div class="stat-desc text-primary-content">31 tasks remaining</div>
-                    </div>
-
-                </div>
-                <div class="col-span-3 row-span-2 col-start-5 row-start-1">
-                    <div class="bg-base-100 h-full text-center p-4">
-                        <div class="flex-col lg:flex-row">
-                            <h2 class="font-bold text-center">Bienvenido, {{ name }}</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-span-3 row-span-4 col-start-5 row-start-3">
-                    <div class="card bg-secondary shadow-xl h-full">
-                        <div class="card-body">
-                            <h2 class="card-title">Card title!</h2>
-                            <p>If a dog chews shoes whose shoes does he choose?</p>
-                            <div class="card-actions justify-end">
-                                <button class="btn btn-primary">Buy Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-span-4 row-span-2 row-start-5">
-                    <div class="card bg-base-200 shadow-xl h-full">
-                        <div class="card-body">
-                            <h2 class="card-title">Card title!</h2>
-                            <DDMenu size="40px">
-                                <p>
-                                    Hola Munsoi
-                                </p>
-                            </DDMenu>
-                        </div>
-                    </div>
-                </div>
+        <div class="grid grid-cols-3 grid-rows-6 gap-4" style="max-height: 90vh;">
+            <div class="bg-base-200 p-4 shadow-sm">1: Statistics</div>
+            <div class="col-start-1 row-start-2 bg-base-200 p-4 shadow-sm">2: User Info</div>
+            <div class="col-start-2 row-start-1 bg-base-200 p-4 shadow-sm">
+                <h2 class="card-title text-4xl">
+                    Bienvenido
+                </h2>
+                <h3 class="font-mono">
+                    {{ name }}
+                </h3>
+            </div>
+            <div class="col-start-2 row-start-2 bg-base-200 p-4 shadow-sm">
+                <Countdown :targetDate="'2024-07-02'" />
+            </div>
+            <div class="row-span-2 col-start-1 row-start-5 bg-base-200 p-4 shadow-sm">
+                7: Recent Activities
+            </div>
+            <div class="row-span-2 col-start-2 row-start-5 bg-base-200 p-4 shadow-sm">
+                8: Notifications
+            </div>
+            <div class="row-span-3 col-start-3 row-start-4 bg-base-200 p-4 shadow-sm">
+                <BarChart />
+            </div>
+            <div class="row-span-3 col-start-3 row-start-1 bg-base-200 p-4 shadow-sm">
+                <PieChart />
+            </div>
+            <div class="col-span-2 row-span-2 col-start-1 row-start-3 bg-base-200 p-4 shadow-sm ">
             </div>
         </div>
     </defaultLayout>
 </template>
 
 <script setup>
-import DDMenu from '@/components/DDMenu/DDMenu.vue';
+import Countdown from '@/components/Countdown.vue'
+import PieChart from '@/components/Graphs/PieChart.vue'
+import BarChart from '@/components/Graphs/BarChart.vue'
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { ref, onMounted } from 'vue';
 import { userDataStore } from '@/store/userStore'
@@ -93,3 +49,10 @@ onMounted(() => {
     name.value = store.name
 })
 </script>
+
+
+<style scoped>
+.shadow-sm {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+</style>

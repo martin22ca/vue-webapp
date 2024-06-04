@@ -18,13 +18,13 @@ import DataTable from '@/components/DataTable/DataTable.vue';
 import { getRecords } from '@/services/records'
 
 const headers = [
-    { prop: 'id', name: 'Nro Exp', pin: 'colPinStart', valType: 'number' },
+    { prop: 'id_record', name: 'Nro Exp', pin: 'colPinStart', valType: 'number' },
     { prop: 'id_provider', name: 'Prestador', valType: 'number' },
     { prop: 'date_liquid', name: 'fecha liquid', valType: 'date' },
     { prop: 'date_recep', name: 'fecha recep', valType: 'date' },
     { prop: 'date_audi_vto', name: 'fecha audi vto', valType: 'date' },
     { prop: 'date_period', name: 'Periodo', valType: 'date' },
-    { prop: 'record_type', name: 'Tipo', valType: 'text' },
+    { prop: 'record_name', name: 'Tipo', valType: 'text' },
     { prop: 'totcal', name: 'Tot cal', valType: 'text' },
     { prop: 'bruto', name: 'Bruto', valType: 'text' },
     { prop: 'ivacal', name: 'Ivacal', valType: 'text' },
@@ -35,7 +35,7 @@ const headers = [
     { prop: 'a_pagar', name: 'A pagar', valType: 'text' },
     { prop: 'debito_iva', name: 'Debito iva', valType: 'text' },
     { prop: 'receipt_num', name: 'Nro Comprobante', valType: 'text' },
-    { prop: 'id_receipt_type', name: 'Tipo Comprobante', valType: 'text' },
+    { prop: 'receipt_short', name: 'Tipo Comprobante', valType: 'text' },
     { prop: 'receipt_date', name: 'Fecha Comprobante', valType: 'text' },
     { prop: 'exento', name: 'Exento', valType: 'text' },
     { prop: 'gravado', name: 'Gravado', valType: 'text' },
@@ -59,11 +59,12 @@ let filters = []
 const loading = ref(true)
 
 const fetchResources = async () => {
+    loading.value = true
     const { data } = await getRecords(filters)
     records.value = data
     setTimeout(() => {
         loading.value = false
-    }, 500)
+    }, 100)
 }
 
 onMounted(async () => {

@@ -1,4 +1,5 @@
 import { axiosClient } from '@/plugins/axios';
+import { getTokenAndPath } from './auth';
 
 const BASE_URL = '/roles'
 
@@ -27,6 +28,22 @@ export async function updateRole(data) {
             method: 'PUT',
             timeout: 10000,
             data: data
+        })
+    } catch (error) {
+        console.error('Error Updating Role:', error);
+        throw error
+    }
+}
+
+
+export async function getRoleUser() {
+    try {
+        const [token, path] = getTokenAndPath()
+        return await axiosClient({
+            url: BASE_URL + '/getrole',
+            method: 'GET',
+            timeout: 10000,
+            params: { token: token }
         })
     } catch (error) {
         console.error('Error Updating Role:', error);

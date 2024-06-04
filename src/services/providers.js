@@ -17,3 +17,15 @@ export async function getProviders(data = null) {
         throw error;
     }
 }
+
+export async function getPriorities() {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/priorities',
+            method: 'GET',
+        });
+    } catch (error) {
+        console.error('Error fetching providers:', error);
+        throw error;
+    }
+}

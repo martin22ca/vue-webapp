@@ -31,7 +31,8 @@
                     </MCInput>
                 </div>
                 <div class="flex flex-row gap-4">
-                    <MCInput class="basis-1/3" textIcon="gg:password" textLabel="CUIT" :textError="cuit.errorMessage.value">
+                    <MCInput class="basis-1/3" textIcon="gg:password" textLabel="CUIT"
+                        :textError="cuit.errorMessage.value">
                         <input v-model="cuit.value.value" class="input input-bordered w-full" />
                     </MCInput>
                     <MCInput class="basis-2/3" textIcon="gg:password" textLabel="Direccion"
@@ -41,12 +42,10 @@
                 </div>
                 <div class="flex flex-row gap-4">
                     <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Nro Coordinador">
-                        <input v-model="props.provider.coordinator_number" class="input input-bordered w-full"
-                            he />
+                        <input v-model="props.provider.coordinator_number" class="input input-bordered w-full" he />
                     </MCInput>
                     <MCInput class="basis-2/3" textIcon="gg:password" textLabel="Coordinador">
-                        <input v-model="props.provider.coordinator_number" class="input input-bordered w-full"
-                            he />
+                        <input v-model="props.provider.coordinator_number" class="input input-bordered w-full" he />
                     </MCInput>
                 </div>
                 <div class="flex flex-row gap-4">
@@ -55,19 +54,17 @@
                         <textarea v-model="observation.value.value" class="textarea textarea-bordered w-full" he />
                     </MCInput>
                     <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Prioridad">
-                        <select class="select select-bordered w-full"></select>
+                        <input v-model="status" disabled class="input input-bordered w-full " />
                     </MCInput>
                 </div>
                 <span class="divider" />
                 <h2 class="text-xl pb-2">Particularidades</h2>
                 <div class="flex flex-row gap-4">
-                    <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Ultima modificacion G-salud"
-                        :textError="address.errorMessage.value">
-                        <input v-model="address.value.value" type="date" class="input input-bordered w-full" disabled />
+                    <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Ultima modificacion G-salud">
+                        <input v-model="mod_g_salud" type="date" class="input input-bordered w-full" disabled />
                     </MCInput>
-                    <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Ultima modificacion Prevencion"
-                        :textError="address.errorMessage.value">
-                        <input v-model="address.value.value" type="date" class="input input-bordered w-full" disabled />
+                    <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Ultima modificacion Prevencion">
+                        <input v-model="mod_prevencion" type="date" class="input input-bordered w-full" disabled />
                     </MCInput>
                 </div>
                 <div class="flex flex-row gap-4">
@@ -89,7 +86,7 @@
     </MCModal>
 </template>
 
-<script setup >
+<script setup>
 import MCModal from './MCModal.vue';
 import { ref } from 'vue';
 import MCInput from '../MCInput.vue';
@@ -128,6 +125,9 @@ const { handleSubmit, handleReset, errors } = useForm({
 });
 
 const id = ref(0)
+const mod_prevencion = ref(null)
+const mod_g_salud = ref(null)
+const status = ref(null)
 const address = useField('address');
 const part_g_salud = useField('part_g_salud')
 const business_name = useField('business_name')
@@ -137,7 +137,11 @@ const cuit = useField('cuit')
 const observation = useField('observation')
 
 if (update.value) {
+    console.log(props.provider)
     id.value = props.provider.id
+    mod_prevencion.value = props.provider.mod_prevencion
+    mod_g_salud.value = props.provider.mod_g_salud
+    status.value = props.provider.status
     address.value.value = props.provider.address
     business_name.value.value = props.provider.business_name
     part_g_salud.value.value = props.provider.part_g_salud

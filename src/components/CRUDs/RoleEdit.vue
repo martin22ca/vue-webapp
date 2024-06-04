@@ -10,7 +10,7 @@
         </button>
     </div>
     <form @submit.prevent="submit" class="">
-        <div class="bg-base-200 px-4 rounded-xl overflow-y-auto mx-1 shadow" style="max-height: 70vh;"> <!--This DIV-->
+        <div class="bg-base-200 px-4 rounded-xl overflow-y-auto mx-1 shadow" style="max-height: 80vh;"> <!--This DIV-->
             <div class="flex flex-row gap-4 ">
                 <MCInput class="w-full" textIcon="mdi:text-account" textLabel="Descripcion"
                     :textError="description.errorMessage.value">
@@ -20,7 +20,7 @@
             <h3 class="mb-2 ">Permisos</h3>
             <div class="flex flex-row gap-4 ">
                 <div className="grid grid-cols-2 grid-rows-1 gap-3 overflow-y-auto w-full rounded-xl p-2 bg-base-100"
-                    style="max-height: 80vh;">
+                    style="max-height: 40vh;">
                     <div>
                         <h2 class="text-xl mb-2">Permisos disponibles</h2>
                         <draggable class="dragArea list-group" :list="paths"
@@ -139,7 +139,12 @@ const submit = handleSubmit(async (values) => {
         }
     }
     valuesSend['id_role'] = id.value
-    valuesSend['configs'] = configs.value.length === 0 ? null : JSON.stringify(configs.value);
+    const optConfigs = configs.value.map((obj) => ({
+        title: obj.title,
+        route: obj.route,
+    }));
+
+    valuesSend['configs'] = configs.value.length === 0 ? null : JSON.stringify(optConfigs);
     const { data } = await updateRole(valuesSend)
     console.log(data)
     props.clearProp()

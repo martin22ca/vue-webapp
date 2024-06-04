@@ -56,7 +56,12 @@ const routes = [
   {
     path: '/input/lots',
     name: 'lots',
-    component: () => import('@/views/dataEntry/lotManagement.vue'),
+    component: () => import('@/views/dataEntry/LotManagement.vue'),
+  },
+  {
+    path: '/input/uploadLots',
+    name: 'uploadlots',
+    component: () => import('@/views/dataEntry/LotUpload.vue'),
   },
   {
     path: '/test',
@@ -75,12 +80,12 @@ router.beforeEach(async (to, from) => {
     let authenticated = false
     const store = userDataStore()
     if (store.token != '') {
-      const response = await isAuth(store.token)
+      const response = await isAuth(store.token, to.path)
       if (!response.data) {
       }
-      authenticated = response.data.success
+      authenticated = response.data
     }
-    if (authenticated) {
+    if (authenticated.success) {
       if (to.name != 'Login') {
         return true
       } else {
@@ -90,6 +95,7 @@ router.beforeEach(async (to, from) => {
     } else {
       store.$reset()
       if (to.name != 'Login') {
+        alert(authenticated.error)
         router.push('/login')
         return false
       } else {

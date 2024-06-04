@@ -7,18 +7,25 @@
     </button>
   </div>
 </template>
-  
-  
+
+
 <script setup>
+import { onMounted } from 'vue';
 import { usetableStore } from '@/store/tableStore';
 import { Icon } from '@iconify/vue';
 
 const props = defineProps(['model', 'prop']);
 const store = usetableStore()
+var infoValue = 1
 
 const setVal = () => {
   store.id = 1
   store.data = props.model
 }
-</script>
 
+onMounted(() => {
+  if (props.prop != null) {
+    infoValue = props.prop.info
+  }
+})
+</script>

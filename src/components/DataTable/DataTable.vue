@@ -103,7 +103,7 @@
             <div class="label">
               <span class="label-text">Nuevo Filtro</span>
             </div>
-            <select class="select select-primary" @change="createNewFilter($event)">
+            <select v-model="newFilterT" class="select select-primary" @change="createNewFilter($event)">
               <option disabled selected>Selecionar Filtro</option>
               <option v-for="col, index in selectedCols" :value="index">
                 {{ col.name }}
@@ -173,6 +173,7 @@ const selectedCols = ref([]);
 const colsToRemove = ref([]);
 const filters = ref()
 const appliedFilters = ref([])
+const newFilterT =ref(null)
 
 const props = defineProps({
   selectedRow: { default: null, },
@@ -251,6 +252,8 @@ const handleCol = (index, event) => {
   const col = selectedCols.value[colIndex]
   appliedFilters.value[index]['col'] = col.prop
   appliedFilters.value[index]['valType'] = col.valType
+  newFilterT.value = null
+  
 }
 
 const handleFilter = (index, event) => {
@@ -323,7 +326,6 @@ const gridAfterEdit = (e) => {
 
 watchEffect(() => {
   if (props.loading == false) { manageCols() }
-  if (props.rows.length > 0) { refreshData() }
 });
 
 

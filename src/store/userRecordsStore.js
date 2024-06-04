@@ -1,13 +1,13 @@
 import { defineStore } from "pinia"
 
 export const useUserRecords = defineStore('userRecords', {
-    state: () => ({ elements: [] }),
+    state: () => ({ elements: {} }),
     actions: {
         $reset() {
-            this.elements = []
+            this.elements = {}
         },
-        addElement(newRow) {
-            this.elements.push(newRow)
+        addElement(newRow, id) {
+            this.elements[id] = newRow
         }
     },
     persist: {

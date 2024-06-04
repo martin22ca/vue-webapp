@@ -5,24 +5,57 @@
         <div class="flex flex-col">
             <div class="top">
                 <div class="card w-auto bg-base-100 shadow-md m-2">
-                    <div class="card-title flex flex-row text-center p-4">
+
+                    <h2 class="card-title m-4 underline">
+                        Carga de datos
+                    </h2>
+                    <p class="mx-4 mb-4">
+                        Sube un archivo CSV o XLS para comenzar a analizar tus datos. La aplicación configurará
+                        automáticamente las columnas si coinciden con la última configuración utilizada. En caso
+                        contrario, las columnas serán configuradas durante la subida del archivo. También podrás ver la
+                        última vez que se actualizaron tus datos, incluyendo el día y la hora. De esta manera, siempre
+                        estarás al día con la información más reciente.
+                    </p>
+                    <div v-if="configData.length >0" class="card-title flex flex-row text-center p-4">
                         <ul class="steps w-full">
                             <li class="step step-success">Carga Prevencion</li>
-                            <li :class="'step ' + (state1 ? 'step-success' : '')">Carga
+                            <li :class="'step ' + (getState(3) ? 'step-success' : '')">Carga
                                 Asignacion</li>
-                            <li :class="'step ' + ((state1 && state2) ? 'step-success' : '')">
+                            <li :class="'step ' + ((getState(3) && getState(4)) ? 'step-success' : '')">
                                 Carga Manual</li>
                         </ul>
                     </div>
                 </div>
                 <div class="flex flex-row flex-1">
-                    <FileUpload :state="state1" :isDb="true" cardT="1. Cargar DB Prevencion" :refresh="getInfo"
-                        :lastLoad="lastLoad1"
-                        description="Primero se deben actualizar la informacion recibida de Prevencion. Esta debe estar en formato CSV" />
-                    <FileUpload :state="state2" :isDb="false" cardT="2. Cargar Asignaciones" :refresh="getInfo"
-                        :lastLoad="lastLoad2"
-                        description="Segundo se deben cargar las asignaciones recibidas por correo de Prevencion. Esta debe estar en formato CSV" />
+                    <Fileuploader v-if="configData.length > 0" cardT="1. Cargar DB Prevencion" :refresh="fetchConfigs"
+                        :postConfig="postDb" :config="getValue(3)"
+                        description="Primero se deben actualizar la informacion recibida de Prevencion. Esta seccion realizara lo siguiente: ">
+                        <div class="ml-2" style="font-size: 16px;">
+                            <li class="my-2">Crear nuevos expedientes.</li>
+                            <li class="my-2"> Actualizar expedientes existentes.</li>
+                            <li class="my-2">Registrar prestadores asociados a nuevos expedientes.</li>
+                        </div>
+                    </Fileuploader>
+                    <Fileuploader v-if="configData.length > 0" cardT="2. Cargar Asignaciones" :refresh="fetchConfigs"
+                        :postConfig="postAssignment" :config="getValue(4)"
+                        description="Segundo se deben cargar las asignaciones recibidas por correo de Prevencion. Esta seccion realizara lo siguiente:">
+                        <div class="ml-2" style="font-size: 16px;">
+                            <li class="my-2">Registrar nuevos prestadores.</li>
+                            <li class="my-2">Actualizar prestadores existentes.</li>
+                            <li class="my-2">Registrar nuevos casos de expedientes.</li>
+                            <li class="my-2">Actualizar casos de expedientes existentes.</li>
+                        </div>
+                    </Fileuploader>
                 </div>
+                <Fileuploader v-if="configData.length > 0" cardT="3. Carga de lotes" :refresh="fetchConfigs"
+                    :postConfig="postLots" :config="getValue(5)"
+                    description="Por ultimo pueden cargar los lotes y asignarle los expedeintes  Esta seccion realizara lo siguiente:">
+                    <div class="ml-2" style="font-size: 16px;">
+                        <li class="my-2">Registrar Lotes.</li>
+                        <li class="my-2">Asignar expediente a Lote.</li>
+                        <li class="my-2">!!! Si el expediente no existe no se registrara !!!</li>
+                    </div>
+                </Fileuploader>
             </div>
         </div>
     </defaultLayout>
@@ -31,44 +64,41 @@
 
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import { useRouter } from 'vue-router';
 import defaultLayout from '@/layouts/defaultLayout.vue'
-import FileUpload from './FileUpload.vue'
+import Fileuploader from '@/components/FileUploader.vue'
 import { ref, onMounted } from 'vue';
 import { getConfig } from '@/services/config'
+import { postAssignment, postDb, postLots } from '@/services/config'
 
-const router = useRouter()
-const state1 = ref(false);
-const state2 = ref(false);
-const lastLoad1 = ref(null)
-const lastLoad2 = ref(null)
-
+const configData = ref([])
 const Now = new Date()
 Now.setHours(0, 0, 0, 0);
+const s1 = ref(false)
+const s2 = ref(false)
 
-const goTo = () => {
-    console.log(router)
-    router.push('/records')
+const fetchConfigs = async () => {
+    const configList = [3, 4, 5]
+    const { data } = await getConfig(configList)
+    configData.value = data
 }
 
-const getInfo = async () => {
-    const { data } = await getConfig()
-    for (const status of data) {
-        const statusD = new Date(status.value)
-        statusD.setHours(0, 0, 0, 0);
-        const stateVal = statusD >= Now;
-        if (status.id === 1) {
-            state1.value = stateVal;
-            lastLoad1.value = status.value
-        } else {
-            state2.value = stateVal;
-            lastLoad2.value = status.value
-        }
-    }
+const getValue = (idConfig) => {
+    return configData.value.find(item => item.id === idConfig);
+}
+
+const getState = (id) => {
+    const dateTime = getValue(id)['mod_date']
+    const lastDate = new Date(dateTime);
+    console.log(lastDate)
+
+    return lastDate > Now
+
 }
 
 onMounted(async () => {
-    await getInfo()
+    await fetchConfigs()
+
+
 })
 
 </script>

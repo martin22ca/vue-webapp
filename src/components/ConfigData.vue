@@ -244,7 +244,7 @@ onMounted(async () => {
     setTimeout(() => {
         if (arraySame) { props.toggleModal() }
         else { loading.value = false }
-    }, 1500);
+    }, 500);
 })
 
 </script>

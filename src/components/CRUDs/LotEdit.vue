@@ -116,14 +116,12 @@ const submit = handleSubmit(async (values) => {
         valuesSend['id_user'] = assignedUser.value.id
     }
     const { data } = await updateLot(valuesSend)
-    console.log(data)
     props.clearLot()
 });
 
 const fetchAudits = async () => {
     // 3 ID AUDIT
     const { data } = await getUsersByRole(3)
-    console.log(data)
     if (data.success) {
         usersAudit.value = data.data
     }
@@ -131,11 +129,9 @@ const fetchAudits = async () => {
 
 const setAudit = (val) => {
     assignedUser.value = val
-    console.log(assignedUser.value)
 }
 
 onMounted(() => {
-    console.log(props.lot)
     id.value = props.lot.id
     lot_key.value.value = props.lot.lot_key
     date_asignment.value.value = props.lot.date_asignment

@@ -1,35 +1,51 @@
 <template>
-    <div>
-      <button class="btn btn-circle btn-ghost p-0 m-0" @click="setVal()">
-        <div data="example" column="exampleColumn" rowIndex="exampleIndex">
-          <Icon icon="material-symbols:info" class="text-3xl text-primary"></Icon>
-        </div>
-      </button>
-      <button class="btn btn-circle btn-ghost p-0 m-0" @click="popVal()">
-        <div data="example" column="exampleColumn" rowIndex="exampleIndex">
-          <Icon icon="mdi:trash-can" class="text-3xl text-error"></Icon>
-        </div>
-      </button>
-    </div>
-  </template>
-  
-  
+  <div v-if="!isTargetEmpty">
+    <button class="btn btn-circle btn-ghost p-0 m-0" @click="setVal()">
+      <div data="example" column="exampleColumn" rowIndex="exampleIndex">
+        <Icon icon="material-symbols:info" class="text-3xl text-primary"></Icon>
+      </div>
+    </button>
+    <button class="btn btn-circle btn-ghost p-0 m-0" @click="popVal()">
+      <div data="example" column="exampleColumn" rowIndex="exampleIndex">
+        <Icon icon="mdi:trash-can" class="text-3xl text-error"></Icon>
+      </div>
+    </button>
+  </div>
+</template>
+
+
 <script setup>
 import { usetableStore } from '@/store/tableStore';
 import { Icon } from '@iconify/vue';
+import { computed, onMounted, toRaw } from 'vue';
 
 const props = defineProps(['model', 'prop']);
 const store = usetableStore()
 
+var infoValue = 1
+var deleteValue = 2
+
 const setVal = () => {
-    store.id = 1
-    store.data = props.model
+  store.id = infoValue
+  store.data = props.model
 }
 
 const popVal = () => {
-    store.id = 2
-    store.data = props.model
+  store.id = deleteValue
+  store.data = props.model
 }
 
-</script>
+const isTargetEmpty = computed(() => {
+  const rawTarget = toRaw(props.model); // Retrieve the original object from the proxy
+  return (Object.keys(rawTarget).length === 0 && rawTarget.constructor === Object);
+});
 
+
+onMounted(() => {
+  if (props.prop != null) {
+    console.log(props.prop)
+    deleteValue = props.prop.delete
+    infoValue = props.prop.info
+  }
+})
+</script>

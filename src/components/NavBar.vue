@@ -21,7 +21,7 @@
                     </button>
                     <div class="avatar placeholder">
                         <div class="bg-primary rounded-full w-12">
-                            <span class="text-xl text-primary-content">{{ initial }}</span>
+                            <span class="text-xl text-primary-content uppercase">{{ initial }}</span>
                         </div>
                     </div>
                 </div>

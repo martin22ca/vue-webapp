@@ -1,79 +1,103 @@
 <template>
     <transition name="toast" mode="out-in">
-        <div class="toast toast-end z-50 w-64" v-if="props.toastOpen">
-            <div :class="'flex flex-col gap-0 alert alert-' + (props.toastSuccess ? 'info' : 'error')">
-                <div class="flex-initial progress-bar" v-if="showProgressBar" :style="{ width: progressBarWidth }"></div>
-                <button class="btn btn-sm btn-rounded btn-error self-end" v-if="props.duration == null"
-                    @click="props.toggleToast()">
-                    <Icon icon="mdi:close"></Icon>
+        <div v-if="toastOpen" class="toast toast-end z-50 w-64 " >
+            <div v-if="props.state != null" :class="'flex flex-row gap-0 alert alert-' + (props.state ? 'success':'error')" style="max-width:40vw;">
+                <div :class="'flex flex-col  text-' + alertType + '-content'">
+                    <span class="font-bold flex ">
+                        <Icon class="text-xl mr-2" :icon="Titles[alertType].icon" /> {{ Titles[alertType].text }}
+                    </span>
+                    <span class="flex-initial">{{ toastText }}</span>
+                </div>
+                <span class="grow"></span>
+                <button v-if="duration === null"
+                    :class="'self-end p-2 rounded-xl ml-2 bg-neutral text-neutral-content'"
+                    @click="toggleToast">
+                    <Icon icon="mdi:close" />
                 </button>
-                <span class="flex-initial">{{ props.toastText }}</span>
             </div>
+            <div class="progress-bar" v-if="duration !== null" :style="{ width: progressBarWidth }"></div>
         </div>
     </transition>
 </template>
-  
+
 <script setup>
 import { Icon } from '@iconify/vue';
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 
 const props = defineProps({
-    toastOpen: Boolean,
-    toastText: {
-        default: null,
-        type: String,
-    },
-    toggleToast: Function,
-    toastSuccess: {
+    toastOpen: {
         type: Boolean,
-        default: true,
+        default: false
+    },
+    toastText: {
+        type: String,
+        default: ''
+    },
+    toggleToast: {
+        type: Function,
+        required: true
+    },
+    state: {
+        type: Boolean,
+        default: null
     },
     duration: {
         type: Number,
-        default: null, // Default duration in seconds
-    },
-});
-
-const progressBarWidth = ref('100%');
-const showProgressBar = ref(false);
-
-const startProgressBarAnimation = () => {
-    let progress = 100;
-    const interval = 100; // Interval for updating progress bar width
-
-    const timer = setInterval(() => {
-        progress -= (interval / (props.duration * 1000)) * 100;
-        progressBarWidth.value = `${Math.max(progress, 0)}%`;
-    }, interval);
-
-    setTimeout(() => {
-        clearInterval(timer);
-        props.toggleToast();
-    }, (props.duration * 1000));
-};
-
-watch(() => props.toastOpen, (newValue) => {
-    if (newValue && props.duration) {
-        startProgressBarAnimation();
-    } else if (!newValue) {
-        showProgressBar.value = true; // Reset showProgressBar when closing
-    } else {
-        showProgressBar.value = false; // Manual closing, hide progress bar
+        default: null
     }
 });
 
+const progressBarWidth = ref('100%');
+const alertType = computed(() => {
+    if (props.state === true) return 'success';
+    if (props.state === false) return 'error';
+    return 'info';
+});
+
+const Titles = {
+    'info': { text: 'Informacion', icon: 'mdi:information' },
+    'success': { text: 'Exito', icon: 'mdi:check' },
+    'error': { text: 'Alerta', icon: 'mdi:alert-circle' }
+};
+
+const startProgressBarAnimation = () => {
+    if (typeof props.toggleToast !== 'function') return;
+
+    let progress = 100;
+    const interval = 100;
+    const timer = setInterval(() => {
+        progress -= (interval / (props.duration * 1000)) * 100;
+        progressBarWidth.value = `${Math.max(progress, 0)}%`;
+
+        if (progress <= 0) {
+            clearInterval(timer);
+            props.toggleToast();
+        }
+    }, interval);
+};
+
+watch(
+    () => props.toastOpen,
+    (newValue) => {
+        if (newValue && props.duration) {
+            startProgressBarAnimation();
+        } else {
+            progressBarWidth.value = '100%';
+        }
+    }
+);
+
 onMounted(() => {
-    if (props.toastOpen && props.duration != null) {
+    if (props.toastOpen && props.duration !== null) {
         startProgressBarAnimation();
     }
 });
 </script>
-  
+
 <style>
 .progress-bar {
     height: 3px;
     background-color: oklch(var(--p));
-    /* Change color as needed */
     width: 100%;
     transition: width linear;
 }

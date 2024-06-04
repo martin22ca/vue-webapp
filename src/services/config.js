@@ -4,12 +4,14 @@ import { axiosClient } from '@/plugins/axios';
 
 const BASE_URL = '/config'
 
-export async function getConfig() {
+export async function getConfig(data) {
+    const stringifiedData = JSON.stringify(data);
     try {
         return await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
             timeout: 10000,
+            params: { 'idList': stringifiedData }
         })
     } catch (error) {
         console.error('Error fetching configuration:', error);
@@ -36,7 +38,7 @@ export async function getConfigId(idCol) {
             url: BASE_URL + '/cols',
             method: 'GET',
             timeout: 10000,
-            params: {id: idCol }
+            params: { id: idCol }
         })
     } catch (error) {
         console.error('Error fetching configuration:', error);
@@ -63,7 +65,6 @@ export async function postAssignment(formData) {
         return await axiosClient({
             url: BASE_URL + '/assignment',
             method: 'POST',
-            timeout: 120000,
             headers: { 'Content-Type': 'multipart/form-data' },
             data: formData
         })
@@ -78,7 +79,20 @@ export async function postDb(formData) {
         return await axiosClient({
             url: BASE_URL + '/db',
             method: 'POST',
-            timeout: 1200000,
+            headers: { 'Content-Type': 'multipart/form-data' },
+            data: formData
+        })
+    } catch (error) {
+        console.error('Error fetching configuration:', error);
+        throw error
+    }
+}
+
+export async function postLots(formData) {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/lots',
+            method: 'POST',
             headers: { 'Content-Type': 'multipart/form-data' },
             data: formData
         })

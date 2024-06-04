@@ -6,13 +6,11 @@
                 <button class=" m-2 btn btn-primary" @click="infoModal = false">
                     Cancelar
                 </button>
-                <button class="m-2 btn btn-error" @click="removeRecordFromLot()">
+                <button class="m-2 btn btn-error" @click="deleteFunction()">
                     Eliminar
                 </button>
             </div>
         </MCModal>
-        <Toast :duration="5" :toastOpen="toastOpen" :toggleToast="() => { toastOpen = !toastOpen }"
-            :toastText="toasText" />
         <div class="h-auto">
             <Breadcrumbs />
             <div>
@@ -49,24 +47,23 @@ import MCModal from '@/components/Modals/MCModal.vue';
 import lotEdit from '@/components/CRUDs/LotEdit.vue';
 import DataTableCheckbox from '@/components/DataTable/DataTableCheckbox.vue';
 import DataTableInfo from '@/components/DataTable/DataTableInfo.vue';
-import DataTableInfoDelete from '@/components/DataTable/DataTableInfoDelete.vue';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
 import DataTable from '@/components/DataTable/DataTable.vue';
-import Toast from '@/components/Toast.vue';
 import { onMounted, ref, watch } from 'vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { getRecordsInfo } from '@/services/records'
 import { getLots, popRecordFromLot } from '@/services/lots'
 import { usetableStore } from '@/store/tableStore';
+import { notificationsStore } from '@/store/notificationsStore';
 
 const infoModal = ref(false)
 const infoModalText = ref('')
 const infoModalTitle = ref('')
-const toastOpen = ref(false)
-const toasText = ref('')
+const deleteFunction = ref(() => { })
 const lots = ref([])
 const loading = ref(true)
 const lotStore = usetableStore()
+const notiStore = notificationsStore()
 const currentLot = ref(null)
 const recordsFromLot = ref(null)
 const recordFromLot = ref(null)
@@ -90,14 +87,13 @@ const headersRecords = [
     { prop: 'business_name', name: 'Razon Social', valType: 'text', size: 200, readonly: true },
     { prop: 'assigned', name: 'Asignado', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
     { prop: 'coorinator_number', name: 'Coordinador', valType: 'number', size: 150, readonly: true },
-    { prop: 'lot_key', name: 'Lote', valType: 'number' },
+    { prop: 'lot_key', name: 'Lote', valType: 'text' },
     { prop: 'id_user', name: 'Usuario Asignado', valType: 'number', size: 200 },
     { prop: 'record_total', name: 'Monto Total', valType: 'number' },
     { prop: 'date_entry_digital', name: 'Fecha Digital', valType: 'date', size: 150 },
     { prop: 'date_entry_physical', name: 'Fecha Fisico', valType: 'date', size: 150 },
     { prop: 'seal_number', name: 'Nro Precinto', valType: 'number' },
     { prop: 'observation', name: 'Observacion', valType: 'text', size: 300 },
-    { name: 'Info', cellTemplate: VGridVueTemplate(DataTableInfoDelete), readonly: true, size: 150 },
 ]
 
 
@@ -115,7 +111,6 @@ const fetchResources = async () => {
     loading.value = true
     const { data } = await getLots(filtersLot)
     lots.value = data
-    console.log(lots.value)
     setTimeout(() => {
         loading.value = false
     }, 500)
@@ -125,15 +120,12 @@ const removeRecordFromLot = async () => {
     const { data } = await popRecordFromLot(recordsFromLot.value)
     if (data.success) {
         fetchResourcesFromLot()
-        toasText.value = 'Valor eliminado correctamente'
-        infoModal.value = false
-        toastOpen.value = true
+        notiStore.newMessage('Valor eliminado correctamente', true)
 
     } else {
-        toasText.value = data.error
-        infoModal.value = false
-        toastOpen.value = true
+        notiStore.newMessage(data.error, false)
     }
+    infoModal.value = false
 }
 
 onMounted(() => {
@@ -154,6 +146,7 @@ watch(
                 infoModalText.value = 'Estas Seguro que quiere eliminar el expediente ' + lotStore.data.id_record + ' ?' + '\n' + ''
                 infoModalTitle.value = 'Eliminar expediente ' + lotStore.data.id_record + ' del Lote ' + lotStore.data.lot_key
                 infoModal.value = true
+                deleteFunction.value = removeRecordFromLot
                 lotStore.$reset()
             }
         }
