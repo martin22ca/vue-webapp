@@ -43,7 +43,7 @@
                     </div>
                     <div>
                         <h2 class="text-xl text-end mb-2">Permisos Selecionadas</h2>
-                        <draggable class="dragArea list-group h-3/4" :list="filteredRoutes" group="columns" item-key="prop">
+                        <draggable class="dragArea list-group h-3/4" :list="configs" group="columns" item-key="prop">
                             <template #item="{ element, index }">
                                 <div class="list-group-item">
                                     <div
@@ -88,10 +88,10 @@ import { Items as paths } from '@/components/Drawer/menuItems'
 const baseRoutes = [{ title: 'reportFeeback', route: '/report' }]
 
 
-const filteredRoutes = computed(() => {
+const filteredRoutes = (array) => {
     const baseTitles = baseRoutes.map(route => route.title);
-    return configs.value.filter(route => !baseTitles.includes(route.title));
-})
+    return array.filter(route => !baseTitles.includes(route.title));
+}
 
 const props = defineProps({
     role: { default: null, type: Object },
@@ -124,7 +124,6 @@ const disableBTN = computed(() => {
 });
 
 const cloneCol = (col) => {
-    console.log(col)
     const index = configs.value.findIndex((item) => item.title === col.title)
     if (index == -1) {
         return col
@@ -168,7 +167,7 @@ onMounted(() => {
     id.value = props.role.id
     description.value.value = props.role.description
     if (props.role.configs != null) {
-        configs.value = JSON.parse(props.role.configs)
+        configs.value = filteredRoutes(JSON.parse(props.role.configs))
     }
 })
 
