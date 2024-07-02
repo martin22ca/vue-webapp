@@ -19,7 +19,7 @@
 import Drawer from '@/components/Drawer/Drawer.vue'
 import NavBar from '@/components/NavBar.vue';
 import { notificationsStore } from "@/store/notificationsStore";
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import Toast from '@/components/Toast.vue';
 
 const drawerStatus = ref(true)
@@ -57,6 +57,13 @@ onBeforeUnmount(() => {
 const contentStyles = computed(() => {
     return { 'max-width': `${contentWidth.value}px` };
 });
+
+watch(
+  () => notifications.message,
+  (newValue) => {
+   console.log(newValue)
+  }
+);
 
 </script>
 

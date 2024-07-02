@@ -3,7 +3,7 @@
         <span v-if="model[prop] === undefined"/>
         <div v-else>
             <Icon :icon="model[prop] != null ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank'"
-                :class="'text-4xl m-auto ' + (model[prop] != null && 'text-success')">
+                :class="'text-4xl m-auto ' + (model[prop] != null ? 'text-success':'text-neutral-content')">
             </Icon>
         </div>
     </div>

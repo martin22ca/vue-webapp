@@ -10,7 +10,7 @@
         </button>
     </div>
     <form @submit.prevent="submit" class="">
-        <div class="bg-base-200 px-4 rounded-xl overflow-y-auto mx-1 shadow"> <!--This DIV-->
+        <div class="bg-base-200 px-4 rounded-xl mx-1 shadow" style="max-height: 90vh;" > <!--This DIV-->
             <div class="flex flex-row gap-4 ">
                 <MCInput class="basis-1/2" textIcon="mdi:land-plots" textLabel="Lote"
                     :textError="lot_key.errorMessage.value">
@@ -148,4 +148,4 @@ onMounted(() => {
     fetchAudits()
 })
 
-</script>modalLot
+</script>

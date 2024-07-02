@@ -43,13 +43,13 @@ import MCModal from "@/components/Modals/MCModal.vue";
 import Toast from "@/components/Toast.vue";
 import { VGridVueTemplate } from "@revolist/vue3-datagrid";
 import modalUser from '@/components/Modals/modalUser.vue'
-import DataTableInfo from "@/components/DataTable/DataTableInfo.vue";
+import DataTableInfo from "@/components/DataTableUI/DataTableInfo.vue";
 import { usetableStore } from "@/store/tableStore";
 import Plugin from "@revolist/revogrid-column-date";
 import { Icon } from "@iconify/vue";
 import { ref, onMounted, watch } from 'vue';
 import { getUsers, removeUser } from '@/services/users'
-import DataTable from '@/components/DataTable/DataTable.vue';
+import DataTable from '@/components/Spreadsheet/DataTable.vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 
 const headers = [

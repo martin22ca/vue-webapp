@@ -2,7 +2,7 @@
     <defaultLayout>
         <Breadcrumbs />
         <h1 class="p-2">Carga de datos</h1>
-        <div class="flex flex-col">
+        <div class="flex flex-col fadeRight">
             <div class="top">
                 <div class="card w-auto bg-base-100 shadow-md m-2">
 
@@ -16,7 +16,7 @@
                         última vez que se actualizaron tus datos, incluyendo el día y la hora. De esta manera, siempre
                         estarás al día con la información más reciente.
                     </p>
-                    <div v-if="configData.length >0" class="card-title flex flex-row text-center p-4">
+                    <div v-if="configData.length > 0" class="card-title flex flex-row text-center p-4">
                         <ul class="steps w-full">
                             <li class="step step-success">Carga Prevencion</li>
                             <li :class="'step ' + (getState(3) ? 'step-success' : '')">Carga
@@ -46,16 +46,16 @@
                             <li class="my-2">Actualizar casos de expedientes existentes.</li>
                         </div>
                     </Fileuploader>
+                    <Fileuploader v-if="configData.length > 0" cardT="3. Carga de lotes" :refresh="fetchConfigs"
+                        :postConfig="postLots" :config="getValue(5)" 
+                        description="Por ultimo pueden cargar los lotes y asignarle los expedeintes  Esta seccion realizara lo siguiente:">
+                        <div class="ml-2" style="font-size: 16px;">
+                            <li class="my-2">Registrar Lotes.</li>
+                            <li class="my-2">Asignar expediente a Lote.</li>
+                            <li class="my-2">!!! Si el expediente no existe no se registrara !!!</li>
+                        </div>
+                    </Fileuploader>
                 </div>
-                <Fileuploader v-if="configData.length > 0" cardT="3. Carga de lotes" :refresh="fetchConfigs"
-                    :postConfig="postLots" :config="getValue(5)"
-                    description="Por ultimo pueden cargar los lotes y asignarle los expedeintes  Esta seccion realizara lo siguiente:">
-                    <div class="ml-2" style="font-size: 16px;">
-                        <li class="my-2">Registrar Lotes.</li>
-                        <li class="my-2">Asignar expediente a Lote.</li>
-                        <li class="my-2">!!! Si el expediente no existe no se registrara !!!</li>
-                    </div>
-                </Fileuploader>
             </div>
         </div>
     </defaultLayout>
@@ -89,10 +89,7 @@ const getValue = (idConfig) => {
 const getState = (id) => {
     const dateTime = getValue(id)['mod_date']
     const lastDate = new Date(dateTime);
-    console.log(lastDate)
-
     return lastDate > Now
-
 }
 
 onMounted(async () => {

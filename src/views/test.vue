@@ -14,6 +14,9 @@
                 Reset
             </button>
         </div>
+        <div>
+            <button @click="getData" title="print current workbook data to console">Get Data</button>
+        </div>
     </div>
 </template>
 
@@ -39,15 +42,27 @@ onBeforeMount(async () => {
     console.log(response)
 })
 const initLots = {
-    id_record: { name: 'Nro Expediente', order: 0, modified: false, lastCol: '' },
-    id_lot: { name: 'Nro Lote', order: 1, modified: false, lastCol: '' },
+    id_record: { name: 'N° Expediente', order: 0, modified: false, lastCol: '' },
+    id_provider: { name: 'N° de Prestador', order: 1, modified: false, lastCol: '' },
+    lot_key: { name: 'Nombre Lote', order: 1, modified: false, lastCol: '' },
+    business_name: { name: 'Razón Social', order: 1, modified: false, lastCol: '' },
+    id_coordinator: { name: 'N° Coordinador', order: 1, modified: false, lastCol: '' },
+    record_total: { name: 'Monto', order: 5, modified: false, lastCol: '' },
+    audit_user: { name: 'Auditor', order: 2, modified: false, lastCol: '' },
+    date_assignment: { name: 'Fecha de Asignacion a usuario', order: 3, modified: false, lastCol: '' },
+    date_entry_digital: { name: 'Fecha de Recepción en Gapresa Digital ', order: 4, modified: false, lastCol: '' },
+    date_entry_physical: { name: 'Fecha de Recepción en Gapresa Fisico', order: 5, modified: false, lastCol: '' },
+    seal_number: { name: 'N° de Precinto ', order: 6, modified: false, lastCol: '' },
+    observation: { name: 'Observacion', order: 7, modified: false, lastCol: '' },
+    record_type: { name: 'tipo expediente', order: 11, modified: false, lastCol: '' },
+    close_dismissed: { name: 'BAJA // DESESTIMADO', order: 8, modified: false, lastCol: '' },
 };
 
 const initiAsignaciones = {
-    id_record: { name: 'Nro Expediente', order: 0, modified: false, lastCol: '' },
-    id_provider: { name: 'Nro Prestador', order: 1, modified: false, lastCol: '' },
+    id_record: { name: 'N°', order: 0, modified: false, lastCol: '' },
+    id_provider: { name: 'N° Prestador', order: 1, modified: false, lastCol: '' },
     business_name: { name: 'Razon Social', order: 2, modified: false, lastCol: '' },
-    id_coordinator: { name: 'Nro Coordinador', order: 3, modified: false, lastCol: '' },
+    id_coordinator: { name: 'N° Coordinador', order: 3, modified: false, lastCol: '' },
     coordinator_business_name: { name: 'Coordinador', order: 4, modified: false, lastCol: '' },
     business_location: { name: 'Provincia', order: 5, modified: false, lastCol: '' },
     sancor_zone: { name: 'Zona', order: 6, modified: false, lastCol: '' },

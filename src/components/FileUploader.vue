@@ -1,8 +1,6 @@
 <template>
-    <MCModal :modal-open="configXlS" :toggle-modal="() => { configXlS = !configXlS }" modal-title="Configurar Columnas">
-        <ConfigData v-if="selectedFile" :file="selectedFile" :id-col="props.configId"
+    <ConfigData class="absolute" v-if="selectedFile" :file="selectedFile" :id-col="id_config"  :modalstatus="configXlS"
             :toggle-modal="() => { configXlS = !configXlS }"></ConfigData>
-    </MCModal>
     <MCModal :modal-open="modalControl.status" :modal-text="modalControl.text" :modal-title="modalControl.title"
         :toggle-modal="() => { toggleModal() }">
         <span v-if="modalControl.loading" class="loading loading-dots loading-lg bg-primary"></span>
@@ -14,8 +12,8 @@
             <slot>
 
             </slot>
-            <div class="ultima-carga-estado">
-                <p class="py-2">
+            <div class="">
+                <p class="">
                     <span class="flex flex-row center items-center gap-2">
                         Ulitma carga:
                         <span class="grow"></span>
@@ -26,7 +24,7 @@
                         </span>
                     </span>
                 </p>
-                <p class="py-2">
+                <p class="pb-2">
                     <span class="flex flex-row center items-center gap-2">
                         Estado:
                         <span class="grow"></span>
@@ -39,15 +37,19 @@
                     </span>
                 </p>
             </div>
-            <input ref="fileInputRef" @change="handleFileChange" type="file"
-                class="w-full file-input file-input-bordered" placeholder="buscar"
-                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                size="" />
-            <div class="card-actions justify-end">
-                <button v-if="selectedFile != null" class="btn btn-error my-2" @click="clearFileInput">Cancelar</button>
-                <button :disabled="selectedFile == null" class="btn btn-primary my-2"
+            <div class="flex flex-row center-items ">
+                <input ref="fileInputRef" @change="handleFileChange" type="file"
+                    class="w-full file-input file-input-bordered" placeholder="buscar"
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    size="" />
+
+                <button v-if="selectedFile != null" class="btn btn-error mx-2" @click="clearFileInput">Cancelar</button>
+                <button :disabled="selectedFile == null" class="btn btn-primary mx-2"
                     @click="sendFileToApi()">Cargar</button>
+
+
             </div>
+
         </div>
     </div>
 </template>
@@ -76,12 +78,15 @@ const modalControl = ref({
     loading: false,
 })
 const now = new Date();
-now.setHours(0, 0, 0, 0);
 const configXlS = ref(false)
 const fileInputRef = ref(null)
 const selectedFile = ref(null);
 const state = ref(false)
 const lastLoad = ref(false)
+
+
+var id_config = null
+now.setHours(0, 0, 0, 0);
 
 const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -108,7 +113,7 @@ const sendFileToApi = async () => {
             const data = await props.postConfig(formData)
             if (data.data.success) {
                 toggleModal()
-                notiStore.newMessage('Expedientes enviados con exito', true, 5)
+                notiStore.newMessage('Expedientes enviados con exito', true)
                 props.refresh()
                 modalControl.value.status = false
             } else {
@@ -152,10 +157,10 @@ onMounted(() => {
     var dateTime = props.config.mod_date.split('T');
     var date = dateTime[0];
     var time = dateTime[1].split('.')[0];
-    lastLoad.value = date +' '+ time
+    lastLoad.value = date + ' ' + time
     const lastDate = new Date(dateTime);
-    console.log(lastDate)
-    if(lastDate > now){
+    id_config = props.config.id
+    if (lastDate > now) {
         state.value = true
     }
 

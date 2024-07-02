@@ -2,7 +2,7 @@
     <div>
         <div class="label">
             <span class="label-text flex-row flex ">
-                <Icon :icon="props.textIcon"  class="mx-2 text-2xl text-neutral" />{{ props.textLabel }}
+                <Icon :icon="props.textIcon"  class="mx-2 text-2xl text-neutral-content bg-neutral rounded " />{{ props.textLabel }}
             </span>
         </div>
         <slot></slot>

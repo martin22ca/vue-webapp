@@ -38,12 +38,12 @@ import { userDataStore } from '@/store/userStore';
 import { usetableStore } from '@/store/tableStore';
 import { useUserRecords } from '@/store/userRecordsStore';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
-import DataTableInfoDelete from '@/components/DataTable/DataTableInfoDelete.vue';
-import DataTableCheckbox from '@/components/DataTable/DataTableCheckbox.vue'
-import DataTableExists from "@/components/DataTable/DataTableExists.vue";
-import DataTablePriorities from "@/components/DataTable/DataTablePriorities.vue";
+import DataTableInfoDelete from '@/components/DataTableUI/DataTableInfoDelete.vue';
+import DataTableCheckbox from '@/components/DataTableUI/DataTableCheckbox.vue'
+import DataTableExists from "@/components/DataTableUI/DataTableExists.vue";
+import DataTablePriorities from "@/components/DataTableUI/DataTablePriorities.vue";
 import Plugin from "@revolist/revogrid-column-date";
-import DataTable from "@/components/DataTable/DataTable.vue";
+import DataTable from "@/components/Spreadsheet/DataTable.vue";
 import { notificationsStore } from "@/store/notificationsStore";
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
@@ -54,8 +54,8 @@ const headers = [
     { prop: 'id_record', name: 'Nro Expediente', pin: 'colPinStart', valType: 'number', size: 100 },
     { prop: 'worked_on', name: 'Activo', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
     { prop: 'id_provider', name: 'Prestador', valType: 'number', size: 150, readonly: true },
-    { prop: 'id_particularity', name: 'Particularidad', cellTemplate: VGridVueTemplate(DataTableExists), valType: 'number', size: 150, readonly: true },
-    { prop: 'id_priority', name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTablePriorities), valType: 'number', size: 150, readonly: true },
+    { prop: 'id_particularity', name: 'Particularidad', cellTemplate: VGridVueTemplate(DataTableExists), valType: 'number', size: 100, readonly: true },
+    { prop: ['id_priority',2], name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTablePriorities), valType: 'number', size: 100, readonly: true },
     { prop: 'business_name', name: 'Razon Social', valType: 'text', size: 200, readonly: true },
     { prop: 'assigned', name: 'Asignado', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
     { prop: 'coorinator_number', name: 'Coordinador', valType: 'number', size: 150, readonly: true },
@@ -74,8 +74,8 @@ const infoModal = ref(false)
 const infoModalText = ref('')
 const infoModalTitle = ref('')
 const loading = ref(true)
-const notiStore = notificationsStore()
 
+const notiStore = notificationsStore()
 const userStore = userDataStore()
 const tableStore = usetableStore()
 const userRecordsStore = useUserRecords()
@@ -92,6 +92,7 @@ const fetchResources = async (reset = false) => {
     try {
         if (reset) loading.value = true;
         const { data } = await getRecordsInfoUser(userStore.token, filters);
+        console.log(data)
         dbRecords.value = [...data]
         addEmptyRow()
 

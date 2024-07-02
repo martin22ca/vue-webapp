@@ -1,10 +1,10 @@
 <template>
     <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
         <div class="modal-box modalAnim max-w-6xl bg-base-300 max-h-screen ">
-            <button class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
+            <button v-if="props.toggleModal != null" class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
                 @click="props.toggleModal()">✕</button>
             <div class="font-bold text-2xl flex flex-row items-center">
-                <Icon :class="'mr-2 text-' + color" :icon="modalIcon" />
+                <Icon v-if="props.modalText != null" :class="'mr-2 text-' + color" :icon="modalIcon" />
                 <h3>{{ props.modalTitle }}</h3>
             </div>
             <p v-if="props.modalText != null" class="my-4 text-md">{{ props.modalText }}</p>
@@ -18,7 +18,7 @@ import { Icon } from '@iconify/vue';
 import { ref, onMounted } from 'vue';
 
 const props = defineProps({
-    modalOpen: Boolean,
+    modalOpen: { type: Boolean },
     modalTitle: String,
     modalText: {
         default: null,
@@ -50,20 +50,20 @@ onMounted(() => {
 </script>
 
 <style>
-.modalAnim{
+.modalAnim {
     animation: fadeBottom 0.5s ease 0s 1 normal forwards;
 }
 
 
 @keyframes fadeBottom {
-	0% {
-		opacity: 0;
-		transform: translateY(50px);
-	}
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
 
-	100% {
-		opacity: 1;
-		transform: translateY(0);
-	}
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>

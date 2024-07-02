@@ -69,7 +69,8 @@
                 <div class="flex flex-row gap-4">
                     <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Contraseña"
                         :textError="user_pass.errorMessage.value">
-                        <input v-model="user_pass.value.value" type="password" class="input input-sm input-bordered w-full" />
+                        <input v-model="user_pass.value.value" type="password"
+                            class="input input-sm input-bordered w-full" />
                     </MCInput>
                     <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Confirmar Contraseña"
                         :textError="passwordConfirmation.errorMessage.value">
@@ -86,13 +87,14 @@
     </MCModal>
 </template>
 
-<script setup >
+<script setup>
 import MCModal from './MCModal.vue';
 import { ref } from 'vue';
 import MCInput from '../MCInput.vue';
 import { registerUser, updateUser } from '@/services/users'
 import * as Yup from "yup";
 import { useField, useForm } from 'vee-validate'
+import { notificationsStore } from '@/store/notificationsStore';
 
 const props = defineProps({
     modalOpen: { default: false, type: Boolean },
@@ -101,6 +103,7 @@ const props = defineProps({
 });
 
 const update = ref(false)
+const notifications = notificationsStore()
 update.value = props.user != null
 
 const createValidationSchema = () => {
@@ -198,12 +201,14 @@ const submit = handleSubmit(async (values) => {
     values['user_id'] = id.value
     if (update.value) {
         const { data } = await updateUser(values)
-        console.log(data)
+        notifications.newMessage(data.success ? 'Usuario Actualizado' : 'Error en la actualizacion', data.success)
     } else {
         const { data } = await registerUser(values)
-        console.log(data)
+        notifications.newMessage(data.success ? 'Usuario Creado' : 'Error en la creacion', data.success)
     }
-    props.toggleModal()
+    setTimeout(() => {
+        props.toggleModal()
+    }, 300)
 });
 
 </script>

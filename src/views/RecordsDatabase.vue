@@ -1,9 +1,9 @@
 <template>
     <defaultLayout>
-        <Breadcrumbs/>
+        <Breadcrumbs />
         <h2 class="p-2">DB Prevencion</h2>
-        <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters" class="w-full mr-2"
-            :rowSize="60" >
+        <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
+            class="w-full mr-2" :rowSize="60">
         </DataTable>
     </defaultLayout>
 </template>
@@ -13,8 +13,9 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { onMounted, ref } from 'vue';
-import DataTableProgres from '@/components/DataTable/DataTableProgres.vue';
-import DataTable from '@/components/DataTable/DataTable.vue';
+import DataTableGroup from '@/components/DataTableUI/DataTableGroup.vue'
+import DataTableProgres from '@/components/DataTableUI/DataTableProgres.vue';
+import DataTable from '@/components/Spreadsheet/DataTable.vue';
 import { getRecords } from '@/services/records'
 
 const headers = [
@@ -48,7 +49,7 @@ const headers = [
     { prop: 'cuenta', name: 'Cuenta', valType: 'text' },
     { prop: 'ambu_total', name: 'Ambu total', valType: 'text' },
     { prop: 'inter_total', name: 'Inter total', valType: 'text' },
-    { prop: 'audit_group', name: 'Grupo Auditor', valType: 'text' },
+    { prop: 'audit_group', name: 'Grupo Auditor',cellTemplate: VGridVueTemplate(DataTableGroup), valType: 'text' },
     { prop: 'date_vto_carga', name: 'fecha vto carga', valType: 'text' },
     { prop: 'status', name: 'Estado', valType: 'text' },
     { prop: 'assigned_user', name: 'Usuario', valType: 'text' },
@@ -61,10 +62,13 @@ const loading = ref(true)
 const fetchResources = async () => {
     loading.value = true
     const { data } = await getRecords(filters)
-    records.value = data
-    setTimeout(() => {
-        loading.value = false
-    }, 100)
+    console.log(data)
+    if (data.success) {
+        records.value = data.data
+        setTimeout(() => {
+            loading.value = false
+        }, 100)
+    }
 }
 
 onMounted(async () => {

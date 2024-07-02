@@ -9,7 +9,7 @@
             G-<span class="salud text-base-content">Salud</span>
           </div>
         </a>
-        <div class="menu menu-horizontal pl-0 bg-base-100 text-base-content overflow-y-scroll overflow-x-hidden center"
+        <div class="menu menu-horizontal pl-0 bg-base-100 text-base-content overflow-y-auto overflow-x-hidden center"
           style="max-height: 70vh;">
           <DrawerItem v-for="Item in itemsArr" :title="Item.title" :icon="Item.icon" :route="Item.route"
             :children="Item.children" />

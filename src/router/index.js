@@ -59,9 +59,24 @@ const routes = [
     component: () => import('@/views/dataEntry/LotManagement.vue'),
   },
   {
+    path: '/report',
+    name: 'reportFeeback',
+    component: () => import('@/views/ReportFeedback.vue'),
+  },
+  {
+    path: '/feedback',
+    name: 'feedback',
+    component: () => import('@/views/Feedback.vue'),
+  },
+  {
     path: '/test',
     name: 'Test',
     component: () => import('@/views/test.vue'),
+  },
+  {
+    path: '/audit',
+    name: 'AuditView',
+    component: () => import('@/views/Audit.vue'),
   },
 ]
 
@@ -90,6 +105,9 @@ router.beforeEach(async (to, from) => {
     } else {
       store.$reset()
       if (to.name != 'Login') {
+        console.log(
+          'error',authenticated.error
+        )
         alert(authenticated.error)
         router.push('/login')
         return false

@@ -5,28 +5,28 @@ export const notificationsStore = defineStore('notificationsStore', () => {
     const open = ref(false)
     const message = ref('demo Message')
     const state = ref(null)
-    const duration = ref(0)
+    const duration = ref(null)
 
     function $reset() {
         open.value = false
         message.value = 'demo Message'
         state.value = null
-        duration.value = 0
+        duration.value = null
     }
 
     function toggle() {
         open.value = !open
     }
 
-    function newMessage(newMessage, newState = null, newDuration = 0) {
+    function newMessage(newMessage, newState = null) {
         open.value = false
         message.value = newMessage
         state.value = newState
-        duration.value = newDuration
+        if (newState) duration.value = 5
         setTimeout(() => {
             open.value = true;
         }, 200);
     }
 
-    return { open, message, state, newMessage, toggle, $reset }
+    return { open, message, state, duration, newMessage, toggle, $reset }
 })

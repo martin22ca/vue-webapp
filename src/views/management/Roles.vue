@@ -59,7 +59,7 @@ import { computed, readonly } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import MCModal from "@/components/Modals/MCModal.vue";
 import modalAddToRole from '@/components/Modals/modalAddToRole.vue';
-import DataTable from '@/components/DataTable/DataTable.vue';
+import DataTable from '@/components/Spreadsheet/DataTable.vue';
 import RoleEdit from '@/components/CRUDs/RoleEdit.vue';
 import Toast from "@/components/Toast.vue";
 import { Icon } from "@iconify/vue";

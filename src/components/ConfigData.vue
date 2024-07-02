@@ -1,9 +1,5 @@
 <template>
-    <div>
-        <MCModal :modal-open="modalControl.status" :modal-text="modalControl.text" :modal-title="modalControl.title"
-            :modal-succes="modalControl.success"
-            :toggle-modal="() => { modalControl.status = !modalControl.status; toggleModal() }">
-        </MCModal>
+    <MCModal :modal-open="props.modalstatus" :toggle-modal="() => {toggleModal() }">
         <div v-if="!loading">
             <h1 class="text-xl mb-2">File: <div class="badge badge-accent badge-lg">{{ props.file.name }} </div>
             </h1>
@@ -57,21 +53,22 @@
                     <div v-if="exists(currentConfig - 1)"
                         :class="'basis-1/3 p-4 text-center rounded-lg bg-base-200 ' + (configs[currentConfig - 1]?.modified ? 'opacity-50' : '')">
                         <p>Col:
-                        <div class="badge badge-lg badge-neutral">{{ configs[currentConfig - 1]?.name }} </div>
+                        <div class="bg-neutral text-neutral-content rounded-lg">{{ configs[currentConfig - 1]?.name }}
+                        </div>
                         </p>
                         <p>Orden:
                         <div class="badge badge-lg badge-secondary my-2">{{ configs[currentConfig - 1].order != null ?
-                            configs[currentConfig - 1].order : 'NULL' }} </div>
+        configs[currentConfig - 1].order : 'NULL' }} </div>
                         </p>
                     </div>
                     <div
                         :class="'grow p-4 bg-base-200 text-center rounded-lg border-2 border-accent ' + (configs[currentConfig]?.modified ? 'opacity-50' : '')">
                         <p>Col:
-                        <div class="badge badge-lg badge-neutral">{{ configs[currentConfig].name }} </div>
+                        <div class="bg-neutral text-neutral-content rounded-lg">{{ configs[currentConfig].name }} </div>
                         </p>
                         <p>Orden:
                         <div class="badge badge-lg badge-accent my-2">{{ configs[currentConfig].order != null ?
-                            configs[currentConfig].order : 'No existe Columna' }} </div>
+        configs[currentConfig].order : 'No existe Columna' }} </div>
                         </p>
                         <button class="btn btn-accent btn-wide my-2"
                             @click="configs[currentConfig].order = null; configs[currentConfig].modified = true">
@@ -81,11 +78,12 @@
                     <div v-if="exists(currentConfig + 1)"
                         :class="'basis-1/3 p-4 text-center rounded-lg bg-base-200 ' + (configs[currentConfig + 1]?.modified ? 'opacity-50' : '')">
                         <p>Col:
-                        <div class="badge badge-lg badge-neutral">{{ configs[currentConfig + 1]?.name }} </div>
+                        <div class="bg-neutral text-neutral-content rounded-lg ">{{ configs[currentConfig + 1]?.name }}
+                        </div>
                         </p>
                         <p>Orden:
                         <div class="badge badge-lg badge-secondary my-2">{{ configs[currentConfig + 1].order != null ?
-                            configs[currentConfig + 1].order : 'NULL' }} </div>
+        configs[currentConfig + 1].order : 'NULL' }} </div>
                         </p>
                     </div>
                     <button class="btn btn-accent my-2 " @click="currentConfig = currentConfig + 1"
@@ -108,7 +106,7 @@
             <h1 class="text-4xl "> Validando archivo Excel...</h1>
             <Loader class="m-auto py-12" />
         </div>
-    </div>
+    </MCModal>
 </template>
 
 
@@ -124,6 +122,7 @@ const props = defineProps({
     file: File,
     idCol: Number,
     toggleModal: Function,
+    modalstatus:Boolean,
 })
 const loading = ref(true)
 const headers = ref([]);
@@ -173,6 +172,7 @@ const setOrder = (index, order, name) => {
     headers.value[index].remove = true
     setTimeout(() => {
         headers.value.splice(index, 1)
+        toggleModal()
     }, 300);
 
 }

@@ -11,15 +11,15 @@
                 </button>
             </div>
         </MCModal>
-        <div class="h-auto">
+        <div class="h-auto ">
             <Breadcrumbs />
             <div>
                 <h1 class="text-2xl p-2">Lotes</h1>
             </div>
             <div class="flex gap-2 m-2 max-w-full">
                 <div v-if="currentLot == null" class="fadeRight w-full">
-                    <DataTable :btnCols="false" :btnExport="false" :rows="lots" :cols="headerLots" :loading="loading">
-                        <template #table_options>
+                    <DataTable :btnCols="false" :btnExport="false" :rows="lots" :cols="headerLots" :loading="loading" @update-filters="updateFiltersLot">
+                        <template #table_options >
                             <h2 class="text-xl p-2 bg-neutral text-neutral-content p-2 rounded-xl">Lotes Disponibles
                             </h2>
                         </template>
@@ -30,7 +30,7 @@
                 </div>
                 <div v-if="currentLot != null" class="fadeLeft" style="max-width: 66%;">
                     <DataTable v-if="recordsFromLot != null" class="w-full" :rows="recordsFromLot"
-                        :cols="headersRecords" :loading="loading">
+                        :cols="headersRecords" :loading="loading" @updateFilters="updateFiltersRecords">
                         <template #table_options>
                         </template>
                     </DataTable>
@@ -45,10 +45,10 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import MCModal from '@/components/Modals/MCModal.vue';
 import lotEdit from '@/components/CRUDs/LotEdit.vue';
-import DataTableCheckbox from '@/components/DataTable/DataTableCheckbox.vue';
-import DataTableInfo from '@/components/DataTable/DataTableInfo.vue';
+import DataTableCheckbox from '@/components/DataTableUI/DataTableCheckbox.vue';
+import DataTableInfo from '@/components/DataTableUI/DataTableInfo.vue';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
-import DataTable from '@/components/DataTable/DataTable.vue';
+import DataTable from '@/components/Spreadsheet/DataTable.vue';
 import { onMounted, ref, watch } from 'vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { getRecordsInfo } from '@/services/records'
@@ -96,6 +96,15 @@ const headersRecords = [
     { prop: 'observation', name: 'Observacion', valType: 'text', size: 300 },
 ]
 
+const updateFiltersLot = (appliedFilters) => {
+    filtersLot = appliedFilters;
+    fetchResources()
+}
+
+const updateFiltersRecords = (appliedFilters) => {
+    filtersLotRecords = appliedFilters;
+    fetchResourcesFromLot()
+}
 
 const fetchResourcesFromLot = async () => {
     loading.value = true

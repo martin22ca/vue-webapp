@@ -99,5 +99,10 @@ export const Items: Array<MenuItem> = [
             },
         ]
     },
-
+    {
+        title: 'Feedback',
+        icon: 'mdi:lifebuoy',
+        route: '/feedback',
+        children: undefined
+    },
 ]

@@ -6,13 +6,11 @@ const BASE_URL = '/users'
 export async function getUsers(data) {
     try {
         const stringifiedData = JSON.stringify(data);
-        const [token, path] = getTokenAndPath()
-        console.log(token,path)
         const response = await axiosClient({
             url: BASE_URL + '/',
             method: 'GET',
             timeout: 10000,
-            params: { 'token': token, 'path': path, filters: stringifiedData }
+            params: { filters: stringifiedData }
         })
         console.log(response.status)
         return response

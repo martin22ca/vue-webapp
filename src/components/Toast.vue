@@ -1,21 +1,20 @@
 <template>
     <transition name="toast" mode="out-in">
-        <div v-if="toastOpen" class="toast toast-end z-50 w-64 " >
-            <div v-if="props.state != null" :class="'flex flex-row gap-0 alert alert-' + (props.state ? 'success':'error')" style="max-width:40vw;">
+        <div v-if="toastOpen" class="toast toast-end z-50 w-64 ">
+            <div v-if="props.state != null" :class="'flex flex-row gap-0 ' + (Titles[alertType].alert)"
+                style="max-width:40vw;">
                 <div :class="'flex flex-col  text-' + alertType + '-content'">
                     <span class="font-bold flex ">
                         <Icon class="text-xl mr-2" :icon="Titles[alertType].icon" /> {{ Titles[alertType].text }}
                     </span>
-                    <span class="flex-initial">{{ toastText }}</span>
+                    <span class="flex-initial overflow-x-auto max-w-80 pb-4" >{{ toastText }}</span>
                 </div>
                 <span class="grow"></span>
-                <button v-if="duration === null"
-                    :class="'self-end p-2 rounded-xl ml-2 bg-neutral text-neutral-content'"
-                    @click="toggleToast">
+                <button v-if="duration == null" :class="'self-end p-2 rounded-xl ml-2 ' + (Titles[alertType].button)" @click="toggleToast">
                     <Icon icon="mdi:close" />
                 </button>
             </div>
-            <div class="progress-bar" v-if="duration !== null" :style="{ width: progressBarWidth }"></div>
+            <div class="progress-bar progress-bar-neutral" v-if="duration != null" :style="{ width: progressBarWidth }"></div>
         </div>
     </transition>
 </template>
@@ -49,15 +48,15 @@ const props = defineProps({
 
 const progressBarWidth = ref('100%');
 const alertType = computed(() => {
-    if (props.state === true) return 'success';
-    if (props.state === false) return 'error';
-    return 'info';
+    if (props.state === true) return 0;
+    if (props.state === false) return 1;
+    return 2;
 });
 
 const Titles = {
-    'info': { text: 'Informacion', icon: 'mdi:information' },
-    'success': { text: 'Exito', icon: 'mdi:check' },
-    'error': { text: 'Alerta', icon: 'mdi:alert-circle' }
+    0: { text: 'Exito', icon: 'mdi:check', alert: 'alert alert-success', button: 'bg-success-content text-success' },
+    1: { text: 'Alerta', icon: 'mdi:alert-circle', alert: 'alert alert-error', button: 'bg-error-content text-error' },
+    2: { text: 'Informacion', icon: 'mdi:information', alert: 'alert alert-info', button: 'bg-info-content text-info' },
 };
 
 const startProgressBarAnimation = () => {
@@ -81,8 +80,6 @@ watch(
     (newValue) => {
         if (newValue && props.duration) {
             startProgressBarAnimation();
-        } else {
-            progressBarWidth.value = '100%';
         }
     }
 );
@@ -97,7 +94,7 @@ onMounted(() => {
 <style>
 .progress-bar {
     height: 3px;
-    background-color: oklch(var(--p));
+    background-color: oklch(var(--nc));
     width: 100%;
     transition: width linear;
 }

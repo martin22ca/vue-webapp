@@ -1,5 +1,5 @@
 <template>
-  <span class="loader"></span>
+  <span class="loader">Cargando </span>
 </template>
 
 <style scoped>
@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 6rem;
+  max-width: 10rem;
   margin-top: 3rem;
   margin-bottom: 3rem;
 }

@@ -16,9 +16,10 @@
                     <button class="btn btn-sm rounded-xl bg-neutral mx-1">
                         <Icon icon="mdi:bell" class=" text-neutral-content w-4 h-4" />
                     </button>
-                    <button class="btn btn-sm rounded-xl bg-neutral mx-1">
-                        <Icon icon="ic:baseline-fullscreen" class="text-neutral-content w-4 h-4" />
-                    </button>
+                    <RouterLink class="btn btn-sm rounded-xl bg-neutral mx-1" to="/report">
+                        <Icon icon="mdi:lifebuoy" class="text-neutral-content w-4 h-4" />
+                    </RouterLink>
+
                     <div class="avatar placeholder">
                         <div class="bg-primary rounded-full w-12">
                             <span class="text-xl text-primary-content uppercase">{{ initial }}</span>
@@ -45,5 +46,3 @@ onMounted(() => {
     initial.value = store.name[0]
 })
 </script>
-
-

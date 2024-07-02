@@ -12,12 +12,12 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
 import defaultLayout from '@/layouts/defaultLayout.vue';
-import { onMounted, ref } from 'vue';
-import DataTableProgres from '@/components/DataTable/DataTableProgres.vue';
-import DataTableGroup from '@/components/DataTable/DataTableGroup.vue'
-import DataTable from '@/components/DataTable/DataTable.vue';
 import { getRecordsAssigned } from '@/services/records'
-import DataTableCheckbox from '@/components/DataTable/DataTableCheckbox.vue'
+import { onMounted, ref } from 'vue';
+import DataTable from '@/components/Spreadsheet/DataTable.vue';
+import DataTableProgres from '@/components/DataTableUI/DataTableProgres.vue';
+import DataTableGroup from '@/components/DataTableUI/DataTableGroup.vue'
+import DataTableCheckbox from '@/components/DataTableUI/DataTableCheckbox.vue'
 
 const headers = [
     { prop: 'id_record', name: 'Nro Exp', pin: 'colPinStart', valType: 'number' },
@@ -72,7 +72,8 @@ const loading = ref(true)
 
 const fetchResources = async () => {
     const { data } = await getRecordsAssigned(filters)
-    records.value = data
+    console.log(data)
+    records.value = data.data
     setTimeout(() => {
         loading.value = false
     }, 500)

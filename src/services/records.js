@@ -47,6 +47,20 @@ export async function getRecordsInfo(data = null, idLot = null) {
     }
 }
 
+export async function getRecordsAudit(token, data = null) {
+    try {
+        const stringifiedData = JSON.stringify(data);
+        return await axiosClient({
+            url: BASE_URL + '/audit',
+            method: 'GET',
+            params: { token: token, filters: stringifiedData }
+        })
+    } catch (error) {
+        console.error('Error fetching records:', error);
+        throw error
+    }
+}
+
 export async function getRecordsInfoUser(token, data = null) {
     try {
         const stringifiedData = JSON.stringify(data);

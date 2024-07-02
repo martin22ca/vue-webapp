@@ -94,7 +94,7 @@ onMounted(() => {
 .results-list {
   position: absolute;
   width: 100%;
-  max-height: 250px;
+  max-height: 350px;
   overflow-y: auto;
   border: 1px solid oklch(var(--n));
   background-color: oklch(var(--b3));
@@ -104,6 +104,7 @@ onMounted(() => {
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 909;
 }
 
 .result-item {

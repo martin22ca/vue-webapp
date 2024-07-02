@@ -44,8 +44,8 @@ const isTargetEmpty = computed(() => {
 onMounted(() => {
   if (props.prop != null) {
     console.log(props.prop)
-    deleteValue = props.prop.delete
-    infoValue = props.prop.info
+    deleteValue = props.prop[0]
+    infoValue = props.prop[1]
   }
 })
 </script>
