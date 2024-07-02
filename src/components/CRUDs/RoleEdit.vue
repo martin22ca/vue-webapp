@@ -43,7 +43,7 @@
                     </div>
                     <div>
                         <h2 class="text-xl text-end mb-2">Permisos Selecionadas</h2>
-                        <draggable class="dragArea list-group h-3/4" :list="configs" group="columns" item-key="prop">
+                        <draggable class="dragArea list-group h-3/4" :list="filteredRoutes" group="columns" item-key="prop">
                             <template #item="{ element, index }">
                                 <div class="list-group-item">
                                     <div
@@ -84,6 +84,14 @@ import * as Yup from "yup";
 import { updateRole } from '@/services/roles'
 import { useField, useForm } from 'vee-validate'
 import { Items as paths } from '@/components/Drawer/menuItems'
+
+const baseRoutes = [{ title: 'reportFeeback', route: '/report' }]
+
+
+const filteredRoutes = computed(() => {
+    const baseTitles = baseRoutes.map(route => route.title);
+    return configs.value.filter(route => !baseTitles.includes(route.title));
+})
 
 const props = defineProps({
     role: { default: null, type: Object },
@@ -144,7 +152,13 @@ const submit = handleSubmit(async (values) => {
         route: obj.route,
     }));
 
+    for (let i = 0; i < baseRoutes.length; i++) {
+        const element = baseRoutes[i];
+        optConfigs.push(element)
+    }
+
     valuesSend['configs'] = configs.value.length === 0 ? null : JSON.stringify(optConfigs);
+    console.log(optConfigs)
     const { data } = await updateRole(valuesSend)
     console.log(data)
     props.clearProp()
