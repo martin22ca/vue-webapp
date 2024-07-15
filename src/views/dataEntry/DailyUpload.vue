@@ -1,61 +1,58 @@
 <template>
     <defaultLayout>
-        <Breadcrumbs />
-        <h1 class="p-2">Carga de datos</h1>
-        <div class="flex flex-col fadeRight">
-            <div class="top">
-                <div class="card w-auto bg-base-100 shadow-md m-2">
-
-                    <h2 class="card-title m-4 underline">
-                        Carga de datos
-                    </h2>
-                    <p class="mx-4 mb-4">
-                        Sube un archivo CSV o XLS para comenzar a analizar tus datos. La aplicación configurará
-                        automáticamente las columnas si coinciden con la última configuración utilizada. En caso
-                        contrario, las columnas serán configuradas durante la subida del archivo. También podrás ver la
-                        última vez que se actualizaron tus datos, incluyendo el día y la hora. De esta manera, siempre
-                        estarás al día con la información más reciente.
-                    </p>
-                    <div v-if="configData.length > 0" class="card-title flex flex-row text-center p-4">
-                        <ul class="steps w-full">
-                            <li class="step step-success">Carga Prevencion</li>
-                            <li :class="'step ' + (getState(3) ? 'step-success' : '')">Carga
-                                Asignacion</li>
-                            <li :class="'step ' + ((getState(3) && getState(4)) ? 'step-success' : '')">
-                                Carga Manual</li>
-                        </ul>
+        <Breadcrumbs title="Carga de datos" />
+        <div class="flex flex-col">
+            <div class="card bg-base-100 shadow-md m-2">
+                <h2 class="card-title m-4 underline">
+                    Carga de datos
+                </h2>
+                <p class="mx-4 mb-4">
+                    Sube un archivo CSV o XLS para comenzar a analizar tus datos. La aplicación configurará
+                    automáticamente las columnas si coinciden con la última configuración utilizada. En caso
+                    contrario, las columnas serán configuradas durante la subida del archivo. También podrás ver la
+                    última vez que se actualizaron tus datos, incluyendo el día y la hora. De esta manera, siempre
+                    estarás al día con la información más reciente.
+                </p>
+                <div v-if="configData.length > 0" class="card-title flex flex-row text-center p-4">
+                    <ul class="steps w-full">
+                        <li class="step step-success">Carga Prevencion</li>
+                        <li :class="'step ' + (getState(3) ? 'step-success' : '')">Carga
+                            Asignacion</li>
+                        <li :class="'step ' + ((getState(3) && getState(4)) ? 'step-success' : '')">
+                            Carga Manual</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flex flex-row flex-1">
+                <Fileuploader v-if="configData.length > 0" cardT="1. Cargar DB Prevencion" :refresh="fetchConfigs"
+                    :postConfig="postDb" :config="getValue(3)"
+                    description="Primero se deben actualizar la informacion recibida de Prevencion. Esta seccion realizara lo siguiente: ">
+                    <div class="ml-2" style="font-size: 16px;">
+                        <li class="my-2">Crear nuevos expedientes.</li>
+                        <li class="my-2"> Actualizar expedientes existentes.</li>
+                        <li class="my-2">Registrar prestadores asociados a nuevos expedientes.</li>
                     </div>
-                </div>
-                <div class="flex flex-row flex-1">
-                    <Fileuploader v-if="configData.length > 0" cardT="1. Cargar DB Prevencion" :refresh="fetchConfigs"
-                        :postConfig="postDb" :config="getValue(3)"
-                        description="Primero se deben actualizar la informacion recibida de Prevencion. Esta seccion realizara lo siguiente: ">
-                        <div class="ml-2" style="font-size: 16px;">
-                            <li class="my-2">Crear nuevos expedientes.</li>
-                            <li class="my-2"> Actualizar expedientes existentes.</li>
-                            <li class="my-2">Registrar prestadores asociados a nuevos expedientes.</li>
-                        </div>
-                    </Fileuploader>
-                    <Fileuploader v-if="configData.length > 0" cardT="2. Cargar Asignaciones" :refresh="fetchConfigs"
-                        :postConfig="postAssignment" :config="getValue(4)"
-                        description="Segundo se deben cargar las asignaciones recibidas por correo de Prevencion. Esta seccion realizara lo siguiente:">
-                        <div class="ml-2" style="font-size: 16px;">
-                            <li class="my-2">Registrar nuevos prestadores.</li>
-                            <li class="my-2">Actualizar prestadores existentes.</li>
-                            <li class="my-2">Registrar nuevos casos de expedientes.</li>
-                            <li class="my-2">Actualizar casos de expedientes existentes.</li>
-                        </div>
-                    </Fileuploader>
-                    <Fileuploader v-if="configData.length > 0" cardT="3. Carga de lotes" :refresh="fetchConfigs"
-                        :postConfig="postLots" :config="getValue(5)" 
-                        description="Por ultimo pueden cargar los lotes y asignarle los expedeintes  Esta seccion realizara lo siguiente:">
-                        <div class="ml-2" style="font-size: 16px;">
-                            <li class="my-2">Registrar Lotes.</li>
-                            <li class="my-2">Asignar expediente a Lote.</li>
-                            <li class="my-2">!!! Si el expediente no existe no se registrara !!!</li>
-                        </div>
-                    </Fileuploader>
-                </div>
+                </Fileuploader>
+                <Fileuploader v-if="configData.length > 0" cardT="2. Cargar Asignaciones" :refresh="fetchConfigs"
+                    :postConfig="postAssignment" :config="getValue(4)"
+                    description="Segundo se deben cargar las asignaciones recibidas por correo de Prevencion. Esta seccion realizara lo siguiente:">
+                    <div class="ml-2" style="font-size: 16px;">
+                        <li class="my-2">Registrar nuevos prestadores.</li>
+                        <li class="my-2">Actualizar prestadores existentes.</li>
+                        <li class="my-2">Registrar nuevos casos de expedientes.</li>
+                        <li class="my-2">Actualizar casos de expedientes existentes.</li>
+                    </div>
+                </Fileuploader>
+                <Fileuploader v-if="configData.length > 0" cardT="3. Carga de lotes" :refresh="fetchConfigs"
+                    :postConfig="postLots" :config="getValue(5)"
+                    description="Por ultimo pueden cargar los lotes y asignarle los expedeintes  Esta seccion realizara lo siguiente:">
+                    <div class="ml-2" style="font-size: 16px;">
+                        <li class="my-2">Registrar Lotes.</li>
+                        <li class="my-2">Asignar expediente a Lote.</li>
+                        <li class="my-2">Registrar Auditores.</li>
+                        <li class="my-2">Registrar Auditores.</li>
+                    </div>
+                </Fileuploader>
             </div>
         </div>
     </defaultLayout>

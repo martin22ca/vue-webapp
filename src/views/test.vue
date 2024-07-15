@@ -42,7 +42,7 @@ onBeforeMount(async () => {
     console.log(response)
 })
 const initLots = {
-    id_record: { name: 'N° Expediente', order: 0, modified: false, lastCol: '' },
+    record_key: { name: 'ID Expediente', order: 0, modified: false, lastCol: '' },
     id_provider: { name: 'N° de Prestador', order: 1, modified: false, lastCol: '' },
     lot_key: { name: 'Nombre Lote', order: 1, modified: false, lastCol: '' },
     business_name: { name: 'Razón Social', order: 1, modified: false, lastCol: '' },
@@ -59,7 +59,7 @@ const initLots = {
 };
 
 const initiAsignaciones = {
-    id_record: { name: 'N°', order: 0, modified: false, lastCol: '' },
+    record_key: { name: 'ID Expediente', order: 0, modified: false, lastCol: '' },
     id_provider: { name: 'N° Prestador', order: 1, modified: false, lastCol: '' },
     business_name: { name: 'Razon Social', order: 2, modified: false, lastCol: '' },
     id_coordinator: { name: 'N° Coordinador', order: 3, modified: false, lastCol: '' },
@@ -85,7 +85,7 @@ const initiAsignaciones = {
 };
 
 const initDB = {
-    id_record: { name: 'expe', order: 1, modified: false, lastCol: '' },
+    record_key: { name: 'ID Expediente', order: 1, modified: false, lastCol: '' },
     id_provider: { name: 'prestador', order: 2, modified: false, lastCol: '' },
     business_name: { name: 'razon', order: 3, modified: false, lastCol: '' },
     business_location: { name: 'loca', order: 4, modified: false, lastCol: '' },

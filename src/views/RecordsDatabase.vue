@@ -1,7 +1,6 @@
 <template>
     <defaultLayout>
-        <Breadcrumbs />
-        <h2 class="p-2">DB Prevencion</h2>
+        <Breadcrumbs title="DB Prevencion" />
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
             class="w-full mr-2" :rowSize="60">
         </DataTable>
@@ -19,7 +18,7 @@ import DataTable from '@/components/Spreadsheet/DataTable.vue';
 import { getRecords } from '@/services/records'
 
 const headers = [
-    { prop: 'id_record', name: 'Nro Exp', pin: 'colPinStart', valType: 'number' },
+    { prop: 'record_key', name: 'ID Expediente', pin: 'colPinStart', valType: 'text' },
     { prop: 'id_provider', name: 'Prestador', valType: 'number' },
     { prop: 'date_liquid', name: 'fecha liquid', valType: 'date' },
     { prop: 'date_recep', name: 'fecha recep', valType: 'date' },

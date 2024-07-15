@@ -42,7 +42,7 @@ export const Items: Array<MenuItem> = [
         route: '/input',
         children: [
             {
-                title: 'Carga DB',
+                title: 'Carga Exel',
                 icon: 'mingcute:upload-line',
                 route: '/input/',
                 children: undefined

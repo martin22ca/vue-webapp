@@ -54,7 +54,7 @@
                     </div>
                     <select v-model="newFilterSelect" @change="createNewFilter($event)" class="select select-primary">
                         <option disabled value="">Seleccionar Filtro</option>
-                        <option v-for="col in selectedCols" :key="col.prop" :value="col.prop">
+                        <option v-for="col in getCols" :key="col.prop" :value="col.prop">
                             {{ col.name }}
                         </option>
                     </select>
@@ -77,7 +77,7 @@
 <script setup>
 import { Icon } from '@iconify/vue';
 import MCModal from '@/components/Modals/MCModal.vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 let filterIdCounter = 0
 const appliedFilters = ref([])
@@ -91,16 +91,26 @@ const props = defineProps({
     filters: { type: Array, default: [] },
 });
 
+
+const getCols = computed(()=>{
+    let cols = []
+    props.selectedCols.forEach(col => {
+        if(col.prop === Object(col.prop)){
+            let newCol = col
+            newCol.prop = col.prop.prop
+            cols.push(newCol)
+        }
+        else cols.push(col)
+    });
+    return cols
+})
+
 const handleCol = (index, event) => {
     const colIndex = props.selectedCols.findIndex((item) => item.prop === event.target.value)
     const col = props.selectedCols[colIndex]
     appliedFilters.value[index]['col'] = col.prop
     appliedFilters.value[index]['valType'] = col.valType
     newFilter.value = 0
-}
-const handleFilter = (index, event) => {
-    const filterIndex = event.target.value;
-    appliedFilters.value[index]['filterOpt'] = props.filters[filterIndex]
 }
 
 const createNewFilter = (event) => {

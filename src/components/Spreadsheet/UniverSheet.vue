@@ -1,11 +1,12 @@
 <template>
-  <div class="m-auto bg-base-200 rounded-lg fade" style="height: 80vh;">
+  <div class="m-auto bg-base-200 rounded-lg fade">
     <ColsSelector v-if="columnDialog" :base-cols="baseCols" :selected-cols="selectedCols"
       @update:selectedCols="handleSelectedColsUpdate" :toggle-modal="() => { columnDialog = false }" />
     <TableFilters v-if="filtersDialog" :selected-cols="selectedCols" :applied-filters="appliedFilters"
-      :filters="availableFilters" :toggle-modal="() => { filtersDialog = false }" @updateFilters="handleUpdateFilters"/>
+      :filters="availableFilters" :toggle-modal="() => { filtersDialog = false }"
+      @updateFilters="handleUpdateFilters" />
     <div class="flex flex-row p-4 gap-2 bg-base-100 top-0">
-      <button v-if="props.btnExport" class="btn btn-secondary mx-1">
+      <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="exportRows">
         <Icon icon="mdi:file-export" class="text-xl" />
       </button>
       <button v-if="props.btnCols" class="btn btn-primary mx-1" @click="columnDialog = true">
@@ -26,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import * as XLSX from 'xlsx';
 import '@univerjs/sheets-numfmt/lib/index.css';
 import { Cell, CellData, Column, RowValue } from './interfaces';
 import ColsSelector from './ColsSelector.vue'
@@ -65,9 +67,9 @@ const rowLength = ref(0);
 const univerRef = ref<Univer | null>(null);
 const workbook = ref<Workbook | null>(null);
 const container = ref<HTMLElement | null>(null);
-const univerAPI = ref<FUniver | null>(null);
+const univerAPI = ref<FUniver>(null);
 
-const emits = defineEmits(['updateFilters'])
+const emits = defineEmits(['updateFilters', 'updateAPI', 'updateColsReference'])
 
 const props = defineProps({
   cols: { type: Array as () => Column[], default: () => [] },
@@ -84,20 +86,23 @@ const constructCellData = (cols: Column[], rows: RowValue[]): CellData => {
 
   // Create header row
   cellData[0] = {};
-  cols.forEach((header, index) => {
+  colsReference.value = {}
+  selectedCols.value.forEach((header, index) => {
     cellData[0][index] = { v: header.name, s: 'header' };
     colsReference.value[index] = header.prop
+    colsReference.value[header.prop] = index
   });
+  emits('updateColsReference', colsReference.value)
 
   // Populate data rows
   rows.forEach((item, rowIndex) => {
     let row = rowIndex + 1; // since 0 is for cols
     cellData[row] = {};
-    cellData[row]['id'] = item.id_provider
-    cols.forEach((header, colIndex) => {
+    selectedCols.value.forEach((header, colIndex) => {
+      let cell_style = header.readonly ? 'cellLock': 'cell'
       let propKey = typeof header.prop === 'string' ? header.prop : Object.keys(header.prop)[0];
       let value = item[propKey] !== undefined ? item[propKey] : null;
-      cellData[row][colIndex] = { v: value, s: 'cell' };
+      cellData[row][colIndex] = { v: value, s: cell_style };
     });
   });
 
@@ -152,6 +157,21 @@ const handleUpdateFilters = (newFilters) => {
   emits('updateFilters', newArray);
 }
 
+const exportRows = () => {
+  const { cellData } = univerAPI.value.getActiveWorkbook().getSnapshot().sheets['sheet-01'];
+  
+  const excelElements = Object.values(cellData).map(row => 
+    Object.values(row).map(cell => cell.v)
+  );
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(excelElements);
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  
+  const fileName = `data_${Date.now()}.xlsx`;
+  XLSX.writeFile(wb, fileName);
+};
+
 onBeforeUnmount(() => {
   destroyUniver();
 });
@@ -166,22 +186,18 @@ const destroyUniver = () => {
 watch(
   () => props.loading,
   (newValue) => {
-    if (selectedCols.value.length <= 0) {
-      setupCols();
-    }
     if (newValue) {
       return
     }
-    else {
-      rowLength.value = props.rows.length
-      if (rowLength.value > 0) {
-        setTimeout(() => {
-          init(WORKBOOK_DATA);
-          manageCols()
-        }, 100)
-      }
-    }
+    rowLength.value = props.rows.length
+    setTimeout(() => {
+      setupCols();
+      init(WORKBOOK_DATA);
+      manageCols()
+    }, 100)
+
   }
+
 );
 
 
@@ -198,7 +214,7 @@ const init = (data = {}) => {
   colsLength.value = props.cols.length
   WORKBOOK_DATA.sheets['sheet-01'].cellData = constructCellData(selectedCols.value, props.rows)
   WORKBOOK_DATA.sheets['sheet-01'].columnCount = colsLength.value + 1
-  WORKBOOK_DATA.sheets['sheet-01'].rowCount = rowLength.value + 3
+  WORKBOOK_DATA.sheets['sheet-01'].rowCount = rowLength.value + 1000
   WORKBOOK_DATA.sheets['sheet-01'].name = props.tableName
 
   const univer = new Univer({
@@ -235,6 +251,7 @@ const init = (data = {}) => {
   // create workbook instance
   univer.createUnit(UniverInstanceType.UNIVER_SHEET, data)
   univerAPI.value = FUniver.newAPI(univer);
+  emits('updateAPI', FUniver.newAPI(univer))
 };
 </script>
 
@@ -245,18 +262,17 @@ const init = (data = {}) => {
   display: none;
 }
 
-.fade{
+.fade {
   animation: myAnim 1s ease 0s 1 normal forwards;
 }
 
 @keyframes myAnim {
-	0% {
-		opacity: 0;
-	}
+  0% {
+    opacity: 0;
+  }
 
-	100% {
-		opacity: 1;
-	}
+  100% {
+    opacity: 1;
+  }
 }
-
 </style>

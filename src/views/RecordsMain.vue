@@ -20,7 +20,7 @@ import DataTableGroup from '@/components/DataTableUI/DataTableGroup.vue'
 import DataTableCheckbox from '@/components/DataTableUI/DataTableCheckbox.vue'
 
 const headers = [
-    { prop: 'id_record', name: 'Nro Exp', pin: 'colPinStart', valType: 'number' },
+    { prop: 'record_key', name: 'ID Expediente', pin: 'colPinStart', valType: 'text' },
     { prop: 'id_provider', name: 'Prestador', valType: 'number' },
     { prop: 'date_liquid', name: 'Fecha liquid', valType: 'date' },
     { prop: 'date_recep', name: 'Fecha recep', valType: 'date' },

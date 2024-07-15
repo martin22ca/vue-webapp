@@ -1,6 +1,6 @@
 <template>
     <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
-        <div class="modal-box modalAnim max-w-6xl bg-base-300 max-h-screen ">
+        <div class="absolute modal-box modalAnim max-w-6xl bg-base-300 max-h-screen ">
             <button v-if="props.toggleModal != null" class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
                 @click="props.toggleModal()">✕</button>
             <div class="font-bold text-2xl flex flex-row items-center">

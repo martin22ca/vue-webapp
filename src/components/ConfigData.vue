@@ -1,5 +1,5 @@
 <template>
-    <MCModal :modal-open="props.modalstatus" :toggle-modal="() => {toggleModal() }">
+    <MCModal :modal-open="props.modalstatus" :toggle-modal="() => { toggleModal() }">
         <div v-if="!loading">
             <h1 class="text-xl mb-2">File: <div class="badge badge-accent badge-lg">{{ props.file.name }} </div>
             </h1>
@@ -58,7 +58,7 @@
                         </p>
                         <p>Orden:
                         <div class="badge badge-lg badge-secondary my-2">{{ configs[currentConfig - 1].order != null ?
-        configs[currentConfig - 1].order : 'NULL' }} </div>
+                            configs[currentConfig - 1].order : 'NULL' }} </div>
                         </p>
                     </div>
                     <div
@@ -68,7 +68,7 @@
                         </p>
                         <p>Orden:
                         <div class="badge badge-lg badge-accent my-2">{{ configs[currentConfig].order != null ?
-        configs[currentConfig].order : 'No existe Columna' }} </div>
+                            configs[currentConfig].order : 'No existe Columna' }} </div>
                         </p>
                         <button class="btn btn-accent btn-wide my-2"
                             @click="configs[currentConfig].order = null; configs[currentConfig].modified = true">
@@ -83,7 +83,7 @@
                         </p>
                         <p>Orden:
                         <div class="badge badge-lg badge-secondary my-2">{{ configs[currentConfig + 1].order != null ?
-        configs[currentConfig + 1].order : 'NULL' }} </div>
+                            configs[currentConfig + 1].order : 'NULL' }} </div>
                         </p>
                     </div>
                     <button class="btn btn-accent my-2 " @click="currentConfig = currentConfig + 1"
@@ -114,6 +114,7 @@
 import Loader from '@/components/Loader.vue';
 import MCModal from '@/components/Modals/MCModal.vue';
 import { setCols, getConfigId } from '@/services/config';
+import { notificationsStore } from '@/store/notificationsStore';
 import { Icon } from '@iconify/vue';
 import { computed, onMounted, ref } from 'vue';
 import * as XLSX from 'xlsx';
@@ -122,7 +123,7 @@ const props = defineProps({
     file: File,
     idCol: Number,
     toggleModal: Function,
-    modalstatus:Boolean,
+    modalstatus: Boolean,
 })
 const loading = ref(true)
 const headers = ref([]);
@@ -130,6 +131,7 @@ const headersOr = ref([]);
 const configs = ref(null)
 const configsOr = ref(null)
 const currentConfig = ref(0)
+const notiStore = notificationsStore()
 
 const modalControl = ref({
     status: false,
@@ -172,7 +174,6 @@ const setOrder = (index, order, name) => {
     headers.value[index].remove = true
     setTimeout(() => {
         headers.value.splice(index, 1)
-        toggleModal()
     }, 300);
 
 }
@@ -210,15 +211,14 @@ const sendColsConfig = async () => {
         configs.value.forEach(element => {
             element.modified = false
         });
-        const res = await setCols(configs.value, props.idCol)
-        if (res.data.success) {
-            modalControl.value.text = 'Las configuraciones fueron cargadas exitosamentes'
-            modalControl.value.status = true
-            modalControl.value.title = 'Configuracion Correcta'
+        const {data} = await setCols(configs.value, props.idCol)
+        if (data.success) {
+            props.toggleModal()
+            notiStore.newMessage('Las configuraciones fueron cargadas exitosamentes',true)
         }
     } else {
-        modalControl.value.text = 'Las configuraciones no estan cargadas'
-        modalControl.value.status = true
+        modalControl.value.text = ''
+        notiStore.newMessage('Error en la carfa de las configuraciones',false)
     }
 }
 

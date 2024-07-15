@@ -74,7 +74,6 @@ const headerLots = [
     { prop: 'lot_key', pin: 'colPinStart', name: 'Lote', valType: 'text' },
     { prop: 'status', name: 'Activo', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
     { prop: 'total_records', name: 'Expedientes en el lote', valType: 'number', size: 200, readonly: true },
-    { prop: 'user_name', name: 'Usuario Asignado', valType: 'text', size: 200, readonly: true },
     { prop: 'date_assigned', name: 'Fecha Asignacion', valType: 'date', size: 200, readonly: true },
     { prop: 'date_departure', name: 'Fecha Salida', valType: 'date', size: 200, readonly: true },
     { prop: 'date_return', name: 'Fecha retorno', valType: 'date', size: 200, readonly: true },
@@ -82,13 +81,12 @@ const headerLots = [
 ]
 
 const headersRecords = [
-    { prop: 'id_record', name: 'Nro Expediente', pin: 'colPinStart', valType: 'number', size: 100 },
+    { prop: 'record_key', name: 'ID Expediente', pin: 'colPinStart', valType: 'number', size: 100 },
     { prop: 'id_provider', name: 'Prestador', valType: 'number', size: 150, readonly: true },
     { prop: 'business_name', name: 'Razon Social', valType: 'text', size: 200, readonly: true },
     { prop: 'assigned', name: 'Asignado', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
     { prop: 'coorinator_number', name: 'Coordinador', valType: 'number', size: 150, readonly: true },
-    { prop: 'lot_key', name: 'Lote', valType: 'text' },
-    { prop: 'id_user', name: 'Usuario Asignado', valType: 'number', size: 200 },
+    { prop: 'lot_user', name: 'Auditor', valType: 'text', size: 200, readonly: true },
     { prop: 'record_total', name: 'Monto Total', valType: 'number' },
     { prop: 'date_entry_digital', name: 'Fecha Digital', valType: 'date', size: 150 },
     { prop: 'date_entry_physical', name: 'Fecha Fisico', valType: 'date', size: 150 },
@@ -109,7 +107,8 @@ const updateFiltersRecords = (appliedFilters) => {
 const fetchResourcesFromLot = async () => {
     loading.value = true
     const { data } = await getRecordsInfo(filtersLotRecords, currentLot.value.id)
-    recordsFromLot.value = data
+    recordsFromLot.value = data.data
+    console.log(data)
     setTimeout(() => {
         loading.value = false
     }, 500)
@@ -119,7 +118,7 @@ const fetchResourcesFromLot = async () => {
 const fetchResources = async () => {
     loading.value = true
     const { data } = await getLots(filtersLot)
-    lots.value = data
+    lots.value = data.data
     setTimeout(() => {
         loading.value = false
     }, 500)

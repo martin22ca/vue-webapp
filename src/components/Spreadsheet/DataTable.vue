@@ -7,14 +7,14 @@
       @updateFilters="handleUpdateFilters" />
     <div class="table-wrapper ">
       <div class="flex flex-row p-4 gap-2 bg-base-100 top-0">
-        <button v-if="props.btnCols" class="btn btn-secondary mx-1" @click="columnDialog = true">
-          <Icon icon="mdi:format-columns" class="text-2xl text-neutral rounded-xl cursor-pointer" />
-        </button>
-        <button v-if="props.btnFilters" class="btn btn-primary mx-1" @click="filtersDialog = true">
-          <Icon icon="mdi:filter" class="text-xl text-neutral rounded-xl cursor-pointer" />
-        </button>
         <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="downloadExcel">
           <Icon icon="mdi:file-export" class="text-xl" />
+        </button>
+        <button v-if="props.btnCols" class="btn btn-primary mx-1" @click="columnDialog = true">
+          <Icon icon="mdi:format-columns" class="text-2xl text-neutral rounded-xl cursor-pointer" />
+        </button>
+        <button v-if="props.btnFilters" class="btn btn-secondary mx-1" @click="filtersDialog = true">
+          <Icon icon="mdi:filter" class="text-xl text-neutral rounded-xl cursor-pointer" />
         </button>
         <div class="grow"></div>
         <!-- Extra button Cols-->

@@ -1,20 +1,22 @@
 <template>
     <transition name="toast" mode="out-in">
-        <div v-if="toastOpen" class="toast toast-end z-50 w-64 ">
+        <div v-if="toastOpen" class="toast toast-end z-50 w-80 ">
             <div v-if="props.state != null" :class="'flex flex-row gap-0 ' + (Titles[alertType].alert)"
                 style="max-width:40vw;">
                 <div :class="'flex flex-col  text-' + alertType + '-content'">
                     <span class="font-bold flex ">
                         <Icon class="text-xl mr-2" :icon="Titles[alertType].icon" /> {{ Titles[alertType].text }}
                     </span>
-                    <span class="flex-initial overflow-x-auto max-w-80 pb-4" >{{ toastText }}</span>
+                    <span class="flex-initial overflow-x-auto max-w-80 pb-4">{{ toastText }}</span>
                 </div>
                 <span class="grow"></span>
-                <button v-if="duration == null" :class="'self-end p-2 rounded-xl ml-2 ' + (Titles[alertType].button)" @click="toggleToast">
+                <button v-if="duration == null" :class="'self-end p-2 rounded-xl ml-2 ' + (Titles[alertType].button)"
+                    @click="toggleToast">
                     <Icon icon="mdi:close" />
                 </button>
             </div>
-            <div class="progress-bar progress-bar-neutral" v-if="duration != null" :style="{ width: progressBarWidth }"></div>
+            <div class="progress-bar progress-bar-neutral" v-if="duration != null" :style="{ width: progressBarWidth }">
+            </div>
         </div>
     </transition>
 </template>
@@ -47,6 +49,7 @@ const props = defineProps({
 });
 
 const progressBarWidth = ref('100%');
+const progress = ref(100)
 const alertType = computed(() => {
     if (props.state === true) return 0;
     if (props.state === false) return 1;
@@ -62,13 +65,13 @@ const Titles = {
 const startProgressBarAnimation = () => {
     if (typeof props.toggleToast !== 'function') return;
 
-    let progress = 100;
+    progress.value = 100
     const interval = 100;
     const timer = setInterval(() => {
-        progress -= (interval / (props.duration * 1000)) * 100;
-        progressBarWidth.value = `${Math.max(progress, 0)}%`;
+        progress.value -= (interval / (props.duration * 1000)) * 100;
+        progressBarWidth.value = `${Math.max(progress.value, 0)}%`;
 
-        if (progress <= 0) {
+        if (progress.value <= 0) {
             clearInterval(timer);
             props.toggleToast();
         }

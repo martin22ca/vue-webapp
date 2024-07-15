@@ -66,6 +66,40 @@ export var WORKBOOK_DATA = {
             "bg": {
                 "rgb": "#eeeeee"
             },
+            'ht':3,
+            'tb':3,
+            "bd": {
+                "t": {
+                    "s": 2,
+                    "cl": {
+                        "rgb": "#000000"
+                    }
+                },
+                "b": {
+                    "s": 2,
+                    "cl": {
+                        "rgb": "#000000"
+                    }
+                },
+                "l": {
+                    "s": 2,
+                    "cl": {
+                        "rgb": "#000000"
+                    }
+                },
+                "r": {
+                    "s": 2,
+                    "cl": {
+                        "rgb": "#000000"
+                    }
+                }
+            }
+        }, 'cellLock': {
+            "bg": {
+                "rgb": "#CCCCCC"
+            },
+            'ht':3,
+            'tb':3,
             "bd": {
                 "t": {
                     "s": 2,
@@ -93,6 +127,7 @@ export var WORKBOOK_DATA = {
                 }
             }
         }
+        
     },
     sheets: {
         'sheet-01': {

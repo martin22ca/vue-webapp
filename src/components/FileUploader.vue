@@ -1,8 +1,8 @@
 <template>
-    <ConfigData class="absolute" v-if="selectedFile" :file="selectedFile" :id-col="id_config"  :modalstatus="configXlS"
+    <ConfigData v-if="selectedFile" :file="selectedFile" :id-col="id_config"  :modalstatus="configXlS"
             :toggle-modal="() => { configXlS = !configXlS }"></ConfigData>
     <MCModal :modal-open="modalControl.status" :modal-text="modalControl.text" :modal-title="modalControl.title"
-        :toggle-modal="() => { toggleModal() }">
+        :toggle-modal="() => { toggleModal() }" class="absolute">
         <span v-if="modalControl.loading" class="loading loading-dots loading-lg bg-primary"></span>
     </MCModal>
     <div class="card card-compact w-auto bg-base-100 shadow-md basis-1/2 m-2 ">
@@ -113,11 +113,13 @@ const sendFileToApi = async () => {
             const data = await props.postConfig(formData)
             if (data.data.success) {
                 toggleModal()
+                configXlS.value = false
                 notiStore.newMessage('Expedientes enviados con exito', true)
                 props.refresh()
                 modalControl.value.status = false
             } else {
                 toggleModal()
+                configXlS.value = false
                 notiStore.newMessage('Error: ' + data.data.error, false)
                 props.refresh()
                 modalControl.value.status = false

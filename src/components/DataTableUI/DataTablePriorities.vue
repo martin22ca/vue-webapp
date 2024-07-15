@@ -1,22 +1,23 @@
 <template>
     <div class="text-center">
-        <span v-if="model[prop[0]] === undefined" />
+        <span v-if="model[prop.prop] === undefined" />
         <div v-else>
-            <div v-if="model[prop[0]] === null" class="bg-neutral text-neutral-content my-2 rounded-full text-xl">
+            <div v-if="model[prop.prop] === null" class="bg-neutral text-neutral-content my-2 rounded-full text-xl">
                 0
             </div>
-            <div :class="'my-2 rounded-full text-xl ' + (getColorForPriority(model[prop[0]], prop[1]))">
-                {{ model[prop[0]] }}
+            <div :class="'my-2 rounded-full text-xl ' + (getColorForPriority(model[prop.prop], prop.extra))">
+                {{ model[prop.prop] }}
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-const props = defineProps(['model', 'prop']);
+const props = defineProps(['model', 'prop','info']);
 
 
 function getColorForPriority(priority, max) {
+    console.log(props.prop.prop)
     if (priority === 0 || priority === null) {
         return 'bg-neutral';
     }

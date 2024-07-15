@@ -6,7 +6,7 @@
         <a href="/" aria-current="page" aria-label="Homepage">
           <div
             class="uppercase font-bold text-3xl text-accent text-center bg-base-200 bg-rounded py-2 mt-2 mx-4 rounded-xl">
-            G-<span class="salud text-base-content">Salud</span>
+            G-<span class="salud text-base-content">soft</span>
           </div>
         </a>
         <div class="menu menu-horizontal pl-0 bg-base-100 text-base-content overflow-y-auto overflow-x-hidden center"

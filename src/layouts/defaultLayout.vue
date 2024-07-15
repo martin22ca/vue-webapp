@@ -5,7 +5,7 @@
             <Drawer v-if="drawerStatus" :drawer-open="drawerStatus" />
         </div>
         <div class="bg-base-300 w-full " :style="contentStyles">
-            <NavBar :toggle-drawer="toggleDrawer" />
+            <NavBar :visible="showNavbar" :toggle-drawer="toggleDrawer" />
             <div class="p-2 bg-base-300  ">
                 <slot></slot>
                 <Toast :toast-open="notifications.open" :duration="notifications.duration" :state="notifications.state"
@@ -23,6 +23,7 @@ import { computed, ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import Toast from '@/components/Toast.vue';
 
 const drawerStatus = ref(true)
+const showNavbar = ref(true);
 const notifications = notificationsStore()
 
 const toggleDrawer = () => {
@@ -32,6 +33,11 @@ const toggleDrawer = () => {
     }, 300)
 
 }
+
+const handleScroll = () => {
+    showNavbar.value = window.scrollY <= 5;
+};
+
 
 const contentWidth = ref(window.innerWidth);
 
@@ -47,10 +53,12 @@ const handleWindowResize = () => {
 
 onMounted(() => {
     updateContentWidth();
+    window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleWindowResize);
 });
 
 onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll);
     window.removeEventListener('resize', handleWindowResize);
 });
 
@@ -59,10 +67,10 @@ const contentStyles = computed(() => {
 });
 
 watch(
-  () => notifications.message,
-  (newValue) => {
-   console.log(newValue)
-  }
+    () => notifications.message,
+    (newValue) => {
+        console.log(newValue)
+    }
 );
 
 </script>

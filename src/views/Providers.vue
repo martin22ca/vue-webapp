@@ -1,12 +1,16 @@
 <template>
     <defaultLayout>
         <div class="h-auto">
-            <Breadcrumbs />
-            <h2 class="p-2">Prestadores</h2>
+            <Breadcrumbs title="Provedores"/>
             <modalProvider v-if="providerModal" :modal-open="providerModal" :provider="providerData"
                 :toggleModal="() => { providerModal = !providerModal; toastText = 'Usuario Actualizado/Creado'; toastSuccess = true; toastVal = !toastVal; fetchResources() }" />
-            <UniverSheet  id="sheet" table-name="Prestadores" :loading="loading" ref="univerRef" :cols="headers" :rows="providers" @updateFilters="updateFilters">
-            </UniverSheet>
+            <DataTable :rows="providers" :cols="headers" :loading="loading" @updateFilters="updateFilters">
+                <template #table_options>
+                    <button class="btn btn-secondary mx-2" @click="addProvider()" disabled>
+                        <Icon icon="material-symbols:add" class="text-xl text-neutral" /> Prestador
+                    </button>
+                </template>
+            </DataTable>
         </div>
     </defaultLayout>
 </template>
@@ -18,9 +22,10 @@ import { notificationsStore } from "@/store/notificationsStore";
 import modalProvider from "@/components/Modals/modalProvider.vue";
 import { VGridVueTemplate } from "@revolist/vue3-datagrid";
 import { ref, onMounted, watch } from 'vue';
-import UniverSheet from '@/components/Spreadsheet/UniverSheet.vue'
+import DataTable from '@/components/Spreadsheet/DataTable.vue'
 import DataTableInfo from "@/components/DataTableUI/DataTableInfo.vue";
 import DataTableExists from '@/components/DataTableUI/DataTableExists.vue'
+import DataTableWarnText from "@/components/DataTableUI/DataTableWarnText.vue";
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { getProviders } from '@/services/providers'
 import { usetableStore } from "@/store/tableStore";
@@ -33,9 +38,9 @@ const headers = [
     { prop: 'business_location', name: 'Locaclidad', size: 200, valType: 'string', editable: false, filter: 'string' },
     { prop: 'sancor_zone', name: 'Zona Sancor', size: 200, valType: 'string', editable: false },
     { prop: 'observation', name: 'Observacion', size: 200, valType: 'string', editable: false },
-    { prop: 'priority', name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'number', editable: false },
-    { prop: 'part_g_salud', name: 'Particularidad G_salud', cellTemplate: VGridVueTemplate(DataTableExists), size: 200, valType: 'number' },
-    { prop: 'part_prevencion', name: 'Particularidad Prevencion', cellTemplate: VGridVueTemplate(DataTableExists), size: 200, valType: 'number' },
+    { prop: 'priority', name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTableWarnText), size: 150, valType: 'text', editable: false },
+    { prop: 'part_g_salud', name: 'Particularidad G_salud', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'text' },
+    { prop: 'part_prevencion', name: 'Particularidad Prevencion', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'text' },
     { prop: { 'info': 1 }, name: 'Acciones', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true, size: 150 },
 ]
 
@@ -89,13 +94,7 @@ watch(
     }
 );
 /**
- *             <DataTable :rows="providers" :cols="headers" :loading="loading" @updateFilters="updateFilters">
-                <template #table_options>
-                    <button class="btn btn-secondary mx-2" @click="addProvider()" disabled>
-                        <Icon icon="material-symbols:add" class="text-xl text-neutral" /> Prestador
-                    </button>
-                </template>
-            </DataTable>
+
  */
 
 </script>

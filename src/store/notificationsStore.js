@@ -19,7 +19,9 @@ export const notificationsStore = defineStore('notificationsStore', () => {
     }
 
     function newMessage(newMessage, newState = null) {
-        open.value = false
+        setTimeout(() => {
+            open.value = false;
+        }, 200);
         message.value = newMessage
         state.value = newState
         if (newState) duration.value = 5

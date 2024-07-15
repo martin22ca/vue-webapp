@@ -1,8 +1,19 @@
 <template>
-    <header class="sticky top-0 z-50 ">
-        <div class="flex flex-row p-2 bg-base-100 items-center ">
+    <header class="sticky top-0 z-50">
+        <div v-if="!props.visible" class="flex flex-row p-2 items-center fadeTop ">
+            <div class="flex flex-row p-2 items-center ">
+                <div class="flex-none">
+                    <label class="btn btn-primary btn-circle swap">
+                        <input type="checkbox" @click="toggleDrawer?.()" />
+                        <Icon icon="ic:baseline-menu" class="swap-off" size="24px" />
+                        <Icon icon="ic:round-menu-open" class="swap-on" size="24px" />
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div v-else class="flex flex-row p-2 bg-base-100 items-center fadeTop ">
             <div class="flex-none">
-                <label class="btn btn-primary swap">
+                <label class="btn btn-primary btn-circle swap">
                     <input type="checkbox" @click="toggleDrawer?.()" />
                     <Icon icon="ic:baseline-menu" class="swap-off" size="24px" />
                     <Icon icon="ic:round-menu-open" class="swap-on" size="24px" />
@@ -40,9 +51,31 @@ const store = userDataStore()
 
 const initial = ref('')
 const props = defineProps({
+    visible: {
+        type: Boolean,
+        default: true
+    },
     toggleDrawer: Function,
 })
 onMounted(() => {
     initial.value = store.name[0]
 })
 </script>
+
+<style>
+
+.fadeTop{
+    animation: myAnim 0.5s ease-out 0s 1 normal forwards;
+}
+
+@keyframes myAnim {
+	0% {
+		opacity: 0;
+		transform: translateY(-50px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}</style>

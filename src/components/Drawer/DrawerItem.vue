@@ -13,12 +13,12 @@
             </ul>
         </li>
         <li v-else class="rounded-lg justify-end">
-            <div class="p-0">
-                <RouterLink class="btn btn-ghost hover:bg-transparent" :to="props.route">
+            <RouterLink class="p-0" :to="props.route">
+                <button class="btn btn-ghost hover:bg-transparent w-full" >
                     <Icon :icon="props.icon ?? 'file-icons:default'" class="text-xl" />
                     {{ props.title }}
-                </RouterLink>
-            </div>
+                </button>
+            </RouterLink>
         </li>
     </div>
 </template>
