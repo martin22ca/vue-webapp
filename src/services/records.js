@@ -36,6 +36,7 @@ export async function getRecordsAssigned(data = null) {
 export async function getRecordsInfo(data = null, idLot = null) {
     try {
         const stringifiedData = JSON.stringify(data);
+        console.log(idLot)
         return await axiosClient({
             url: BASE_URL + '/info',
             method: 'GET',
@@ -75,7 +76,7 @@ export async function getRecordsInfoUser(token, data = null) {
     }
 }
 
-export async function addRecordtoUser(data = null) {
+export async function addRecordstoUser(data = null) {
     try {
         return await axiosClient({
             url: BASE_URL + '/addrecord',
@@ -119,7 +120,7 @@ export async function removeRecordUser(data = null) {
     try {
         return await axiosClient({
             url: BASE_URL + '/removeuserecord',
-            method: 'PUT',
+            method: 'DELETE',
             data: data
         })
     } catch (error) {
@@ -127,4 +128,16 @@ export async function removeRecordUser(data = null) {
         throw error
     }
 }
-removeRecordUser
+
+export async function removeAllRecordsUser(data = null) {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/removealluserecords',
+            method: 'DELETE',
+            data: data
+        })
+    } catch (error) {
+        console.error('Error updating records:', error);
+        throw error
+    }
+}

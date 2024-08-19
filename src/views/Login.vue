@@ -59,9 +59,6 @@ import { onBeforeMount } from 'vue';
 import { usethemeStore } from '@/store/themeStore'
 
 const themeStore = usethemeStore()
-
-
-
 const screenSaverActive = ref(false);
 const store = userDataStore()
 const router = useRouter()

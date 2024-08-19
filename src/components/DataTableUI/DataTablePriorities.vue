@@ -1,23 +1,23 @@
 <template>
     <div class="text-center">
-        <span v-if="model[prop.prop] === undefined" />
+        <span v-if="model[prop] === undefined" />
         <div v-else>
-            <div v-if="model[prop.prop] === null" class="bg-neutral text-neutral-content my-2 rounded-full text-xl">
+            <div v-if="model[prop] === null" class="bg-neutral text-neutral-content my-2 rounded-full text-xl">
                 0
             </div>
-            <div :class="'my-2 rounded-full text-xl ' + (getColorForPriority(model[prop.prop], prop.extra))">
-                {{ model[prop.prop] }}
+            <div :class="'my-2 rounded-full text-xl ' + (getColorForPriority(model[prop], 3))">
+                {{ model[prop] }}
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+
 const props = defineProps(['model', 'prop','info']);
 
-
 function getColorForPriority(priority, max) {
-    console.log(props.prop.prop)
     if (priority === 0 || priority === null) {
         return 'bg-neutral';
     }
@@ -41,9 +41,6 @@ function getColorForPriority(priority, max) {
     const index = Math.floor((priority - 1) / (max - 1) * (colors.length - 1));
     return colors[index];
 }
-
-
-
 </script>
 
 <style scoped>

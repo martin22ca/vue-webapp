@@ -22,6 +22,10 @@
                     <button v-if="!isEmpty(editedRecords)" class="fadeRight btn btn-error mx-2" @click="clearEdited()">
                         <Icon icon="mdi:delete" class="text-xl text-neutral" />
                     </button>
+                    <button v-if="dbRecords.length > 0" class="fadeRight btn btn-secondary mx-2"
+                        @click="clearAssignedRecords()">
+                        <Icon icon="mdi:broom" class="text-xl text-neutral" />
+                    </button>
                 </template>
             </UniverSheet>
         </div>
@@ -37,23 +41,23 @@ import { userDataStore } from '@/store/userStore';
 import { usetableStore } from '@/store/tableStore';
 import { useUserRecords } from '@/store/userRecordsStore';
 import { FUniver, FWorksheet } from "@univerjs/facade";
-import { ICellData, cellToRange, ICommandInfo } from '@univerjs/core'
+import { ICommandInfo, ICellData } from '@univerjs/core'
 import UniverSheet from "@/components/Spreadsheet/UniverSheet.vue";
 import { notificationsStore } from "@/store/notificationsStore";
-import { ref, onMounted, watch, onUnmounted } from 'vue';
+import { ref, onMounted, } from 'vue';
+import { getRow, insertRow, removeRow, isEmpty } from '@/utils/spreadsheet/generic'
 import defaultLayout from '@/layouts/defaultLayout.vue';
-import { addRecordtoUser, updateRecordsUser, getRecordsInfoUser, saveRecordsUser, removeRecordUser } from '@/services/records';
+import { addRecordstoUser, updateRecordsUser, getRecordsInfoUser, saveRecordsUser, removeRecordUser, removeAllRecordsUser } from '@/services/records';
 
 const headers = [
     { prop: 'record_key', name: 'ID Expediente', pin: 'colPinStart', valType: 'text', size: 100, readonly: false },
     { prop: 'worked_on', name: 'Activo', valType: 'bool', readonly: true },
     { prop: 'id_provider', name: 'Prestador', valType: 'number', size: 100, readonly: true },
-    { prop: 'part_g_salud', name: 'Part. G salud', size: 170, valType: 'text', readonly: true },
-    { prop: 'part_prevencion', name: 'Part. Prevencion', size: 170, valType: 'text', readonly: true },
+    { prop: 'particularity', name: 'Particularidad', size: 170, valType: 'text', readonly: true },
     { prop: 'priority', name: 'Prioridad', valType: 'number', size: 100, readonly: true },
     { prop: 'business_name', name: 'Razon Social', valType: 'text', size: 200, readonly: true },
     { prop: 'assigned', name: 'Asignado', valType: 'bool', readonly: true },
-    { prop: 'coorinator_number', name: 'Coordinador', valType: 'number', size: 150, readonly: true },
+    { prop: 'id_coorinator', name: 'Coordinador', valType: 'number', size: 150, readonly: true },
     { prop: 'lot_key', name: 'Lote', valType: 'text', readonly: false },
     { prop: 'auditor', name: 'Usuario Asignado', valType: 'number', size: 200 },
     { prop: 'record_name', name: 'Tipo', valType: 'text', readonly: true },
@@ -95,7 +99,7 @@ const fetchResources = async (reset = false) => {
         if (reset) {
             setTimeout(() => {
                 loading.value = false;
-            }, 100);
+            }, 1);
         }
         for (let i = 0; i < dbRecords.value.length; i++) {
             const element = dbRecords.value[i];
@@ -106,7 +110,7 @@ const fetchResources = async (reset = false) => {
                 mergedRows.value.push(element)
             }
 
-        } console.log(mergedRows.value)
+        }
 
 
     } catch (error) {
@@ -132,124 +136,175 @@ const updateAPI = (UniverAPI: FUniver) => {
     var row = null
     var col = null
     var preVal = null
+    let preVPaste = {}
 
-    univerAPI.value.onCommandExecuted((command) => {
+    univerAPI.value.onBeforeCommandExecute(async (command) => {
+        // PRESSED DELETE ON RANGE
+        if (command.id === 'sheet.command.clear-selection-content') {
+            let result = true
+            const toDelete = []
+            activeSheet.value.getSelection().getActiveRange().forEach((rrow: number, ccol: number, ccell: ICellData) => {
+                if (ccell.v == undefined || ccell.v == '') return
+                if (ccol == colsReference.value['record_key']) { holdTableChanges(ccol, rrow, ccell.v) }
+                else { toDelete.push({ 'value': ccell.v, 'row': rrow }) }
+            })
+            if (toDelete.length > 0) result = await deleteRecords(toDelete)
+            if (!result) {
+                notiStore.newMessage('error de servidor', false)
+                univerAPI.value.executeCommand('univer.command.undo')
+            }
+        }
+    })
+    univerAPI.value.onCommandExecuted(async (command: ICommandInfo) => {
+        // PASTE AFTER
+        if (command.id == 'sheet.command.paste-bu-short-key') {
+            const range = activeSheet.value.getSelection().getActiveRange()
+            const editsValues = []
+            range.forEach((rrow: number, ccol: number, ccell: ICellData) => {
+                if (ccol != colsReference.value['record_key']) holdTableChanges(ccol, rrow, ccell.v)
+                else { editsValues.push({ 'col': ccol, 'row': rrow, 'prevVal': undefined, 'newVal': ccell.v }) }
+            })
+            preVPaste = {}
+            const result = manageEdit(editsValues)
+            if (!result) {
+                notiStore.newMessage('error de servidor', false)
+                univerAPI.value.executeCommand('univer.command.undo')
+            }
+        }
+        // ENTER EDIT ON CELL
         if (command.id === 'sheet.operation.set-cell-edit-visible' && command.params.visible) {
             row = activeSheet.value.getSelection().getActiveRange().getCell().actualRow
             col = activeSheet.value.getSelection().getActiveRange().getCell().actualColumn
             preVal = activeSheet.value.getSelection().getActiveRange().getCellData()
         }
-    })
-    univerAPI.value.onCommandExecuted(async (command: ICommandInfo) => {
+        // EXIT EDIT ON CELL
         if (command.id === 'sheet.operation.set-cell-edit-visible' && !command.params.visible) {
-            const cell = activeSheet.value.getRange(row, col, 1, 1).getCellData()
-            const Nrow = activeSheet.value.getSelection().getActiveRange().getCell().actualRow - 1
-            const Ncol = activeSheet.value.getSelection().getActiveRange().getCell().actualColumn
-            if (row == Nrow && col == Ncol) {
-                const result = await manageEdit(col, row, preVal.v == undefined ? '' : preVal.v, cell.v == undefined ? '' : cell.v)
-                console.log(result)
+            const newVal = activeSheet.value.getRange(row, col, 1, 1).getCellData()
+            if (newVal.v == preVal.v) return
+            if (col != colsReference.value['record_key']) {
+                const result = holdTableChanges(col, row, newVal.v)
                 if (!result) {
-                    const range = activeSheet.value.getRange(row, col, 1, 1)
-                    if (preVal.v == undefined) range.setValue('')
-                    else range.setValue(preVal.v)
+                    notiStore.newMessage('error de servidor', false)
+                    univerAPI.value.executeCommand('univer.command.undo')
                 }
-            } else {
-                const range = activeSheet.value.getRange(row, col, 1, 1)
-                if (preVal.v == undefined) range.setValue('')
-                else range.setValue(preVal.v)
             }
+            else {
+                const result = manageEdit([{ 'col': col, 'row': row, 'prevVal': preVal.v, 'newVal': newVal.v }])
+                if (!result) {
+                    notiStore.newMessage('error de servidor', false)
+                    univerAPI.value.executeCommand('univer.command.undo')
+                }
+            }
+
         }
     })
 }
 
-const manageResponse = async (response) => {
-    console.log(response.data)
-    if (response.data.success) {
-        await fetchResources(true)
-        notiStore.newMessage(response.data.message, true)
+const manageEdit = async (edits: Array<object>) => {
+    const addValues = []
+    const deleteValues = []
+    const changeValues = []
+    edits.forEach(async cellObj => {
+        if (cellObj['prevVal'] == '' || cellObj['prevVal'] == undefined) {
+            // ADD RECORD
+            if (cellObj['newVal'] == '') return
+            addValues.push({ 'value': String(cellObj['newVal']), 'row': cellObj['row'] })
+            return
+
+        } else {
+            if (cellObj['newVal'] == '' || cellObj['newVal'] == undefined) {
+                // DELETE RECORD
+                deleteValues.push({ 'value': cellObj['prevVal'], 'row': cellObj['row'] })
+                return
+            } else {
+                // CHANGE ROW
+                const new_record_key = String(cellObj['newVal'])
+                const old_record_key = String(cellObj['prevVal'])
+                changeValues.push({ 'old_record_key': old_record_key, 'new_record_key': new_record_key, 'row': cellObj['row'] })
+
+            }
+        }
+    })
+    if (deleteValues.length > 0) { deleteRecords(deleteValues) }
+    if (addValues.length > 0) { addRecords(addValues) }
+    if (changeValues.length > 0) { changeRecords(changeValues) }
+    return true
+}
+const holdTableChanges = (col: number, row: number, newCellVal: any) => {
+    const index = colsReference.value[col]
+    const header = headers.find((element) => element.prop == index);
+    if (header.readonly) {
+        univerAPI.value.executeCommand('univer.command.undo')
         return true
     }
-    notiStore.newMessage(response.data.error, false)
+
+    553433
+    55
+    const fullRow = getRow(activeSheet.value, row, colsReference.value)
+    let record_key = fullRow['record_key']
+    if (record_key == undefined) return true
+    record_key = String(record_key)
+    if (record_key in editedRecords.value) {
+        if (newCellVal == '') delete editedRecords.value[record_key][index]
+        else editedRecords.value[record_key][index] = newCellVal
+    } else {
+        editedRecords.value[record_key] = {}
+        editedRecords.value[record_key]['worked_on'] = true
+        editedRecords.value[record_key][index] = newCellVal
+    }
+    return true
+}
+
+const deleteRecords = async (prevCellVals: Array<Object>) => {
+    univerAPI.value.executeCommand('univer.command.undo')
+    const celldata = {
+        'records': prevCellVals,
+        'token': userStore.token
+    }
+    const { data } = await removeRecordUser(celldata)
+    if (data.success) {
+        prevCellVals.forEach(element => {
+            removeRow(activeSheet.value, element['row'], colsReference.value)
+            delete editedRecords.value[element['value']]
+        });
+        return true
+    }
     return false
 }
 
-const getRow = (col: number, row: number) => {
-    var rowObj = {}
-    const width = Object.keys(colsReference.value).length
-    activeSheet.value.getRange(row, 0, 1, width).forEach((row: number, col: number, cell: ICellData) => {
-        rowObj[colsReference.value[col]] = cell.v
-    })
-    return rowObj
-}
+const addRecords = async (newCellVals: Array<Object>) => {
+    const celldata = {
+        'records': newCellVals,
+        'token': userStore.token
+    }
+    const { data } = await addRecordstoUser(celldata)
+    if (data.success) {
+        mergedRows.value = mergedRows.value.concat(data.added_records)
+        data.added_records.forEach((element: Object) => {
+            const idx = newCellVals.findIndex((e) => e['value'] === element['record_key'])
+            if (idx != -1) insertRow(activeSheet.value, newCellVals[idx]['row'], element, colsReference.value, headers);
+        })
 
-
-const manageEdit = async (col: number, row: number, prevCellVal: any, newCellVal: any) => {
-    let res = null
-    if (prevCellVal == newCellVal) return true
-    if (col != colsReference.value['record_key']) {
-        const index = colsReference.value[col]
-        const header = headers.find((element) => element.prop == index);
-        if (header.readonly) return false
-        const fullRow = getRow(col, row)
-        const record_key = String(fullRow.record_key)
-        if (record_key in editedRecords.value) {
-            if (newCellVal == '') delete editedRecords.value[record_key][index]
-            else editedRecords.value[record_key][index] = newCellVal
-        } else {
-            editedRecords.value[record_key] = {}
-            editedRecords.value[record_key]['worked_on'] = true
-            editedRecords.value[record_key][index] = newCellVal
-        }
         return true
     }
-    if (prevCellVal == '') {
-        if (newCellVal == '') return true
-        // ADD RECORD
-        const record_key = String(newCellVal)
-        const celldata = {
-            'record_key': record_key,
-            'token': userStore.token
-        }
-        if (await manageResponse(await addRecordtoUser(celldata))) {
-            editedRecords.value[record_key] = {}
-            editedRecords.value[record_key][colsReference.value['worked_on']] = true
-            return true
-        }
-        return false
-    } else {
-        if (String(newCellVal).trim().length === 0) {
-            // DELETE Record
-            const record_key = String(prevCellVal)
-            const celldata = {
-                'record_key': record_key,
-                'token': userStore.token
-            }
-            if (await manageResponse(await removeRecordUser(celldata))) {
-                delete editedRecords.value[record_key]
-                return true
-            }
-            return false
-        } else {
-            // CHANGE ROW
-            const new_record_key = String(newCellVal)
-            const old_record_key = String(prevCellVal)
-            const celldata = {
-                'new_record_key': new_record_key,
-                'old_record_key': old_record_key,
-                'token': userStore.token
-            }
-            if (await manageResponse(await updateRecordsUser(celldata))) {
-                delete editedRecords.value[old_record_key]
-                editedRecords.value[new_record_key] = {}
-                editedRecords.value[new_record_key][colsReference.value['worked_on']] = true
-                return true
-            }
-            else {
-                return false
-            }
+    return false
+}
 
-        }
+const changeRecords = async (changeCellVals: Array<Object>) => {
+    const celldata = {
+        'records': changeCellVals,
+        'token': userStore.token
     }
+    const { data } = await updateRecordsUser(celldata)
+    if (data.success) {
+        mergedRows.value = mergedRows.value.concat(data.added_records)
+        data.modified_records.forEach((element: Object) => {
+            const idx = changeCellVals.findIndex((e) => e['new_record_key'] === element['record_key'])
+            if (idx != -1) insertRow(activeSheet.value, changeCellVals[idx]['row'], element, colsReference.value, headers)
+        })
+        return true
+    }
+    return false
 }
 
 const saveChanges = async () => {
@@ -280,9 +335,19 @@ const clearEdited = () => {
     fetchResources(true)
 }
 
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
+const clearAssignedRecords = async () => {
+    editedRecords.value = {}
+    userRecordsStore.$reset()
+    const reqData = {
+        'token': userStore.token,
+    }
+    const { data } = await removeAllRecordsUser(reqData)
+    if (data.success) {
+        notiStore.newMessage(data.message, true)
+        fetchResources(true)
+    }
 }
+
 
 onMounted(async () => {
     await fetchResources(true)

@@ -105,4 +105,10 @@ export const Items: Array<MenuItem> = [
         route: '/feedback',
         children: undefined
     },
+    {
+        title: 'Reportes',
+        icon: 'mdi:finance',
+        route: '/report',
+        children: undefined
+    },
 ]

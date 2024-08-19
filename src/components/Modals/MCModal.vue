@@ -1,16 +1,19 @@
 <template>
-    <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
-        <div class="absolute modal-box modalAnim max-w-6xl bg-base-300 max-h-screen ">
-            <button v-if="props.toggleModal != null" class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
-                @click="props.toggleModal()">✕</button>
-            <div class="font-bold text-2xl flex flex-row items-center">
-                <Icon v-if="props.modalText != null" :class="'mr-2 text-' + color" :icon="modalIcon" />
-                <h3>{{ props.modalTitle }}</h3>
+    <Teleport to="body">
+        <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
+            <div class="absolute modal-box modalAnim max-w-6xl bg-base-300 max-h-screen ">
+                <button v-if="props.toggleModal != null"
+                    class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
+                    @click="props.toggleModal()">✕</button>
+                <div class="font-bold text-2xl flex flex-row items-center">
+                    <Icon v-if="props.modalText != null" :class="'mr-2 text-' + color" :icon="modalIcon" />
+                    <h3>{{ props.modalTitle }}</h3>
+                </div>
+                <p v-if="props.modalText != null" class="my-4 text-md">{{ props.modalText }}</p>
+                <slot></slot>
             </div>
-            <p v-if="props.modalText != null" class="my-4 text-md">{{ props.modalText }}</p>
-            <slot></slot>
-        </div>
-    </dialog>
+        </dialog>
+    </Teleport>
 </template>
 
 <script setup>

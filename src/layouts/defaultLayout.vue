@@ -31,13 +31,11 @@ const toggleDrawer = () => {
     setTimeout(() => {
         updateContentWidth()
     }, 300)
-
 }
 
 const handleScroll = () => {
     showNavbar.value = window.scrollY <= 5;
 };
-
 
 const contentWidth = ref(window.innerWidth);
 

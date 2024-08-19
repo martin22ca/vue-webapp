@@ -59,7 +59,7 @@ const routes = [
     component: () => import('@/views/dataEntry/LotManagement.vue'),
   },
   {
-    path: '/report',
+    path: '/reportFeedback',
     name: 'reportFeeback',
     component: () => import('@/views/ReportFeedback.vue'),
   },
@@ -67,6 +67,10 @@ const routes = [
     path: '/feedback',
     name: 'feedback',
     component: () => import('@/views/Feedback.vue'),
+  },  {
+    path: '/report',
+    name: 'report',
+    component: () => import('@/views/Report.vue'),
   },
   {
     path: '/test',

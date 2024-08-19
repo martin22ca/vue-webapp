@@ -85,7 +85,7 @@ import { updateRole } from '@/services/roles'
 import { useField, useForm } from 'vee-validate'
 import { Items as paths } from '@/components/Drawer/menuItems'
 
-const baseRoutes = [{ title: 'reportFeeback', route: '/report' }]
+const baseRoutes = [{ title: 'reportFeeback', route: '/reportFeedback' }]
 
 
 const filteredRoutes = (array) => {

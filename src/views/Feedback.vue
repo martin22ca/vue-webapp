@@ -1,7 +1,7 @@
 <template>
     <defaultLayout>
         <Breadcrumbs />
-        <modalFeedback v-if="feedbackModal" :feedback="feedback" :clearProp="toggleModal"/>
+        <modalFeedback v-if="feedbackModal" :feedback="feedback" :clearProp="toggleModal" />
         <h2 class="p-2">Informacion de reportes</h2>
         <DataTable :rows="reports" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
             class="mr-2" :rowSize="50">
@@ -27,7 +27,7 @@ import { getFeedback } from '@/services/feedback'
 const headers = [
     { prop: 'date_report', name: 'Fecha reporte', pin: 'colPinStart', size: 150, valType: 'date' },
     { prop: 'is_bug', name: 'Es error?', cellTemplate: VGridVueTemplate(DataTableCheckbox), valType: 'boolean' },
-    { prop: ['priority', 3], name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTablePriorities), size: 100, valType: 'number' },
+    { prop: 'priority', name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTablePriorities), size: 100, valType: 'number' },
     { prop: 'title', name: 'Titulo', size: 200, valType: 'text' },
     { prop: 'description', name: 'Descripcion', size: 300, valType: 'date' },
     { name: 'Acciones', size: 100, pin: 'colPinEnd', prop: [1, 2], cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true },
@@ -42,6 +42,7 @@ const loading = ref(true)
 const fetchResources = async () => {
     loading.value = true
     const { data } = await getFeedback(filters)
+    console.log(data.data)
     if (data.success) {
         reports.value = data.data
         setTimeout(() => {
@@ -54,9 +55,9 @@ onMounted(async () => {
     fetchResources()
 })
 
-const toggleModal = ()=>{
-    feedbackModal.value = !feedbackModal.value 
-    fetchResources()
+const toggleModal = (refresh = false) => {
+    feedbackModal.value = !feedbackModal.value
+    if (refresh) { fetchResources() }
 }
 
 const updateFilters = (appliedFilters) => {
@@ -75,8 +76,8 @@ watch(
             }
         }
     },
-    () => feedbackModal.value, 
-    ( newV) =>{
+    () => feedbackModal.value,
+    (newV) => {
         console.log(newV)
     }
 );

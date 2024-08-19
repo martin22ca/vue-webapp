@@ -6,7 +6,7 @@
                 <div class="badge badge-lg badge-primary">{{ id }}</div>
             </h2>
             <span class="grow"></span>
-            <button class="btn btn-error btn-circle mt-4" @click="props.clearProp()">
+            <button class="btn btn-error btn-circle mt-4" @click="props.clearProp(false)">
                 ✕
             </button>
         </div>
@@ -106,13 +106,13 @@ const submit = handleSubmit(async (values) => {
     valuesSend['id_feedback'] = id.value
     const {data} = await updateFeedback(valuesSend)
     notifications.newMessage(data.success ? 'Reporte actualizado' : 'Error de Servidor', data.success)
-    props.clearProp()
+    props.clearProp(true)
 });
 
 const popFeedback = async () => {
     const { data } = await removeFeedback({ 'id_feedback': id.value })
     notifications.newMessage(data.success ? 'Reporte Eliminado' : 'Error de Servidor', data.success)
-    props.clearProp()
+    props.clearProp(true)
 }
 
 onMounted(() => {

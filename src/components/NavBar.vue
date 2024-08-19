@@ -27,7 +27,7 @@
                     <button class="btn btn-sm rounded-xl bg-neutral mx-1">
                         <Icon icon="mdi:bell" class=" text-neutral-content w-4 h-4" />
                     </button>
-                    <RouterLink class="btn btn-sm rounded-xl bg-neutral mx-1" to="/report">
+                    <RouterLink class="btn btn-sm rounded-xl bg-neutral mx-1" to="/reportFeedback">
                         <Icon icon="mdi:lifebuoy" class="text-neutral-content w-4 h-4" />
                     </RouterLink>
 

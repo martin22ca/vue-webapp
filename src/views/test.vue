@@ -17,13 +17,43 @@
         <div>
             <button @click="getData" title="print current workbook data to console">Get Data</button>
         </div>
+
+        <v-grid style="height:90vh; width: 100%;" :columns="columns" :source="rows" :column-types="plugin"/>
     </div>
 </template>
 
 
 <script setup>
+import VGrid from '@revolist/vue3-datagrid';
 import { setCols, getConfigId } from '@/services/config';
 import { onBeforeMount, ref } from 'vue';
+
+import SelectTypePlugin from '@revolist/revogrid-column-select'
+
+const dropdown = {
+    labelKey: 'label',
+    valueKey: 'value',
+    source: [
+        { label: 'According', value: 'a' },
+        { label: 'Over', value: 'b' },
+        { label: 'Source', value: 's' },
+    ],
+}
+const columns = [
+    {
+        ...dropdown,
+        prop: 'name',
+        name:'select',
+        columnType: 'select', // column type specified as 'select'
+    },
+    {
+        prop:'info', name:'ads'
+    }
+]
+const rows = [{ name: 'New item' }, { name: 'New item 2' },{ name: 'New item 3' },{ name: 'New item 4' }]
+
+// register column type
+const plugin = { select: new SelectTypePlugin() }
 
 const sendColsConfig = async (conf, idCol) => {
     const arrayOfObjects = Object.keys(conf).map(key => {
@@ -49,7 +79,7 @@ const initLots = {
     id_coordinator: { name: 'N° Coordinador', order: 1, modified: false, lastCol: '' },
     record_total: { name: 'Monto', order: 5, modified: false, lastCol: '' },
     audit_user: { name: 'Auditor', order: 2, modified: false, lastCol: '' },
-    date_assignment: { name: 'Fecha de Asignacion a usuario', order: 3, modified: false, lastCol: '' },
+    date_assignment_audit: { name: 'Fecha de Asignacion a usuario', order: 3, modified: false, lastCol: '' },
     date_entry_digital: { name: 'Fecha de Recepción en Gapresa Digital ', order: 4, modified: false, lastCol: '' },
     date_entry_physical: { name: 'Fecha de Recepción en Gapresa Fisico', order: 5, modified: false, lastCol: '' },
     seal_number: { name: 'N° de Precinto ', order: 6, modified: false, lastCol: '' },
