@@ -25,8 +25,7 @@
             <div>
                 <h1 class="text-2xl p-2">Usuarios</h1>
             </div>
-            <DataTable rowSize="50" :rows="users" :cols="headers" :loading="loading" :columnTypes="columnTypes"
-                @updateFilters="updateFilters">
+            <DataTable rowSize="50" :rows="users" :cols="headers" :loading="loading" @updateFilters="updateFilters">
                 <template #table_options>
                     <button class="btn btn-secondary mx-2" @click="addUser()">
                         <Icon icon="material-symbols:add" class="text-xl text-neutral" /> User
@@ -45,7 +44,6 @@ import { VGridVueTemplate } from "@revolist/vue3-datagrid";
 import modalUser from '@/components/Modals/modalUser.vue'
 import DataTableInfo from "@/components/DataTableUI/DataTableInfo.vue";
 import { usetableStore } from "@/store/tableStore";
-import Plugin from "@revolist/revogrid-column-date";
 import { Icon } from "@iconify/vue";
 import { ref, onMounted, watch } from 'vue';
 import { getUsers, removeUser } from '@/services/users'
@@ -63,8 +61,8 @@ const headers = [
     { prop: 'email_personal', name: 'Email Personal', size: 150 },
     { prop: 'phone', name: 'Telefono', },
     { prop: 'phone_alt', name: 'Telefono Alt' },
-    { prop: 'start_date', name: "Fecha Comienzo", size: 150, columnType: 'date' },
-    { prop: 'end_date', name: 'Fecha Fin', columnType: 'date' },
+    { prop: 'start_date', name: "Fecha Comienzo", size: 150 },
+    { prop: 'end_date', name: 'Fecha Fin' },
     { name: 'Acciones', size: 150, pin: 'colPinEnd', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true },
 ]
 const infoModal = ref(false)
@@ -75,7 +73,6 @@ const toastSuccess = ref(false)
 const toastVal = ref(false)
 const toastText = ref('')
 const store = usetableStore()
-const columnTypes = { 'date': new Plugin() };
 const loading = ref(true)
 const users = ref([])
 const userData = ref(null)
@@ -83,10 +80,12 @@ let filters = []
 
 const fetchResources = async () => {
     const { data } = await getUsers(filters)
-    users.value = data
-    setTimeout(() => {
-        loading.value = false
-    }, 500)
+    if (data.success) {
+        users.value = data.data
+        setTimeout(() => {
+            loading.value = false
+        }, 500)
+    }
 }
 
 onMounted(async () => {

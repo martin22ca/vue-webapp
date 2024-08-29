@@ -1,35 +1,43 @@
 <template>
   <div class="autocomplete" ref="autocompleteRef">
     <div class="flex items-center">
-      <input v-if="isComponent" v-model="searchQuery"
-        class="input input-ghost border-2 border-neutral input w-full " @keydown.enter.prevent="onEnter"
-        @focus="onFocus" @input="onInput" ref="inputRef" />
-      <div v-else class="input input-ghost border-2 border-neutral input input-sm w-full">
-        {{ searchQuery }}
-      </div>
-      <button @click="toggleOpen" class="btn btn-circle btn-sm btn-primary ml-2 pr-2" type="button">
+      <MCInput class="w-full" :text-label="props.label">
+        <input
+          v-model="displayValue"
+          class="input input-primary w-full input mt-3"
+          @keydown.down.prevent="onArrowDown"
+          @keydown.up.prevent="onArrowUp"
+          @keydown.enter.prevent="onEnter"
+          @focus="onFocus"
+          @input="onInput"
+          ref="inputRef"
+        />
+      </MCInput>
+      <button @click="toggleOpen" class="btn btn-circle btn-sm btn-primary pr-2 mt-8 ml-4 mr-4" type="button">
         <Icon :icon="isOpen ? 'mdi:menu-up' : 'mdi:menu-down'" class="ml-2 text-2xl" />
       </button>
     </div>
-    <teleport to="body">
-      <div v-if="isOpen" class="autocomplete-dropdown" :style="dropdownStyle">
-        <input v-if="!isComponent" v-model="searchQuery" placeholder="..."
-          class="input input-ghost border-2 border-neutral input input input-sm w-full m-2" @keydown.enter.prevent="onEnter"
-          @focus="onFocus" @input="onInput" ref="inputRef" />
-        <ul v-if="filteredResults.length" class="results-list">
-          <li v-for="(item, index) in filteredResults" :key="item[keyProp]"
-            :class="['result-item', { 'selected': index === selectedIndex }]">
-            <button class="btn btn-wide w-full text-left" @click="selectItem(item)" @mouseenter="selectedIndex = index"
-              type="button">
-              {{ item[textProp] }}
-            </button>
-          </li>
-        </ul>
-        <div v-else class="no-results">
-          No hay elementos
-        </div>
+    <div v-if="isOpen" class="autocomplete-dropdown mr-4 rounded-left " :style="dropdownStyle">
+      <ul v-if="filteredResults.length" class="results-list ">
+        <li
+          v-for="(item, index) in filteredResults"
+          :key="item[key]"
+          :class="['result-item', { 'selected': index === selectedIndex }]"
+        >
+          <button
+            class="btn btn-wide w-full text-left"
+            @click="selectItem(item)"
+            @mouseenter="selectedIndex = index"
+            type="button"
+          >
+            {{ item[text] }}
+          </button>
+        </li>
+      </ul>
+      <div v-else class="no-results">
+        No hay elementos
       </div>
-    </teleport>
+    </div>
   </div>
 </template>
 
@@ -37,34 +45,35 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 import { useEventListener, useDebounce } from '@vueuse/core';
+import MCInput from './MCInput.vue';
 
 const props = defineProps({
   items: {
     type: Array,
     required: true
   },
-  isComponent: {
-    type: Boolean,
-    default: true
-  },
-  textProp: {
+  text: {
     type: String,
     required: true
   },
-  keyProp: {
+  key: {
     type: String,
     required: true
   },
-  addval: {
+  selectNew: {
     type: Function,
     required: true
   },
   defaultValue: {
     default: null
+  },
+  label:{
+    default:'Buscar'
   }
 });
 
 const searchQuery = ref('');
+const displayValue = ref('');
 const isOpen = ref(false);
 const dropdownStyle = ref({});
 const selectedIndex = ref(-1);
@@ -74,29 +83,28 @@ const userInteracted = ref(false);
 
 const filteredResults = computed(() =>
   props.items.filter(item =>
-    item[props.textProp].toLowerCase().includes(searchQuery.value.toLowerCase())
+    item[props.text].toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 );
 
 const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
 watch(debouncedSearchQuery, () => {
-  if (userInteracted.value) {
-    isOpen.value = true;
-    updateDropdownPosition();
+  if (debouncedSearchQuery.value && userInteracted.value) {
+    open();
+  } else {
+    close();
   }
 });
 
 // Set default value on component mount
 onMounted(() => {
   if (props.defaultValue) {
-    const val = props.items.find((item) => item[props.keyProp] === props.defaultValue);
+    const val = props.items.find((item) => item[props.key] === props.defaultValue);
     if (val) {
-      searchQuery.value = val[props.textProp];
+      displayValue.value = val[props.text];
     }
   }
-  useEventListener(window, 'scroll', updateDropdownPosition, { passive: true });
-  useEventListener(window, 'resize', updateDropdownPosition, { passive: true });
 });
 
 const toggleOpen = () => {
@@ -107,7 +115,6 @@ const toggleOpen = () => {
 const open = () => {
   isOpen.value = true;
   selectedIndex.value = -1;
-  updateDropdownPosition();
 };
 
 const close = () => {
@@ -116,10 +123,10 @@ const close = () => {
 };
 
 const selectItem = (item) => {
-  searchQuery.value = item[props.textProp];
-  props.addval(item);
+  displayValue.value = item[props.text];
+  searchQuery.value = '';
+  props.selectNew(item);
   close();
-  userInteracted.value = false;  // Reset user interaction flag
 };
 
 const onArrowDown = () => {
@@ -148,27 +155,16 @@ const onEnter = () => {
 };
 
 const onFocus = () => {
-  if (!userInteracted.value) {
+  userInteracted.value = true;
+  searchQuery.value = displayValue.value;
+  if (searchQuery.value) {
     open();
   }
 };
 
-const onInput = () => {
+const onInput = (event) => {
   userInteracted.value = true;
-  open();
-};
-
-const updateDropdownPosition = () => {
-  if (!autocompleteRef.value) return;
-
-  const rect = autocompleteRef.value.getBoundingClientRect();
-  dropdownStyle.value = {
-    position: 'fixed',
-    top: `${rect.bottom}px`,
-    left: `${rect.left}px`,
-    width: `${rect.width}px`,
-    zIndex: 1000
-  };
+  searchQuery.value = event.target.value;
 };
 
 useEventListener(document, 'click', (event) => {
@@ -186,11 +182,16 @@ useEventListener(document, 'click', (event) => {
 
 <style>
 .autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background-color: oklch(var(--b3));
-  border: 1px solid oklch(var(--n));
+  border: 4px solid oklch(var(--n));
   border-radius: 0 0 16px 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-height: 350px;
+  max-height: 250px;
   overflow-y: auto;
 }
 
@@ -213,4 +214,5 @@ useEventListener(document, 'click', (event) => {
   padding: 8px;
   text-align: center;
 }
+
 </style>

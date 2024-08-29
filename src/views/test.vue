@@ -17,43 +17,14 @@
         <div>
             <button @click="getData" title="print current workbook data to console">Get Data</button>
         </div>
-
-        <v-grid style="height:90vh; width: 100%;" :columns="columns" :source="rows" :column-types="plugin"/>
     </div>
 </template>
 
 
 <script setup>
-import VGrid from '@revolist/vue3-datagrid';
 import { setCols, getConfigId } from '@/services/config';
 import { onBeforeMount, ref } from 'vue';
 
-import SelectTypePlugin from '@revolist/revogrid-column-select'
-
-const dropdown = {
-    labelKey: 'label',
-    valueKey: 'value',
-    source: [
-        { label: 'According', value: 'a' },
-        { label: 'Over', value: 'b' },
-        { label: 'Source', value: 's' },
-    ],
-}
-const columns = [
-    {
-        ...dropdown,
-        prop: 'name',
-        name:'select',
-        columnType: 'select', // column type specified as 'select'
-    },
-    {
-        prop:'info', name:'ads'
-    }
-]
-const rows = [{ name: 'New item' }, { name: 'New item 2' },{ name: 'New item 3' },{ name: 'New item 4' }]
-
-// register column type
-const plugin = { select: new SelectTypePlugin() }
 
 const sendColsConfig = async (conf, idCol) => {
     const arrayOfObjects = Object.keys(conf).map(key => {

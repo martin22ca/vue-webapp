@@ -1,8 +1,8 @@
 <template>
-    <MCModal :modalOpen="props.modalOpen" modalTitle="Prestadores" :toggleModal="() => { props.toggleModal() }">
-        <form @submit.prevent="submit">
-            <div class="header flex flex-row gap-4 bg-base-200 px-4 mt-2 rounded-xl">
-                <h2 v-if="update" class="card-title text-4xl py-4">
+    <MCModal :modalOpen="props.modalOpen" modalTitle="Prestadores" :toggleModal="() => { props.toggleModal(false) }">
+        <form @submit.prevent="submit" class="bg-base-200 px-4 rounded-xl" style="height: 87vh;">
+            <div class="flex flex-row mt-2 rounded-xl">
+                <h2 v-if="update" class="card-title text-4xl">
                     Prestador:
                     <div class="badge badge-lg badge-primary">{{ business_name.value.value }}</div>
                 </h2>
@@ -10,77 +10,110 @@
                     Nuevo Prestador
                 </h2>
                 <span class="grow"></span>
-                <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Nro Prestador">
-                    <input v-model="id" class="input input-bordered w-full" disabled />
+                <MCInput class="basis-1/3" textIcon="mdi:numeric" textLabel="ID Prestador">
+                    <div class="input input-bordered w-full p-2 pl-4">
+                        {{ id_provider }}
+                    </div>
                 </MCInput>
             </div>
-            <span class='m - 1 divider divider-neurtal '></span>
-            <div class="bg-base-200 px-4 rounded-xl overflow-y-auto" style="max-height: 70vh;"> <!--This DIV-->
-                <div class="flex flex-row gap-4 ">
-                    <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Razon Social"
-                        :textError="business_name.errorMessage.value">
-                        <input v-model="business_name.value.value" class="input input-bordered w-full" />
-                    </MCInput>
-                    <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Ubicacion"
-                        :textError="business_location.errorMessage.value">
-                        <input v-model="business_location.value.value" class="input input-bordered w-full" />
-                    </MCInput>
-                    <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Zona Sancor"
-                        :textError="sancor_zone.errorMessage.value">
-                        <input v-model="sancor_zone.value.value" class="input input-bordered w-full" />
-                    </MCInput>
+            <span class='m - 1 divider divider-neurtal p-0 mb-4'></span>
+            <div class="overflow-y-auto" style="max-height: 65vh;"> <!--This DIV-->
+
+                <div className="grid grid-cols-6 grid-rows-7 gap-4">
+                    <div>
+                        <MCInput textIcon="mdi:account" textLabel="Razon Social"
+                            :textError="business_name.errorMessage.value">
+                            <input v-model="business_name.value.value" class="input input-bordered w-full" />
+                        </MCInput>
+                    </div>
+                    <div>
+                        <MCInput class="basis-1/3" textIcon="mdi:home-account" textLabel="Ubicacion"
+                            :textError="business_location.errorMessage.value">
+                            <input v-model="business_location.value.value" class="input input-bordered w-full" />
+                        </MCInput>
+                    </div>
+                    <div className="">
+                        <MCInput class="basis-1/3" textIcon="mdi:home-account" textLabel="Zona Sancor"
+                            :textError="sancor_zone.errorMessage.value">
+                            <input v-model="sancor_zone.value.value" class="input input-bordered w-full" />
+                        </MCInput>
+                    </div>
+                    <div>
+                        <MCInput class="basis-1/3" textIcon="mdi:priority-high" textLabel="Prioridad">
+                            <input v-model="priority.value.value" class="input input-bordered w-full" />
+                        </MCInput>
+                    </div>
+                    <div className="col-span-2 row-span-3 col-start-5">
+                        <MCInput class="grow" textIcon="mdi:text-box-outline" textLabel="Obsevacion"
+                            :textError="observation.errorMessage.value">
+                            <textarea v-model="observation.value.value"
+                                class="textarea textarea-bordered w-full h-64" />
+                        </MCInput>
+                    </div>
+                    <div className="col-span-2 row-start-2">
+                        <MCInput class="basis-1/4" textIcon="mdi:numeric" textLabel="CUIT"
+                            :textError="cuit.errorMessage.value">
+                            <input v-model="cuit.value.value" class="input input-bordered w-full" />
+                        </MCInput>
+                    </div>
+                    <div className="col-span-2 col-start-3 row-start-2">
+                        <MCInput class="basis-1/4" textIcon="mdi:map-marker" textLabel="Direccion"
+                            :textError="address.errorMessage.value">
+                            <input v-model="address.value.value" class="input input-bordered w-full" />
+                        </MCInput>
+                    </div>
+                    <div className="col-span-2 row-start-3 ">
+                        <MCInput class="basis-1/4" textIcon="mdi:numeric" textLabel="ID Coordinador">
+                            <div class="input input-bordered w-full overflow-x-scroll px-3 pt-3">
+                                {{ props.provider.id_coordinator }}
+                            </div>
+                        </MCInput>
+                    </div>
+                    <div className="col-span-2 row-start-3">
+                        <MCInput class="basis-1/4" textIcon="mdi:account" textLabel="Coordinador">
+                            <div class="input input-bordered w-full overflow-x-scroll px-3 pt-">
+                                {{ props.provider.coordinator_business_name }}
+                            </div>
+                        </MCInput>
+                    </div>
+                    <div className="col-span-6 col-start-1 row-start-4">
+                        <h2 class="text-xl pb-2">Particularidades</h2>
+                        <span class="divider" />
+                    </div>
+                    <div className="col-span-3 row-start-5">
+                        <MCInput class="basis-1/2" textIcon="mdi:calendar-range"
+                            textLabel="Ultima modificacion G-salud">
+                            <div class="input input-bordered w-full">
+                                {{ mod_g_salud }}
+                            </div>
+                        </MCInput>
+                    </div>
+                    <div className="col-span-3 col-start-4 row-start-5">
+                        <MCInput class="basis-1/2" textIcon="mdi:calendar-range"
+                            textLabel="Ultima modificacion Prevencion">
+                            <div class="input input-bordered w-full px-3 pt-3">
+                                {{ mod_prevencion }}
+                            </div>
+                        </MCInput>
+                    </div>
+                    <div className="col-span-3 row-span-2 row-start-6">
+                        <MCInput class="basis-1/2" textIcon="mdi:text-box-outline" textLabel="Particularidad G-salud "
+                            :textError="part_g_salud.errorMessage.value">
+                            <textarea v-model="part_g_salud.value.value"
+                                class="textarea textarea-bordered w-full h-32" />
+                        </MCInput>
+                    </div>
+                    <div className="col-span-3 row-span-2 col-start-4 row-start-6">
+                        <MCInput class="basis-1/2" textIcon="mdi:text-box-outline"
+                            textLabel="Particularidad Prevencion">
+                            <div class="textarea textarea-bordered w-full h-32 overflow-y-scroll">{{
+                                props.provider.part_prevencion }}</div>
+                        </MCInput>
+                    </div>
                 </div>
-                <div class="flex flex-row gap-4">
-                    <MCInput class="basis-1/3" textIcon="gg:password" textLabel="CUIT"
-                        :textError="cuit.errorMessage.value">
-                        <input v-model="cuit.value.value" class="input input-bordered w-full" />
-                    </MCInput>
-                    <MCInput class="basis-2/3" textIcon="gg:password" textLabel="Direccion"
-                        :textError="address.errorMessage.value">
-                        <input v-model="address.value.value" class="input input-bordered w-full" />
-                    </MCInput>
-                </div>
-                <div class="flex flex-row gap-4">
-                    <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Nro Coordinador">
-                        <input v-model="props.provider.coordinator_number" class="input input-bordered w-full" he />
-                    </MCInput>
-                    <MCInput class="basis-2/3" textIcon="gg:password" textLabel="Coordinador">
-                        <input v-model="props.provider.coordinator_number" class="input input-bordered w-full" he />
-                    </MCInput>
-                </div>
-                <div class="flex flex-row gap-4">
-                    <MCInput class="basis-2/3" textIcon="gg:password" textLabel="Obsevacion"
-                        :textError="observation.errorMessage.value">
-                        <textarea v-model="observation.value.value" class="textarea textarea-bordered w-full" he />
-                    </MCInput>
-                    <MCInput class="basis-1/3" textIcon="gg:password" textLabel="Prioridad">
-                        <input v-model="status" disabled class="input input-bordered w-full " />
-                    </MCInput>
-                </div>
-                <span class="divider" />
-                <h2 class="text-xl pb-2">Particularidades</h2>
-                <div class="flex flex-row gap-4">
-                    <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Ultima modificacion G-salud">
-                        <input v-model="mod_g_salud" type="date" class="input input-bordered w-full" disabled />
-                    </MCInput>
-                    <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Ultima modificacion Prevencion">
-                        <input v-model="mod_prevencion" type="date" class="input input-bordered w-full" disabled />
-                    </MCInput>
-                </div>
-                <div class="flex flex-row gap-4">
-                    <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Particularidad G-salud "
-                        :textError="part_g_salud.errorMessage.value">
-                        <textarea v-model="part_g_salud.value.value" class="textarea textarea-bordered w-full" he />
-                    </MCInput>
-                    <MCInput class="basis-1/2" textIcon="gg:password" textLabel="Particularidad Prevencion">
-                        <textarea v-model="props.provider.part_prevencion" class="textarea textarea-bordered w-full"
-                            disabled />
-                    </MCInput>
-                </div>
-                <div class="card-actions justify-end py-2">
-                    <button class="btn btn-primary " type="submit">Guardar</button>
-                    <button class="btn btn-secondary ma-2" @click="handleReset">Limpiar</button>
-                </div>
+            </div>
+            <div class="card-actions justify-end ">
+                <button class="btn btn-primary" type="submit">Guardar</button>
             </div>
         </form>
     </MCModal>
@@ -90,7 +123,7 @@
 import MCModal from './MCModal.vue';
 import { ref } from 'vue';
 import MCInput from '../MCInput.vue';
-import { registerUser, updateUser } from '@/services/users'
+import { updateProvider } from '@/services/providers'
 import * as Yup from "yup";
 import { useField, useForm } from 'vee-validate'
 
@@ -109,10 +142,10 @@ const createValidationSchema = () => {
         business_name: Yup.string().nullable(),
         business_location: Yup.string().nullable(),
         sancor_zone: Yup.string().nullable(),
-        cuit: Yup.string().nullable(),
+        cuit: Yup.string().nullable().max(12, 'El  Cuit no puede ser mas largo que 12 caracteres'),
         observation: Yup.string().nullable(),
         part_g_salud: Yup.string().nullable(),
-        status: Yup.string(),
+        priority: Yup.string().nullable(),
     };
     return Yup.object().shape(baseSchema);
 };
@@ -124,10 +157,11 @@ const { handleSubmit, handleReset, errors } = useForm({
     validateOnMount: false
 });
 
-const id = ref(0)
+const id_provider = ref(0)
 const mod_prevencion = ref(null)
 const mod_g_salud = ref(null)
-const status = ref(null)
+const coordinator_business_name = ref(null)
+const priority = useField('priority')
 const address = useField('address');
 const part_g_salud = useField('part_g_salud')
 const business_name = useField('business_name')
@@ -138,10 +172,11 @@ const observation = useField('observation')
 
 if (update.value) {
     console.log(props.provider)
-    id.value = props.provider.id
+    coordinator_business_name.value = props.provider.coordinator_business_name
+    id_provider.value = props.provider.id_provider
     mod_prevencion.value = props.provider.mod_prevencion
     mod_g_salud.value = props.provider.mod_g_salud
-    status.value = props.provider.status
+    priority.value.value = props.provider.priority
     address.value.value = props.provider.address
     business_name.value.value = props.provider.business_name
     part_g_salud.value.value = props.provider.part_g_salud
@@ -169,14 +204,15 @@ const submit = handleSubmit(async (values) => {
             }
         }
     }
+    values['id_provider'] = id_provider.value
     if (update.value) {
-        const { data } = await updateUser(values)
+        const { data } = await updateProvider(values)
         console.log(data)
-    } else {
-        const { data } = await registerUser(values)
-        console.log(data)
+        if (data.success) {
+            props.toggleModal(true)
+        }
     }
-    props.toggleModal()
+
 });
 
 

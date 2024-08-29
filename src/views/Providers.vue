@@ -1,9 +1,9 @@
 <template>
     <defaultLayout>
         <div class="h-auto">
-            <Breadcrumbs title="Provedores"/>
+            <Breadcrumbs title="Provedores" />
             <modalProvider v-if="providerModal" :modal-open="providerModal" :provider="providerData"
-                :toggleModal="() => { providerModal = !providerModal; toastText = 'Usuario Actualizado/Creado'; toastSuccess = true; toastVal = !toastVal; fetchResources() }" />
+                :toggleModal="closeModal" />
             <DataTable :rows="providers" :cols="headers" :loading="loading" @updateFilters="updateFilters">
                 <template #table_options>
                     <button class="btn btn-secondary mx-2" @click="addProvider()" disabled>
@@ -31,26 +31,24 @@ import { getProviders } from '@/services/providers'
 import { usetableStore } from "@/store/tableStore";
 
 const headers = [
-    { prop: 'id_provider', name: 'ID', editor: 'number', pin: 'colPinStart', autoSize: true, valType: 'number', editable: false },
-    { prop: 'id_coordinator', name: 'Coordinador', autoSize: true, valType: 'number', editable: false },
-    { prop: 'cuit', name: 'CUIT', valType: 'string' },
-    { prop: 'business_name', name: 'Razon Social', editor: 'text', size: 200, valType: 'string', editable: false },
-    { prop: 'business_location', name: 'Locaclidad', size: 200, valType: 'string', editable: false, filter: 'string' },
-    { prop: 'sancor_zone', name: 'Zona Sancor', size: 200, valType: 'string', editable: false },
-    { prop: 'observation', name: 'Observacion', size: 200, valType: 'string', editable: false },
-    { prop: 'priority', name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTableWarnText), size: 150, valType: 'text', editable: false },
-    { prop: 'part_g_salud', name: 'Particularidad G_salud', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'text' },
-    { prop: 'part_prevencion', name: 'Particularidad Prevencion', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'text' },
-    { prop: { 'info': 1 }, name: 'Acciones', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true, size: 150 },
+    { prop: 'id_provider', name: 'ID', editor: 'number', pin: 'colPinStart', autoSize: true, valType: 'number', readonly: true },
+    { prop: 'id_coordinator', name: 'Coordinador', autoSize: true, valType: 'number', readonly: true },
+    { prop: 'coordinator_business_name', name: 'Razon Coord', autoSize: true, valType: 'string', readonly: true },
+    { prop: 'cuit', name: 'CUIT', valType: 'string', readonly: true },
+    { prop: 'business_name', name: 'Razon Social', editor: 'text', size: 200, valType: 'string', readonly: true },
+    { prop: 'business_location', name: 'Locaclidad', size: 200, valType: 'string', readonly: true, filter: 'string', readonly: true },
+    { prop: 'sancor_zone', name: 'Zona Sancor', size: 200, valType: 'string', readonly: true },
+    { prop: 'observation', name: 'Observacion', size: 200, valType: 'string', readonly: true },
+    { prop: 'priority', name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTableWarnText), size: 150, valType: 'text', readonly: true },
+    { prop: 'part_g_salud', name: 'Particularidad G_salud', cellTemplate: VGridVueTemplate(DataTableExists), size: 150, valType: 'text', readonly: true },
+    { prop: 'part_prevencion', name: 'Particularidad Prevencion', cellTemplate: VGridVueTemplate(DataTableExists), size: 150, valType: 'text', readonly: true },
+    { prop: 'info', name: 'Acciones', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true,pin: 'colPinEnd', size: 100 },
 ]
 
 const notiStore = notificationsStore()
 const store = usetableStore()
-const infoModal = ref(false)
 const providerModal = ref(false)
 let providerData = null
-
-const univerRef = ref(null);
 
 let filters = []
 const providers = ref([])
@@ -59,12 +57,23 @@ const loading = ref(true)
 const fetchResources = async () => {
     loading.value = true
     const { data } = await getProviders(filters)
-    console.log(data)
-    setTimeout(() => {
-        loading.value = false
-        providers.value = data.data
-    }, 1000)
+    if (data.success) {
+        console.log(data.data)
+        setTimeout(() => {
+            loading.value = false
+            providers.value = data.data
+        }, 1000)
+
+    } else {
+        notiStore.newMessage(data.error, false)
+    }
 }
+
+const closeModal = (refetch = false) => {
+    providerModal.value = !providerModal.value;
+    if (refetch) fetchResources();
+}
+
 
 const updateFilters = (appliedFilters) => {
     filters = appliedFilters;

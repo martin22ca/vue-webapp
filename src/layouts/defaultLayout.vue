@@ -5,8 +5,8 @@
             <Drawer v-if="drawerStatus" :drawer-open="drawerStatus" />
         </div>
         <div class="bg-base-300 w-full " :style="contentStyles">
-            <NavBar :visible="showNavbar" :toggle-drawer="toggleDrawer" />
-            <div class="p-2 bg-base-300  ">
+            <NavBar :visible="drawerStatus" :toggle-drawer="toggleDrawer" />
+            <div class="bg-base-300  ">
                 <slot></slot>
                 <Toast :toast-open="notifications.open" :duration="notifications.duration" :state="notifications.state"
                     :toast-text="notifications.message" :toggle-toast="() => { notifications.toggle() }" />
@@ -27,15 +27,13 @@ const showNavbar = ref(true);
 const notifications = notificationsStore()
 
 const toggleDrawer = () => {
+    showNavbar.value = true
     drawerStatus.value = !drawerStatus.value
     setTimeout(() => {
         updateContentWidth()
     }, 300)
 }
 
-const handleScroll = () => {
-    showNavbar.value = window.scrollY <= 5;
-};
 
 const contentWidth = ref(window.innerWidth);
 
@@ -51,12 +49,10 @@ const handleWindowResize = () => {
 
 onMounted(() => {
     updateContentWidth();
-    window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleWindowResize);
 });
 
 onBeforeUnmount(() => {
-    window.removeEventListener('scroll', handleScroll);
     window.removeEventListener('resize', handleWindowResize);
 });
 

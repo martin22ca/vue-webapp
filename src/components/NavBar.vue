@@ -1,5 +1,5 @@
 <template>
-    <header class="sticky top-0 z-50">
+    <header :class="'sticky top-0 z-50 ' + (!props.visible ?'h-0':'') " >
         <div v-if="!props.visible" class="flex flex-row p-2 items-center fadeTop ">
             <div class="flex flex-row p-2 items-center ">
                 <div class="flex-none">
@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <div v-else class="flex flex-row p-2 bg-base-100 items-center fadeTop ">
+        <div v-else class="flex flex-row p-2 bg-base-100 items-center fadeTop">
             <div class="flex-none">
                 <label class="btn btn-primary btn-circle swap">
                     <input type="checkbox" @click="toggleDrawer?.()" />

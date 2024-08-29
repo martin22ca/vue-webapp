@@ -3,7 +3,7 @@ import { ICellData, cellToRange, ICommandInfo } from '@univerjs/core'
 import { WORKBOOK_DATA } from '@/assets/WorkbookData'
 
 
-export const getRow = (activeSheet: FWorksheet, row: number, colsReference: Object) => {
+export const getRow = (activeSheet:  FWorksheet | null, row: number, colsReference: Object) => {
     var rowObj = {}
     const width = Object.keys(colsReference).length / 2
     activeSheet.getRange(row, 0, 1, width).forEach((row: number, col: number, cell: ICellData) => {
@@ -13,8 +13,7 @@ export const getRow = (activeSheet: FWorksheet, row: number, colsReference: Obje
 }
 
 
-export const insertRow = (activeSheet: FWorksheet, row: number, rowObj: Object, colsReference: Object, headers: Array<Object> | null) => {
-    console.log(rowObj)
+export const insertRow = (activeSheet:  FWorksheet | null, row: number, rowObj: Object, colsReference: Object, headers: Array<Object> | null) => {
     const width = Object.keys(colsReference).length / 2
     let arrObj = new Array(width)
     const range = activeSheet.getRange(row, 0, 1, width)
@@ -37,7 +36,7 @@ export const insertRow = (activeSheet: FWorksheet, row: number, rowObj: Object, 
 
 }
 
-export const removeRow = (activeSheet: FWorksheet, row: number, colsReference: Object) => {
+export const removeRow = (activeSheet:  FWorksheet | null, row: number, colsReference: Object) => {
     const width = Object.keys(colsReference).length / 2
     let arrObj = new Array(width).fill(null)
     const range = activeSheet.getRange(row, 0, 1, width)
@@ -52,19 +51,25 @@ export const logChanges = (univerAPI: FUniver, modifiedItems: Object,) => {
     var preVal = null
 
     univerAPI.onCommandExecuted((command) => {
-        if (command.id === 'sheet.operation.set-cell-edit-visible' && command.params.visible) {
+        if (command.id === 'sheet.operation.set-cell-edit-visible' && command.params['visible']) {
             row = activeSheet.getSelection().getActiveRange().getCell().actualRow
             col = activeSheet.getSelection().getActiveRange().getCell().actualColumn
             preVal = activeSheet.getSelection().getActiveRange().getCellData()
         }
     })
     univerAPI.onCommandExecuted(async (command: ICommandInfo) => {
-        if (command.id === 'sheet.operation.set-cell-edit-visible' && !command.params.visible) {
+        if (command.id === 'sheet.operation.set-cell-edit-visible' && !command.params['visible']) {
             const cell = activeSheet.getRange(row, col, 1, 1).getCellData()
             const Nrow = activeSheet.getSelection().getActiveRange().getCell().actualRow - 1
             const Ncol = activeSheet.getSelection().getActiveRange().getCell().actualColumn
         }
     })
+}
+
+export const returnPrev = (activeSheet:  FWorksheet | null, row: number, col: number, preVal: any) => {
+    const range = activeSheet.getRange(row, col, 1, 1)
+    range.setValue({'v':preVal})
+    return
 }
 
 export const isEmpty = (obj: Object) => {

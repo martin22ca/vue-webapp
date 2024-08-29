@@ -1,7 +1,7 @@
 <template>
     <Teleport to="body">
         <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
-            <div class="absolute modal-box modalAnim max-w-6xl bg-base-300 max-h-screen ">
+            <div class="absolute modal-box modalAnim bg-base-300 max-h-screen " style="max-width: 90vw;">
                 <button v-if="props.toggleModal != null"
                     class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
                     @click="props.toggleModal()">✕</button>

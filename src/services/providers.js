@@ -29,3 +29,16 @@ export async function getPriorities() {
         throw error;
     }
 }
+
+export async function updateProvider(data) {
+    try {
+        return await axiosClient({
+            url: BASE_URL + '/update',
+            method: 'PUT',
+            data: data
+        })
+    } catch (error) {
+        console.error('Error Updating User:', error);
+        throw error
+    }
+}
