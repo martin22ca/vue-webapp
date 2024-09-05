@@ -73,9 +73,9 @@ const routes = [
     component: () => import('@/views/Report.vue'),
   },
   {
-    path: '/test',
-    name: 'Test',
-    component: () => import('@/views/test.vue'),
+    path: '/Admin',
+    name: 'Admin',
+    component: () => import('@/views/AdminPanel.vue'),
   },
   {
     path: '/audit',
