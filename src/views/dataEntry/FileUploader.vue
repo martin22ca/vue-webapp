@@ -2,7 +2,7 @@
     <ConfigData v-if="selectedFile" :file="selectedFile" :id-col="id_config"  :modalstatus="configXlS"
             :toggle-modal="() => { configXlS = !configXlS }"></ConfigData>
     <MCModal :modal-open="modalControl.status" :modal-text="modalControl.text" :modal-title="modalControl.title"
-        :toggle-modal="() => { toggleModal() }" class="absolute">
+        :toggle-modal="() => { toggleModal() }">
         <span v-if="modalControl.loading" class="loading loading-dots loading-lg bg-primary"></span>
     </MCModal>
     <div class="card card-compact w-auto bg-base-100 shadow-md basis-1/2 m-2 ">
@@ -55,11 +55,11 @@
 </template>
 
 <script setup>
+import * as XLSX from 'xlsx';
 import { Icon } from '@iconify/vue';
 import MCModal from '@/components/Modals/MCModal.vue';
-import * as XLSX from 'xlsx';
 import { notificationsStore } from '@/store/notificationsStore';
-import ConfigData from '@/components/ConfigData.vue';
+import ConfigData from '@/views/dataEntry/ConfigData.vue';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps({
@@ -84,14 +84,11 @@ const selectedFile = ref(null);
 const state = ref(false)
 const lastLoad = ref(false)
 
-
 var id_config = null
 now.setHours(0, 0, 0, 0);
 
 const handleFileChange = (event) => {
     const file = event.target.files[0];
-    const allowedExtensions = ['csv', 'xlm', 'xls'];
-    const fileExtension = file.name.split('.').pop().toLowerCase();
     selectedFile.value = file
     configXlS.value = true
 }

@@ -53,8 +53,6 @@ import { UniverUIPlugin } from "@univerjs/ui";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { zhCN, enUS } from 'univer:locales'
 import { WORKBOOK_DATA } from "@/assets/WorkbookData";
-import { AddSheetDataValidationCommand } from '@univerjs/sheets-data-validation';
-import type { IAddSheetDataValidationCommandParams } from '@univerjs/sheets-data-validation';
 import { createCheckBox, createDropdown } from '@/utils/spreadsheet/columTypes'
 
 const filtersDialog = ref(false)
@@ -191,19 +189,24 @@ const destroyUniver = () => {
 
 watch(
   () => props.loading,
-  (newValue) => {
+  async (newValue) => {
     if (newValue) {
-      return
+      return;
     }
-    rowLength.value = props.rows.length
+    rowLength.value = props.rows.length;
     setTimeout(() => {
       setupCols();
       init(WORKBOOK_DATA);
-      manageCols()
-    }, 100)
-
+    }, 1);
   }
+);
 
+// Watch for changes in props.rows.length
+watch(
+  () => props.rows.length,
+  () => {
+    if (!props.loading) manageCols();
+  }
 );
 
 
@@ -260,6 +263,7 @@ const init = (data = {}) => {
   univer.createUnit(UniverInstanceType.UNIVER_SHEET, data)
   univerAPI.value = FUniver.newAPI(univer);
   emits('updateAPI', univerAPI.value)
+  manageCols()
 };
 </script>
 

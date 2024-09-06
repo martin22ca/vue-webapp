@@ -32,17 +32,16 @@ import { usetableStore } from "@/store/tableStore";
 
 const headers = [
     { prop: 'id_provider', name: 'ID', editor: 'number', pin: 'colPinStart', autoSize: true, valType: 'number', readonly: true },
-    { prop: 'id_coordinator', name: 'Coordinador', autoSize: true, valType: 'number', readonly: true },
-    { prop: 'coordinator_business_name', name: 'Razon Coord', autoSize: true, valType: 'string', readonly: true },
-    { prop: 'cuit', name: 'CUIT', valType: 'string', readonly: true },
-    { prop: 'business_name', name: 'Razon Social', editor: 'text', size: 200, valType: 'string', readonly: true },
-    { prop: 'business_location', name: 'Locaclidad', size: 200, valType: 'string', readonly: true, filter: 'string', readonly: true },
-    { prop: 'sancor_zone', name: 'Zona Sancor', size: 200, valType: 'string', readonly: true },
-    { prop: 'observation', name: 'Observacion', size: 200, valType: 'string', readonly: true },
+    { prop: 'id_coordinator', name: 'Coordinador', autoSize: true, size: 100, valType: 'number', readonly: true },
+    { prop: 'coordinator_business_name', name: 'Razon Coord', autoSize: true,size: 250, valType: 'string', readonly: true },
+    { prop: 'cuit', name: 'CUIT', valType: 'string',size: 220, readonly: true },
+    { prop: 'business_name', name: 'Razon Social', editor: 'text', size: 220, valType: 'string', readonly: true },
+    { prop: 'business_location', name: 'Locaclidad', size: 250, valType: 'string', readonly: true, filter: 'string', readonly: true },
+    { prop: 'sancor_zone', name: 'Zona Sancor', size: 250, valType: 'string', readonly: true },
     { prop: 'priority', name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTableWarnText), size: 150, valType: 'text', readonly: true },
-    { prop: 'part_g_salud', name: 'Particularidad G_salud', cellTemplate: VGridVueTemplate(DataTableExists), size: 150, valType: 'text', readonly: true },
-    { prop: 'part_prevencion', name: 'Particularidad Prevencion', cellTemplate: VGridVueTemplate(DataTableExists), size: 150, valType: 'text', readonly: true },
-    { prop: 'info', name: 'Acciones', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true,pin: 'colPinEnd', size: 100 },
+    { prop: 'part_g_salud', name: 'Particularidad G_salud', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'text', readonly: true },
+    { prop: 'part_prevencion', name: 'Particularidad Prevencion', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'text', readonly: true },
+    { prop: 'info', name: 'Acciones', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true,pin: 'colPinEnd' ,size: 100},
 ]
 
 const notiStore = notificationsStore()
@@ -58,7 +57,6 @@ const fetchResources = async () => {
     loading.value = true
     const { data } = await getProviders(filters)
     if (data.success) {
-        console.log(data.data)
         setTimeout(() => {
             loading.value = false
             providers.value = data.data

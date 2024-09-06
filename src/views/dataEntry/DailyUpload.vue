@@ -62,7 +62,7 @@
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import defaultLayout from '@/layouts/defaultLayout.vue'
-import Fileuploader from '@/components/FileUploader.vue'
+import Fileuploader from '@/views/dataEntry/FileUploader.vue'
 import { ref, onMounted } from 'vue';
 import { getConfig } from '@/services/config'
 import { postAssignment, postDb, postLots } from '@/services/config'
@@ -70,8 +70,7 @@ import { postAssignment, postDb, postLots } from '@/services/config'
 const configData = ref([])
 const Now = new Date()
 Now.setHours(0, 0, 0, 0);
-const s1 = ref(false)
-const s2 = ref(false)
+
 
 const fetchConfigs = async () => {
     const configList = [3, 4, 5]
@@ -80,7 +79,7 @@ const fetchConfigs = async () => {
 }
 
 const getValue = (idConfig) => {
-    return configData.value.find(item => item.id === idConfig);
+    return configData.value.find(item => item.id === idConfig);  
 }
 
 const getState = (id) => {

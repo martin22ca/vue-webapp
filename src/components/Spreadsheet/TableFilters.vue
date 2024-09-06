@@ -1,120 +1,132 @@
 <template>
     <MCModal :modal-open="true" modal-title="Filtros" :toggle-modal="props.toggleModal">
-        <div>
-            <div v-for="(filter, index) in appliedFilters" class="my-8 bg-base-100 p-2 rounded-xl">
-                <div class="flex flex-row gap-4 overflow-y-auto">
-                    <div class="m-auto">
-                        <label class="form-control w-full max-w-xs">
-                            <div class="label">
-                                <span class="label-text">Columna </span>
-                            </div>
-                            <select v-model="filter.col" @change="handleCol(index, $event)"
-                                class="select select-primary">
-                                <option disabled selected>Selecionar Columna</option>
-                                <option v-for="col, colIndex in selectedCols" :value="col.prop">
-                                    {{ col.name }}
-                                </option>
-                            </select>
-                        </label>
+        <div class="space-y-4">
+            <!-- Applied Filters -->
+            <div v-if="appliedFilters.length > 0" style="max-height: 60vh; overflow-y: scroll">
+                <h3>Filtros aplicados</h3>
+                <div v-for="(filter, index) in appliedFilters" :key="filter.id"
+                    class="bg-base-100 p-4 my-2 rounded-xl shadow">
+                    <div class="flex items-center gap-4 fade">
+                        <!-- Column Select -->
+                        <div class="flex-grow">
+                            <MCInput text-label="Columna" text-icon="mdi:view-column">
+                                <select v-model="filter.col" @change="handleColChange(index, $event)"
+                                    class="select select-primary w-full">
+                                    <option disabled value="">Seleccionar columna</option>
+                                    <option v-for="col in getCols" :key="col.prop" :value="col.prop">
+                                        {{ col.name }}
+                                    </option>
+                                </select>
+                            </MCInput>
+                        </div>
+                        <!-- Filter Condition -->
+                        <div v-if="filter.col" class="flex-grow">
+                            <MCInput text-label="Filtro" text-icon="mdi:filter">
+                                <select v-model="filter.filterOpt" class="select select-primary w-full fade">
+                                    <option disabled value="">Seleccionar Filtro</option>
+                                    <option v-for="filterOption in getCompatibleFilters(filter.col)"
+                                        :key="filterOption.name" :value="filterOption">
+                                        {{ filterOption.name }}
+                                    </option>
+                                </select>
+                            </MCInput>
+                        </div>
+
+                        <!-- Filter Value -->
+                        <div v-if="filter.filterOpt?.values_needed > 0" class="flex-grow">
+                            <MCInput text-label="Valor" text-icon="mdi:numeric">
+                                <input v-model="filter.val" :type="filter.valType" placeholder="Valor..."
+                                    class="input input-primary w-full" />
+                            </MCInput>
+                        </div>
+
+                        <!-- Remove Filter Button -->
+                        <button @click="removeFilter(filter.id)" class="btn btn-circle btn-sm btn-error self-end mb-6">
+                            <Icon icon="mdi:close" class="text-lg" />
+                        </button>
                     </div>
-                    <div v-if="filter.col" class="m-auto basis-1/3 text-center">
-                        <label class="form-control w-full max-w-xs">
-                            <div class="label">
-                                <span class="label-text">Condicion</span>
-                            </div>
-                            <select v-model="filter.filterOpt" class="select select-primary">
-                                <option disabled value="">Seleccionar Filtro</option>
-                                <option v-for="(filterOption, filterIndex) in filters" :key="filterIndex"
-                                    :value="filterOption">
-                                    {{ filterOption.name }}
-                                </option>
-                            </select>
-                        </label>
-                    </div>
-                    <span class="grow"></span>
-                    <div v-if="filter.filterOpt?.values_needed > 0 && filter.filterOpt" class="m-auto grow justify-end">
-                        <label class="form-control w-full max-w-xs text-end">
-                            <div class="label">
-                                <span class="label-text">Valor</span>
-                            </div>
-                            <input v-model="filter.val" :type="filter.valType" placeholder="Valor..."
-                                class="input input-primary input-md w-full " />
-                        </label>
-                    </div>
-                    <button class="btn btn-circle btn-sm mb-auto btn-error ml-2 self-end"
-                        @click="removeFilter(filter.id)">
-                        X
-                    </button>
                 </div>
             </div>
-            <div class="my-4 bg-base-200 p-2 rounded-xl ">
-                <label class="form-control w-full max-w-xs">
-                    <div class="label">
-                        <span class="label-text">Nuevo Filtro</span>
-                    </div>
-                    <select v-model="newFilterSelect" @change="createNewFilter($event)" class="select select-primary">
-                        <option disabled value="">Seleccionar Filtro</option>
+
+            <span class="divider m-2">Nuevo Filtro</span>
+
+            <!-- Add New Filter -->
+            <div class="bg-base-200 p-4 rounded-xl">
+                <MCInput text-label="Seleccionar Columna" text-icon="mdi:view-column">
+                    <select v-model="newFilterSelect" @change="createNewFilter" class="select select-primary w-full">
+                        <option disabled value="">Seleccionar Columna</option>
                         <option v-for="col in getCols" :key="col.prop" :value="col.prop">
                             {{ col.name }}
                         </option>
                     </select>
-                </label>
+                </MCInput>
             </div>
         </div>
-        <div class="card-actions float-right p-2">
-            <div>
-                <button class="btn btn-primary mr-2 right-0" @click="applyFilters()">
-                    <Icon icon="mdi:content-save" />Guardar
-                </button>
-                <button class="btn btn-error ml-2 right-0" @click="appliedFilters = [];">
-                    <Icon icon="mdi:broom" />Limpiar
-                </button>
-            </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end gap-2 mt-4">
+            <button @click="clearFilters" class="btn btn-error">
+                <Icon icon="mdi:broom" class="text-lg" />
+                Limpiar
+            </button>
+            <button @click="applyFilters" class="btn btn-primary">
+                <Icon icon="mdi:content-save" class="text-lg" />
+                Aplicar
+            </button>
         </div>
     </MCModal>
 </template>
 
 <script setup>
+import { ref, computed } from 'vue';
 import { Icon } from '@iconify/vue';
 import MCModal from '@/components/Modals/MCModal.vue';
-import { computed, onMounted, ref } from 'vue';
-
-let filterIdCounter = 0
-const appliedFilters = ref([])
-const newFilterSelect = ref("");
-const emits = defineEmits(['updateFilters'])
+import MCInput from '../MCInput.vue';
 
 const props = defineProps({
-    toggleModal: { type: Function, default: () => { } },
-    selectedCols: { type: Array, default: [] },
-    appliedFilters: { type: Array, default: [] },
-    filters: { type: Array, default: [] },
+    toggleModal: { type: Function, required: true },
+    selectedCols: { type: Array, required: true },
+    appliedFilters: { type: Array, required: true },
+    filters: { type: Array, required: true },
 });
 
+const emits = defineEmits(['updateFilters']);
 
-const getCols = computed(()=>{
-    let cols = []
-    props.selectedCols.forEach(col => {
-        if(col.prop === Object(col.prop)){
-            let newCol = col
-            newCol.prop = col.prop.prop
-            cols.push(newCol)
-        }
-        else cols.push(col)
+const appliedFilters = ref(props.appliedFilters);
+const newFilterSelect = ref("");
+let filterIdCounter = props.appliedFilters.length;
+
+const getCols = computed(() => {
+    return props.selectedCols.map(col => ({
+        ...col,
+        prop: typeof col.prop === 'object' ? col.prop.prop : col.prop
+    }));
+});
+
+const getCompatibleFilters = (colProp) => {
+    const column = getCols.value.find(col => col.prop === colProp);
+    return props.filters.filter(filter => {
+        // Add logic here to determine which filters are compatible with the column type
+        // For example, you might want to exclude certain filters for numeric columns
+        return true; // Replace with actual compatibility logic
     });
-    return cols
-})
+};
 
-const handleCol = (index, event) => {
-    const colIndex = props.selectedCols.findIndex((item) => item.prop === event.target.value)
-    const col = props.selectedCols[colIndex]
-    appliedFilters.value[index]['col'] = col.prop
-    appliedFilters.value[index]['valType'] = col.valType
-    newFilter.value = 0
-}
+const handleColChange = (index, event) => {
+    const col = getCols.value.find(item => item.prop === event.target.value);
+    appliedFilters.value[index] = {
+        ...appliedFilters.value[index],
+        col: col.prop,
+        valType: col.valType,
+        filterOpt: null,
+        val: '',
+    };
+};
 
-const createNewFilter = (event) => {
-    const col = props.selectedCols.find(item => item.prop === event.target.value);
+const createNewFilter = () => {
+    if (!newFilterSelect.value) return;
+
+    const col = getCols.value.find(item => item.prop === newFilterSelect.value);
     appliedFilters.value.push({
         id: filterIdCounter++,
         col: col.prop,
@@ -125,27 +137,20 @@ const createNewFilter = (event) => {
     setTimeout(() => {
         newFilterSelect.value = "";
     }, 1)
-    // Reset the new filter select
+
 };
 
-const removeFilter = (itemId, all = false) => {
-    if (all) {
-        appliedFilters.value = []
-        filterIdCounter = 1
-    } else {
-        const index = appliedFilters.value.findIndex((item) => item.id === itemId)
-        appliedFilters.value.splice(index, 1)
-    }
-}
+const removeFilter = (itemId) => {
+    appliedFilters.value = appliedFilters.value.filter(filter => filter.id !== itemId);
+};
 
+const clearFilters = () => {
+    appliedFilters.value = [];
+    filterIdCounter = 0;
+};
 
 const applyFilters = () => {
     emits('updateFilters', appliedFilters.value);
-    props.toggleModal()
-}
-
-
-onMounted(() => {
-    appliedFilters.value = props.appliedFilters
-})
+    props.toggleModal();
+};
 </script>
