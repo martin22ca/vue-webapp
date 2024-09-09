@@ -1,6 +1,6 @@
 <template>
     <defaultLayout>
-        <Breadcrumbs title="DB Prevencion" />
+        <h3 class="m-2 ml-4">DB Prevencion</h3>
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
             class="w-full mr-2" :rowSize="60">
         </DataTable>
@@ -8,7 +8,6 @@
 </template>
 
 <script setup>
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { onMounted, ref } from 'vue';

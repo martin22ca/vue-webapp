@@ -4,14 +4,14 @@
         <div :class="'duration-200 ease-out  ' + (drawerStatus ? 'w-60' : 'w-0')">
             <Drawer v-if="drawerStatus" :drawer-open="drawerStatus" />
         </div>
-        <div class="bg-base-300 w-full " :style="contentStyles">
+        <div class="bg-base-300 w-full flex flex-col" :style="contentStyles">
             <NavBar :visible="drawerStatus" :toggle-drawer="toggleDrawer" />
-            <div class="bg-base-300  ">
+            <div class="flex-grow overflow-auto">
                 <slot></slot>
-                <Toast :toast-open="notifications.open" :duration="notifications.duration" :state="notifications.state"
-                    :toast-text="notifications.message" :toggle-toast="() => { notifications.toggle() }" />
             </div>
         </div>
+        <Toast :toast-open="notifications.open" :duration="notifications.duration" :state="notifications.state"
+            :toast-text="notifications.message" :toggle-toast="() => { notifications.toggle() }" />
     </div>
 </template>
 

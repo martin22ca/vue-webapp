@@ -1,7 +1,6 @@
 <template>
     <defaultLayout>
         <div class="h-auto">
-            <Breadcrumbs title="Provedores" />
             <modalProvider v-if="providerModal" :modal-open="providerModal" :provider="providerData"
                 :toggleModal="closeModal" />
             <DataTable :rows="providers" :cols="headers" :loading="loading" @updateFilters="updateFilters">
@@ -17,7 +16,6 @@
 
 <script setup>
 import { Icon } from "@iconify/vue";
-import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import { notificationsStore } from "@/store/notificationsStore";
 import modalProvider from "@/components/Modals/modalProvider.vue";
 import { VGridVueTemplate } from "@revolist/vue3-datagrid";

@@ -1,19 +1,16 @@
 <template>
-    <Teleport to="body">
-        <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
-            <div class="absolute modal-box modalAnim bg-base-300 max-h-screen " style="max-width: 90vw;">
-                <button v-if="props.toggleModal != null"
-                    class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
-                    @click="props.toggleModal()">✕</button>
-                <div class="font-bold text-2xl flex flex-row items-center">
-                    <Icon v-if="props.modalText != null" :class="'mr-2 text-' + color" :icon="modalIcon" />
-                    <h3>{{ props.modalTitle }}</h3>
-                </div>
-                <p v-if="props.modalText != null" class="my-4 text-md">{{ props.modalText }}</p>
-                <slot></slot>
+    <dialog class="modal" :open="props.modalOpen" style="background-color: oklch(var(--b1)/.8);">
+        <div class="absolute modal-box modalAnim bg-base-300" style="max-width: 90vw; max-height: 90vh;">
+            <button v-if="props.toggleModal != null" class='m-2 btn btn-sm btn-circle absolute right-2 top-2 btn-error '
+                @click="props.toggleModal()">✕</button>
+            <div class="font-bold text-2xl flex flex-row items-center">
+                <Icon v-if="props.modalText != null" :class="'mr-2 text-' + color" :icon="modalIcon" />
+                <h3>{{ props.modalTitle != null  ? props.modalTitle: '' }}</h3>
             </div>
-        </dialog>
-    </Teleport>
+            <p v-if="props.modalText != null" class="my-4 text-md">{{ props.modalText }}</p>
+            <slot></slot>
+        </div>
+    </dialog>
 </template>
 
 <script setup>
@@ -35,7 +32,6 @@ const props = defineProps({
 })
 const modalIcon = ref('material-symbols:info')
 const color = ref('primary')
-
 
 onMounted(() => {
     if (props.modalSucces != null) {

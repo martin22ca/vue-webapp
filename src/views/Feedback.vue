@@ -1,6 +1,6 @@
 <template>
     <defaultLayout>
-        <Breadcrumbs />
+
         <modalFeedback v-if="feedbackModal" :feedback="feedback" :clearProp="toggleModal" />
         <h2 class="p-2">Informacion de reportes</h2>
         <DataTable :rows="reports" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"

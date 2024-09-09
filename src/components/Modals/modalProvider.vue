@@ -83,7 +83,7 @@
                     <div className="col-span-3 row-start-5">
                         <MCInput class="basis-1/2" textIcon="mdi:calendar-range"
                             textLabel="Ultima modificacion G-salud">
-                            <div class="input input-bordered w-full">
+                            <div class="input input-bordered w-full px-3 pt-3">
                                 {{ mod_g_salud }}
                             </div>
                         </MCInput>
@@ -113,7 +113,7 @@
                 </div>
             </div>
             <div class="card-actions justify-end ">
-                <button class="btn btn-primary" type="submit">Guardar</button>
+                <button class="btn btn-primary" type="submit" >Guardar</button>
             </div>
         </form>
     </MCModal>
@@ -121,7 +121,7 @@
 
 <script setup>
 import MCModal from './MCModal.vue';
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import MCInput from '../MCInput.vue';
 import { updateProvider } from '@/services/providers'
 import * as Yup from "yup";
@@ -170,6 +170,9 @@ const sancor_zone = useField('sancor_zone')
 const cuit = useField('cuit')
 const observation = useField('observation')
 
+// Create a reactive object to store the original values
+const originalValues = reactive({})
+
 if (update.value) {
     console.log(props.provider)
     coordinator_business_name.value = props.provider.coordinator_business_name
@@ -185,36 +188,46 @@ if (update.value) {
     cuit.value.value = props.provider.cuit
     observation.value.value = props.provider.observation
 
+    // Store the original values
+    Object.keys(props.provider).forEach(key => {
+        originalValues[key] = props.provider[key]
+    })
 } else {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
-    let month = currentDate.getMonth() + 1; // Adding 1 because months are zero-indexed
-    month = month < 10 ? `0${month}` : month; // Add leading zero if month is a single digit
+    let month = currentDate.getMonth() + 1;
+    month = month < 10 ? `0${month}` : month;
     let day = currentDate.getDate();
-    day = day < 10 ? `0${day}` : day; // Add leading zero if day is a single digit
+    day = day < 10 ? `0${day}` : day;
     const dateString = `${year}-${month}-${day}`;
 }
 
 const submit = handleSubmit(async (values) => {
-    for (const i in values) {
-        if (Object.hasOwnProperty.call(values, i)) {
-            const element = values[i];
-            if (!element) {
-                values[i] = null
+    const changedValues = {}
+
+    for (const key in values) {
+        if (Object.hasOwnProperty.call(values, key)) {
+            const newValue = values[key]
+            const originalValue = originalValues[key]
+
+            if (newValue !== originalValue) {
+                changedValues[key] = newValue === '' ? null : newValue
             }
         }
     }
-    values['id_provider'] = id_provider.value
-    if (update.value) {
-        const { data } = await updateProvider(values)
+
+    changedValues['id_provider'] = id_provider.value
+
+    if (update.value && Object.keys(changedValues).length > 1) {  // > 1 because id_provider is always included
+        const { data } = await updateProvider(changedValues)
         console.log(data)
         if (data.success) {
             props.toggleModal(true)
         }
+    } else if (!update.value) {
+        // Handle create new provider case if needed
+    } else {
+        props.toggleModal(false)
     }
-
 });
-
-
-
 </script>

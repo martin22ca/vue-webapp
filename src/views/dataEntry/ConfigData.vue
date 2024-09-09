@@ -236,8 +236,8 @@ const exists = computed(() => {
 
 onMounted(async () => {
     parseFile(props.file)
-    const response = await getConfigId(props.idCol)
-    const configArr = JSON.parse(response.data.value);
+    const {data} = await getConfigId(props.idCol)
+    const configArr = JSON.parse(data.value);
     configsOr.value = configArr.sort((a, b) => a['order'] - b['order'])
     configs.value = JSON.parse(JSON.stringify(configsOr.value))
     const arraySame = verifyArrays()

@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="flex flex-col h-full">
     <ColsSelector v-if="columnDialog" :base-cols="baseCols" :selected-cols="selectedCols"
       @update:selectedCols="handleSelectedColsUpdate" :toggle-modal="() => { columnDialog = false }" />
     <TableFilters v-if="filtersDialog" :selected-cols="selectedCols" :applied-filters="appliedFilters"
       :filters="availableFilters" :toggle-modal="() => { filtersDialog = false }"
       @updateFilters="handleUpdateFilters" />
-    <div class="table-wrapper ">
+    <div class="table-wrapper" style="height:98%">
       <div class="flex flex-row p-4 gap-2 bg-base-100 top-0">
         <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="downloadExcel">
           <Icon icon="mdi:file-export" class="text-xl" />
@@ -22,10 +22,11 @@
           <slot name="table_options"></slot>
         </div>
       </div>
-      <v-grid v-if="!props.loading && refresh && props.rows.length > 0" id="datagrid" theme="compact"
-        :source="props.rows" :columns="selectedCols" class="MCGrid" resize="true" editors="text" range="true"
-        autoSizeColumn="true" :row-size="props.rowSize" :columnTypes='props.columnTypes'
-        @beforeedit="gridAfterEdit"></v-grid>
+      <div v-if="!props.loading && refresh && props.rows.length > 0" style="height:98%;  ">
+        <v-grid id="datagrid" theme="compact" :source="props.rows" :columns="selectedCols" class="MCGrid"
+          style="height: 100%;" resize="true" editors="text" range="true" autoSizeColumn="true"
+          :row-size="props.rowSize" :columnTypes='props.columnTypes' @beforeedit="gridAfterEdit"></v-grid>
+      </div>
       <div v-else class="flex flex-1 justify-center mt-20 ">
         <Loader v-if="props.loading" />
         <div v-else class="flex flex-col flex-1 justify-center ">
@@ -163,7 +164,6 @@ onMounted(async () => {
 
 .MCGrid {
   z-index: 10;
-  height: 80vh;
   background-color: white;
 }
 

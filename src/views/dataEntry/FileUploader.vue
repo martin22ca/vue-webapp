@@ -1,6 +1,6 @@
 <template>
-    <ConfigData v-if="selectedFile" :file="selectedFile" :id-col="id_config"  :modalstatus="configXlS"
-            :toggle-modal="() => { configXlS = !configXlS }"></ConfigData>
+    <ConfigData v-if="selectedFile" :file="selectedFile" :id-col="id_config" :modalstatus="configXlS"
+        :toggle-modal="() => { configXlS = !configXlS }"></ConfigData>
     <MCModal :modal-open="modalControl.status" :modal-text="modalControl.text" :modal-title="modalControl.title"
         :toggle-modal="() => { toggleModal() }">
         <span v-if="modalControl.loading" class="loading loading-dots loading-lg bg-primary"></span>
@@ -17,10 +17,14 @@
                     <span class="flex flex-row center items-center gap-2">
                         Ulitma carga:
                         <span class="grow"></span>
-                        <span
+                        <span v-if="lastLoad != f"
                             :class="{ 'badge p-4 px-5': true, 'bg-success text-success-content': state, 'bg-warning text-warning-content': !state }">
                             <Icon icon="material-symbols:calendar-month" class="mx-2" style="font-size: 1rem;" />
                             {{ lastLoad }}
+                        </span>
+                        <span v-else class="badge my-1 p-4 px-5 badge-error ">
+                            Error
+                            <Icon v-if="state" class="text-2xl ml-4" icon="mdi:alert-circle" />
                         </span>
                     </span>
                 </p>
@@ -28,11 +32,15 @@
                     <span class="flex flex-row center items-center gap-2">
                         Estado:
                         <span class="grow"></span>
-                        <span
+                        <span v-if="state != null"
                             :class="{ 'badge p-4 px-5': true, 'bg-success text-success-content': state, 'bg-warning text-warning-content': !state }">
                             {{ state ? 'Cargado' : 'Esperando' }}
                             <Icon v-if="state" class="text-2xl ml-4" icon="icon-park-solid:success" />
                             <span v-else class="ml-4 loading loading-dots loading-md" />
+                        </span>
+                        <span v-else class="badge p-4 px-5 badge-error ">
+                            Error
+                            <Icon v-if="state" class="text-2xl ml-4" icon="mdi:alert-circle" />
                         </span>
                     </span>
                 </p>
@@ -152,13 +160,19 @@ const toggleModal = (titleVal = null, textVal = null) => {
 }
 
 onMounted(() => {
+    id_config = props.config.id
     // Split the datetime string by 'T' to separate date and time
+    if (props.config.mod_date == null) {
+        state.value = null
+        lastLoad.value = null
+        return
+    }
     var dateTime = props.config.mod_date.split('T');
     var date = dateTime[0];
     var time = dateTime[1].split('.')[0];
     lastLoad.value = date + ' ' + time
     const lastDate = new Date(dateTime);
-    id_config = props.config.id
+
     if (lastDate > now) {
         state.value = true
     }

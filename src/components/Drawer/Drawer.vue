@@ -1,26 +1,26 @@
 <template>
   <div class='drawer w-60 fixed'>
-    <input id="my-drawer" type="checkbox" class="drawer-toggle " />
+    <input id="my-drawer" type="checkbox" class="drawer-toggle" />
     <aside class="w-60 h-screen bg-base-100 flex flex-col border-r-2 border-neutral sticky end-0">
-      <div class="top">
-        <a href="/" aria-current="page" aria-label="Homepage">
-          <div
-            class="uppercase font-bold text-3xl text-accent text-center bg-base-200 bg-rounded py-2 mt-2 mx-4 rounded-xl">
-            G-<span class="salud text-base-content">soft</span>
+      <div class="flex flex-col h-full">
+        <div class="top flex-grow overflow-y-auto">
+          <a href="/" aria-current="page" aria-label="Homepage">
+            <div
+              class="uppercase font-bold text-3xl text-accent text-center bg-base-200 bg-rounded py-2 mt-2 mx-4 rounded-xl">
+              G-<span class="salud text-base-content">soft</span>
+            </div>
+          </a>
+          <div class="menu menu-vertical pl-0 bg-base-100 text-base-content">
+            <DrawerItem v-for="Item in itemsArr" :key="Item.route" :title="Item.title" :icon="Item.icon"
+              :route="Item.route" :children="Item.children" />
           </div>
-        </a>
-        <div class="menu menu-horizontal pl-0 bg-base-100 text-base-content overflow-y-auto overflow-x-hidden center"
-          style="max-height: 70vh;">
-          <DrawerItem v-for="Item in itemsArr" :title="Item.title" :icon="Item.icon" :route="Item.route"
-            :children="Item.children" />
         </div>
-      </div>
-      <span class="my-auto"></span>
-      <div class="bottom mx-auto items-center p-2">
-        <ThemePicker class="m-aut" />
-        <button class="btn w-full" @click="logOut">
-          Log Out
-        </button>
+        <div class="bottom mt-auto p-4">
+          <ThemePicker class="mb-4" />
+          <button class="btn w-full" @click="logOut">
+            Log Out
+          </button>
+        </div>
       </div>
     </aside>
   </div>

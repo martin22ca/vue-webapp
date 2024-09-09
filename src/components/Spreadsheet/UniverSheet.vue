@@ -22,7 +22,7 @@
       </div>
     </div>
     <Loader v-if="props.loading" class="m-auto" style=" padding-top: 20%;" />
-    <div v-else class="flex flex-col p-2 h-screen" style="max-height: 82vh; border: 5px,red;" ref="container" />
+    <div v-else class="flex flex-col p-2 h-full" style="border: 5px,red;" ref="container" />
   </div>
 </template>
 
