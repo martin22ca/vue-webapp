@@ -12,7 +12,7 @@
             </div>
         </MCModal>
         <div class="h-auto">
-            <Breadcrumbs title="Carga Manual"></Breadcrumbs>
+            <h3 class="m-2 bg-base-100 rounded-xl px-2"> Carga Manual</h3>
             <UniverSheet :rows="mergedRows" :cols="headers" :loading="loading" @updateFilters="updateFilters"
                 @update-a-p-i="updateAPI" @update-cols-reference="updateColsReference">
                 <template #table_options>
