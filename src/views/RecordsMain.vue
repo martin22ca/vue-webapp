@@ -1,14 +1,13 @@
 <template>
     <defaultLayout>
-        <h3 class="m-2 ml-4">Expedientes Asignados</h3>
+        <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2">Expedientes Asignados</h3>
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
-            class="w-full mr-2" :rowSize="60">
+            class="w-full" :rowSize="60">
         </DataTable>
     </defaultLayout>
 </template>
 
 <script setup>
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { getRecordsAssigned } from '@/services/records'

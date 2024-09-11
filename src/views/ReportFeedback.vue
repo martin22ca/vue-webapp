@@ -1,7 +1,6 @@
 <template>
   <defaultLayout>
-    <Breadcrumbs />
-    <h2 class="p-2">Feedback</h2>
+    <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2">Reportar feedback</h3>
     <div class="max-w-xl mt-4 mx-auto p-6 bg-base-200 rounded-lg shadow-lg fadeRight">
       <h3 class="p-2 ">Reportes de errores y mejoras</h3>
       <p class="p-2 text-sm">Si encuentras un error o pensaste en una mejora para la pagina, se puede reportar

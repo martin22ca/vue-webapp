@@ -11,24 +11,22 @@
                 </button>
             </div>
         </MCModal>
-        <div class="h-auto">
-            <h3 class="m-2 bg-base-100 rounded-xl px-2"> Carga Manual</h3>
-            <UniverSheet :rows="mergedRows" :cols="headers" :loading="loading" @updateFilters="updateFilters"
-                @update-a-p-i="updateAPI" @update-cols-reference="updateColsReference">
-                <template #table_options>
-                    <button :disabled="isEmpty(editedRecords)" class="btn btn-primary mx-2" @click="saveChanges()">
-                        <Icon icon="mdi:content-save" class="text-xl text-neutral" />
-                    </button>
-                    <button v-if="!isEmpty(editedRecords)" class="fadeRight btn btn-error mx-2" @click="clearEdited()">
-                        <Icon icon="mdi:delete" class="text-xl text-neutral" />
-                    </button>
-                    <button v-if="dbRecords.length > 0" class="fadeRight btn btn-secondary mx-2"
-                        @click="clearAssignedRecords()">
-                        <Icon icon="mdi:broom" class="text-xl text-neutral" />
-                    </button>
-                </template>
-            </UniverSheet>
-        </div>
+        <h3 class="m-2 bg-base-100 rounded-xl px-2"> Carga Manual</h3>
+        <UniverSheet class="h-full" :rows="mergedRows" :cols="headers" :loading="loading" @updateFilters="updateFilters"
+            @update-a-p-i="updateAPI" @update-cols-reference="updateColsReference">
+            <template #table_options>
+                <button :disabled="isEmpty(editedRecords)" class="btn btn-primary mx-2" @click="saveChanges()">
+                    <Icon icon="mdi:content-save" class="text-xl text-neutral" />
+                </button>
+                <button v-if="!isEmpty(editedRecords)" class="fadeRight btn btn-error mx-2" @click="clearEdited()">
+                    <Icon icon="mdi:delete" class="text-xl text-neutral" />
+                </button>
+                <button v-if="dbRecords.length > 0" class="fadeRight btn btn-secondary mx-2"
+                    @click="clearAssignedRecords()">
+                    <Icon icon="mdi:broom" class="text-xl text-neutral" />
+                </button>
+            </template>
+        </UniverSheet>
     </defaultLayout>
 </template>
 

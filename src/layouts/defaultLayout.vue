@@ -1,15 +1,11 @@
 <template>
     <title>G-SOFT</title>
-    <div class="flex flex-row h-screen w-screen">
-        <div :class="'duration-200 ease-out  ' + (drawerStatus ? 'w-60' : 'w-0')">
-            <Drawer v-if="drawerStatus" :drawer-open="drawerStatus" />
-        </div>
-        <div class="bg-base-300 w-full flex flex-col" :style="contentStyles">
-            <NavBar :visible="drawerStatus" :toggle-drawer="toggleDrawer" />
-            <div class="flex-grow overflow-auto">
-                <slot></slot>
-            </div>
-        </div>
+    <div class="relative flex flex-row h-screen w-screen overflow-hidden">
+        <div class="hover-area" @mouseenter="openDrawer" @mouseleave="closeDrawerIfNotHovered" />
+        <Drawer :is-open="isDrawerOpen" @mouseleave="closeDrawerIfNotHovered" @mouseenter="keepDrawerOpen" />
+        <main class="bg-base-300 flex-1 flex flex-col overflow-y-scroll">
+            <slot></slot>
+        </main>
         <Toast :toast-open="notifications.open" :duration="notifications.duration" :state="notifications.state"
             :toast-text="notifications.message" :toggle-toast="() => { notifications.toggle() }" />
     </div>
@@ -17,49 +13,31 @@
 
 <script setup lang="ts">
 import Drawer from '@/components/Drawer/Drawer.vue'
-import NavBar from '@/components/NavBar.vue';
 import { notificationsStore } from "@/store/notificationsStore";
-import { computed, ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, watch } from 'vue';
 import Toast from '@/components/Toast.vue';
 
-const drawerStatus = ref(true)
-const showNavbar = ref(true);
 const notifications = notificationsStore()
 
-const toggleDrawer = () => {
-    showNavbar.value = true
-    drawerStatus.value = !drawerStatus.value
-    setTimeout(() => {
-        updateContentWidth()
-    }, 300)
+const isDrawerOpen = ref(false);
+
+// Function to open drawer on hover
+function openDrawer() {
+    isDrawerOpen.value = true;
 }
 
-
-const contentWidth = ref(window.innerWidth);
-
-const updateContentWidth = () => {
-    const drawerWidth = drawerStatus.value ? 240 : 0; // Adjust these values accordingly
-    contentWidth.value = window.innerWidth - drawerWidth;
+// Close drawer only if mouse is not in the drawer
+function closeDrawerIfNotHovered(event) {
+    const relatedTarget = event.relatedTarget || event.toElement;
+    if (!relatedTarget || !relatedTarget.closest('.drawer-content')) {
+        isDrawerOpen.value = false;
+    }
 }
 
-// Update content width on window resize
-const handleWindowResize = () => {
-    updateContentWidth();
+// Keep drawer open if hovering over it
+function keepDrawerOpen() {
+    isDrawerOpen.value = true;
 }
-
-onMounted(() => {
-    updateContentWidth();
-    window.addEventListener('resize', handleWindowResize);
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener('resize', handleWindowResize);
-});
-
-const contentStyles = computed(() => {
-    return { 'max-width': `${contentWidth.value}px` };
-});
-
 watch(
     () => notifications.message,
     (newValue) => {
@@ -97,6 +75,21 @@ p {
 
 .fadeLeft {
     animation: fadeLeft 0.5s ease 0s 1 normal forwards;
+}
+
+.hover-area {
+    position: absolute;
+    width: 40px;
+    /* Adjust width based on your needs */
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 50;
+}
+
+.drawer-content {
+    z-index: 100;
+    transition: all 0.3s ease;
 }
 
 @keyframes fadeLeft {

@@ -6,12 +6,13 @@
         <span v-if="modalControl.loading" class="loading loading-dots loading-lg bg-primary"></span>
     </MCModal>
     <div class="card card-compact w-auto bg-base-100 shadow-md basis-1/2 m-2 ">
-        <div class="card-body">
+        <div class="flex flex-grow flex-col m-4">
             <h3 class="card-title underline">{{ props.cardT }}</h3>
             <p>{{ props.description }}</p>
-            <slot>
-
-            </slot>
+            <div class="m-6">
+                <slot> </slot>
+            </div>
+            <span class="flex flex-1 grow" />
             <div class="">
                 <p class="">
                     <span class="flex flex-row center items-center gap-2">

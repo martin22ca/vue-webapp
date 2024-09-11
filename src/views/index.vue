@@ -1,6 +1,6 @@
 <template>
     <defaultLayout>
-        <div class="grid grid-cols-3 grid-rows-6 gap-4 h-full m-2" >
+        <div class="grid grid-cols-3 grid-rows-6 gap-4 h-full p-2" >
             <div class="bg-base-200 p-4 shadow-sm">1: Statistics</div>
             <div class="col-start-1 row-start-2 bg-base-200 p-4 shadow-sm">2: User Info</div>
             <div class="col-start-2 row-start-1 bg-base-200 p-4 shadow-sm">

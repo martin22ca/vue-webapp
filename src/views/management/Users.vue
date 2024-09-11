@@ -16,15 +16,7 @@
         <modalUser v-if="userModal" :modal-open="userModal" :user="userData"
             :toggleModal="() => { userModal = !userModal; fetchResources() }" />
         <div class="h-auto">
-            <div class="text-sm breadcrumbs p-2">
-                <ul>
-                    <li><a>Home</a></li>
-                    <li><a>Usuarios</a></li>
-                </ul>
-            </div>
-            <div>
-                <h1 class="text-2xl p-2">Usuarios</h1>
-            </div>
+            <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2"> Usuarios</h3>
             <DataTable rowSize="50" :rows="users" :cols="headers" :loading="loading" @updateFilters="updateFilters">
                 <template #table_options>
                     <button class="btn btn-secondary mx-2" @click="addUser()">
@@ -81,6 +73,7 @@ let filters = []
 const fetchResources = async () => {
     const { data } = await getUsers(filters)
     if (data.success) {
+        console.log(data)
         users.value = data.data
         setTimeout(() => {
             loading.value = false

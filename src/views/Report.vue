@@ -1,8 +1,8 @@
 <template>
     <defaultLayout>
-        <Breadcrumbs />
-        <h2 class="p-2" v-if="currentReport == null">Reportes disponibles</h2>
-        <div v-if="currentReport === null" class="fadeRight">
+        <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2">Reportes disponibles</h3>
+        <h2 class="p-2" v-if="currentReport == null"></h2>
+        <div v-if="currentReport === null" class="fadeRight h-full">
             <div class="flex justify-center items-center ">
                 <div class="max-w-3xl w-full p-8 bg-base-200 rounded-lg shadow">
                     <ul>
@@ -18,38 +18,27 @@
                 </div>
             </div>
         </div>
-        <div v-else class="fadeRight flex flex-col">
-            <div class=" " style="height: 10%">
-                <div class="bg-base-200 my-2 px-4 rounded-xl mx-1 shadow">
-                    <h3 class="card-title py-4 flex flex-row">
-                        Reporte: <div class="badge badge-lg badge-primary ">{{ currentReport.title }}</div>
-                        <span class="grow"></span>
-                        <button class="btn btn-secondary btn-circle mt-4" @click="clearReport()">
-                            <Icon icon="mdi:keyboard-return" class="text-xl"></Icon>
-                        </button>
-                    </h3>
-
-
-                    <MCInput class="grow" textIcon="mdi:text" textLabel="Detalles">
-                        <div class="textarea textarea-bordered w-full h-full">
-                            {{ currentReport.description }}
-                        </div>
-                    </MCInput>
-                </div>
-                <div class="bg-base-200 my-4 px-4 rounded-xl mx-1 shadow" style="max-height: 90vh;">
-
-                </div> <!--This DIV-->
+        <div v-else class="fadeRight flex flex-row h-full">
+            <div class="h-full bg-base-200 pb-2 py-2 px-4 rounded-xl mx-1 shadow w-1/6">
+                <h3 class="card-title py-4 flex flex-row">
+                    <div class="badge badge-lg badge-primary h-24">{{ currentReport.title }}</div>
+                    <span class="grow"></span>
+                </h3>
+                <MCInput class="grow" textIcon="mdi:text" textLabel="Detalles">
+                    <div class="textarea textarea-bordered w-full h-full">
+                        {{ currentReport.description }}
+                    </div>
+                </MCInput>
+                <button class="btn btn-error w-full mt-4" @click="clearReport()">
+                        <Icon icon="mdi:keyboard-return" class="text-xl"></Icon>
+                    </button>
             </div>
-            <div class="fadeLeft">
+            <div class="w-5/6"> 
                 <DataTable :rows="reportItems" :cols="tempHeaders" :btnFilters="true" :loading="loading"
-                    @updateFilters="updateFilters" class="mr-2" :rowSize="50">
+                    @updateFilters="updateFilters" :rowSize="50">
                 </DataTable>
             </div>
-
         </div>
-
-
-
     </defaultLayout>
 </template>
 
@@ -154,11 +143,6 @@ watch(
 
 
 <style scoped>
-.tableContainer {
-    max-width: 100%;
-    overflow-x: auto;
-}
-
 .truncate {
     width: 20vw;
     /* Adjust the width as needed */

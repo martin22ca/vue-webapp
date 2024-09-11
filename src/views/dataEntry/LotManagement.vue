@@ -11,38 +11,34 @@
                 </button>
             </div>
         </MCModal>
-        <div class="h-auto ">
-            <Breadcrumbs />
-            <div class="flex gap-2 mx-2 max-w-full" style="height: 93vh;">
-                <DataTable v-if="currentLot == null" class="fadeRight w-full" :btnCols="false" :btnExport="false"
-                    :rows="lots" :cols="headerLots" :loading="loading" @update-filters="updateFiltersLot">
-                    <template #table_options>
-                        <h2 class="text-xl p-2 bg-neutral text-neutral-content p-2 rounded-xl">Lotes Disponibles
-                        </h2>
-                    </template>
-                </DataTable>
-                <lotEdit v-else class="rounded-xl fadeRight" style="width: 30%" :lot="currentLot"
-                    :clearLot="() => { currentLot = null; fetchResources() }" :users="auditors"
-                    :edited-records="editedRecords" />
-                <UniverSheet v-if="recordsFromLot != null && currentLot != null" class="w-full fadeLeft"
-                    style="width: 70%;" :rows="recordsFromLot" :cols="headersRecords" :loading="loading"
-                    @updateFilters="updateFiltersRecords" @update-a-p-i="updateAPI"
-                    @update-cols-reference="updateColsReference">
-                    <template #table_options>
-                        <button v-if="!isEmpty(editedRecords)" class="fadeRight btn btn-error mx-2"
-                            @click="fetchResourcesFromLot()">
-                            <Icon icon="mdi:delete" class="text-xl text-neutral" />
-                        </button>
-                    </template>
-                </UniverSheet>
-            </div>
+        <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2">Lotes</h3>
+        <div class="flex gap-2 mx-2 max-w-full h-full">
+            <DataTable v-if="currentLot == null" class="fadeRight w-full" :btnCols="false" :btnExport="false"
+                :rows="lots" :cols="headerLots" :loading="loading" @update-filters="updateFiltersLot">
+                <template #table_options>
+                    <h2 class="text-xl p-2 bg-neutral text-neutral-content p-2 rounded-xl">Lotes Disponibles
+                    </h2>
+                </template>
+            </DataTable>
+            <lotEdit v-else class="rounded-xl fadeRight" style="width: 30%" :lot="currentLot"
+                :clearLot="() => { currentLot = null; fetchResources() }" :users="auditors"
+                :edited-records="editedRecords" />
+            <UniverSheet v-if="recordsFromLot != null && currentLot != null" class="w-full fadeLeft" style="width: 70%;"
+                :rows="recordsFromLot" :cols="headersRecords" :loading="loading" @updateFilters="updateFiltersRecords"
+                @update-a-p-i="updateAPI" @update-cols-reference="updateColsReference">
+                <template #table_options>
+                    <button v-if="!isEmpty(editedRecords)" class="fadeRight btn btn-error mx-2"
+                        @click="fetchResourcesFromLot()">
+                        <Icon icon="mdi:delete" class="text-xl text-neutral" />
+                    </button>
+                </template>
+            </UniverSheet>
         </div>
     </defaultLayout>
 </template>
 
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import MCModal from '@/components/Modals/MCModal.vue';
 import lotEdit from './LotEdit.vue';
 import { getUsersByRole } from '@/services/users'
@@ -87,12 +83,12 @@ const getAuditors = computed(() => {
 })
 
 const headerLots = [
-    { prop: 'lot_key', pin: 'colPinStart', name: 'Lote', valType: 'text' },
+    { prop: 'lot_key', pin: 'colPinStart', name: 'Lote', size: 200, valType: 'text' },
     { prop: 'status', name: 'Activo', valType: 'bool', cellTemplate: VGridVueTemplate(DataTableCheckbox), readonly: true },
     { prop: 'total_records', name: 'Expedientes en el lote', valType: 'number', size: 250, readonly: true },
-    { prop: 'date_departure', name: 'Fecha Salida', valType: 'date', size: 180, readonly: true },
-    { prop: 'date_return', name: 'Fecha retorno', valType: 'date', size: 180, readonly: true },
-    { prop: 'observation', name: 'Observacion', valType: 'text', size: 250, readonly: true },
+    { prop: 'date_departure', name: 'Fecha Salida', valType: 'date', size: 200, readonly: true },
+    { prop: 'date_return', name: 'Fecha retorno', valType: 'date', size: 200, readonly: true },
+    { prop: 'observation', name: 'Observacion', valType: 'text', size: 350, readonly: true },
     { name: 'Info', cellTemplate: VGridVueTemplate(DataTableInfo), pin: 'colPinEnd', readonly: true, size: 75 },
 ]
 

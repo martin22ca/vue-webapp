@@ -5,8 +5,8 @@
     <TableFilters v-if="filtersDialog" :selected-cols="selectedCols" :applied-filters="appliedFilters"
       :filters="availableFilters" :toggle-modal="() => { filtersDialog = false }"
       @updateFilters="handleUpdateFilters" />
-    <div class="table-wrapper" style="height:98%">
-      <div class="flex flex-row p-4 gap-2 bg-base-100 top-0">
+    <div class="table-wrapper h-full flex flex-col">
+      <div class="flex flex-row p-4 gap-2 bg-base-100 top-0 h-20" >
         <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="downloadExcel">
           <Icon icon="mdi:file-export" class="text-xl" />
         </button>
@@ -22,10 +22,12 @@
           <slot name="table_options"></slot>
         </div>
       </div>
-      <div v-if="!props.loading && refresh && props.rows.length > 0" style="height:98%;  ">
-        <v-grid id="datagrid" theme="compact" :source="props.rows" :columns="selectedCols" class="MCGrid"
-          style="height: 100%;" resize="true" editors="text" range="true" autoSizeColumn="true"
-          :row-size="props.rowSize" :columnTypes='props.columnTypes' @beforeedit="gridAfterEdit"></v-grid>
+      <div v-if="!props.loading && refresh && props.rows.length > 0" class="mx-auto flex flex-1">
+        <v-grid  id="datagrid" theme="compact"
+          :source="props.rows" :columns="selectedCols" class="MCGrid  rounded-xl"
+          style="max-height: 88vh;max-width: fit-content;" resize="true" editors="text" range="true"
+          autoSizeColumn="true" :row-size="props.rowSize" :columnTypes='props.columnTypes'
+          @beforeedit="gridAfterEdit" />
       </div>
       <div v-else class="flex flex-1 justify-center mt-20 ">
         <Loader v-if="props.loading" />
@@ -152,11 +154,10 @@ onMounted(async () => {
 <style>
 .table-wrapper {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  max-width: 99%;
   overflow-x: auto;
-  margin-left: 10px;
-  margin-right: 20px;
-  margin-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 20px;
+  padding-bottom: 10px;
   overflow-y: auto;
   border-radius: 10px;
 }

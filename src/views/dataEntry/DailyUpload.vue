@@ -1,7 +1,7 @@
 <template>
     <defaultLayout>
-        <Breadcrumbs title="Carga de datos" />
-        <div class="flex flex-col">
+        <div class="flex flex-col h-full">
+            <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2"> Carga Exel</h3>
             <div class="card bg-base-100 shadow-md m-2">
                 <h2 class="card-title m-4 underline">
                     Carga de datos
@@ -23,11 +23,11 @@
                     </ul>
                 </div>
             </div>
-            <div class="flex flex-row flex-1">
+            <div class="flex flex-row flex-1 grow">
                 <Fileuploader v-if="configData.length > 0" cardT="1. Cargar DB Prevencion" :refresh="fetchConfigs"
                     :postConfig="postDb" :config="getValue(3)"
                     description="Primero se deben actualizar la informacion recibida de Prevencion. Esta seccion realizara lo siguiente: ">
-                    <div class="ml-2" style="font-size: 16px;">
+                    <div class="ml-2 mb-16" style="font-size: 16px;">
                         <li class="my-2">Crear nuevos expedientes.</li>
                         <li class="my-2"> Actualizar expedientes existentes.</li>
                         <li class="my-2">Registrar prestadores asociados a nuevos expedientes.</li>
@@ -60,7 +60,6 @@
 
 
 <script setup>
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import defaultLayout from '@/layouts/defaultLayout.vue'
 import Fileuploader from '@/views/dataEntry/FileUploader.vue'
 import { ref, onMounted } from 'vue';

@@ -1,28 +1,32 @@
 <template>
-  <div class="m-auto bg-base-200 rounded-lg fade px-2">
+  <div class="bg-base-200 rounded-lg fade px-2">
     <ColsSelector v-if="columnDialog" :base-cols="baseCols" :selected-cols="selectedCols"
       @update:selectedCols="handleSelectedColsUpdate" :toggle-modal="() => { columnDialog = false }" />
     <TableFilters v-if="filtersDialog" :selected-cols="selectedCols" :applied-filters="appliedFilters"
       :filters="availableFilters" :toggle-modal="() => { filtersDialog = false }"
       @updateFilters="handleUpdateFilters" />
-    <div class="flex flex-row p-2 gap-2 top-0">
-      <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="exportRows">
-        <Icon icon="mdi:file-export" class="text-xl" />
-      </button>
-      <button v-if="props.btnCols" class="btn btn-primary mx-1" @click="columnDialog = true">
-        <Icon icon="mdi:format-columns" class="text-2xl text-neutral rounded-xl cursor-pointer" />
-      </button>
-      <button v-if="props.btnFilters" class="btn btn-secondary mx-1" @click="filtersDialog = true">
-        <Icon icon="mdi:filter" class="text-xl text-neutral rounded-xl cursor-pointer" />
-      </button>
-      <div class="grow"></div>
-      <!-- Extra button Cols-->
-      <div>
-        <slot name="table_options"></slot>
+    <div class="table-wrapper h-full flex flex-col">
+      <div class="flex flex-row p-4 gap-2 bg-base-100 top-0 h-20">
+        <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="downloadExcel">
+          <Icon icon="mdi:file-export" class="text-xl" />
+        </button>
+        <button v-if="props.btnCols" class="btn btn-primary mx-1" @click="columnDialog = true">
+          <Icon icon="mdi:format-columns" class="text-2xl text-neutral rounded-xl cursor-pointer" />
+        </button>
+        <button v-if="props.btnFilters" class="btn btn-secondary mx-1" @click="filtersDialog = true">
+          <Icon icon="mdi:filter" class="text-xl text-neutral rounded-xl cursor-pointer" />
+        </button>
+        <div class="grow"></div>
+        <!-- Extra button Cols-->
+        <div>
+          <slot name="table_options"></slot>
+        </div>
+      </div>
+      <Loader v-if="props.loading" class="m-auto" style=" padding-top: 20%;" />
+      <div v-else class="flex flex-1">
+        <div class="w-full" ref="container" />
       </div>
     </div>
-    <Loader v-if="props.loading" class="m-auto" style=" padding-top: 20%;" />
-    <div v-else class="flex flex-col p-2" style="height: 80vh ;" ref="container" />
   </div>
 </template>
 
