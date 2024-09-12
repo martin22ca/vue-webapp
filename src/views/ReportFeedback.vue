@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import Breadcrumbs from '@/components/Header.vue';
 import MCInput from '@/components/MCInput.vue';
 import { notificationsStore } from '@/store/notificationsStore';
 import defaultLayout from '@/layouts/defaultLayout.vue';

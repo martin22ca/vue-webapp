@@ -1,8 +1,8 @@
 <template>
     <defaultLayout>
-        <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2">DB Prevencion</h3>
+        <Header title="DB Prevencion" />
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
-            class="w-full" :rowSize="60">
+            :rowSize="60">
         </DataTable>
     </defaultLayout>
 </template>
@@ -15,6 +15,7 @@ import DataTableGroup from '@/components/DataTableUI/DataTableGroup.vue'
 import DataTableProgres from '@/components/DataTableUI/DataTableProgres.vue';
 import DataTable from '@/components/Spreadsheet/DataTable.vue';
 import { getRecords } from '@/services/records'
+import Header from '@/components/Header.vue';
 
 const headers = [
     { prop: 'record_key', name: 'ID Expediente', pin: 'colPinStart', valType: 'text', readonly: true },

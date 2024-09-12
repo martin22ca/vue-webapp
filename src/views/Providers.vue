@@ -1,22 +1,23 @@
 <template>
     <defaultLayout>
-        <div class="h-auto">
-            <modalProvider v-if="providerModal" :modal-open="providerModal" :provider="providerData"
-                :toggleModal="closeModal" />
-            <DataTable :rows="providers" :cols="headers" :loading="loading" @updateFilters="updateFilters">
-                <template #table_options>
-                    <button class="btn btn-secondary mx-2" @click="addProvider()" disabled>
-                        <Icon icon="material-symbols:add" class="text-xl text-neutral" /> Prestador
-                    </button>
-                </template>
-            </DataTable>
-        </div>
+        <Header title="Prestadores" />
+        <modalProvider v-if="providerModal" :modal-open="providerModal" :provider="providerData"
+            :toggleModal="closeModal" />
+        <DataTable :rows="providers" :cols="headers" :loading="loading" @updateFilters="updateFilters">
+            <template #table_options>
+                <button class="btn btn-secondary mx-2" @click="addProvider()" disabled>
+                    <Icon icon="material-symbols:add" class="text-xl text-neutral" /> Prestador
+                </button>
+            </template>
+        </DataTable>
+
     </defaultLayout>
 </template>
 
 <script setup>
 import { Icon } from "@iconify/vue";
 import { notificationsStore } from "@/store/notificationsStore";
+import Header from "@/components/Header.vue";
 import modalProvider from "@/components/Modals/modalProvider.vue";
 import { VGridVueTemplate } from "@revolist/vue3-datagrid";
 import { ref, onMounted, watch } from 'vue';
@@ -31,15 +32,15 @@ import { usetableStore } from "@/store/tableStore";
 const headers = [
     { prop: 'id_provider', name: 'ID', editor: 'number', pin: 'colPinStart', autoSize: true, valType: 'number', readonly: true },
     { prop: 'id_coordinator', name: 'Coordinador', autoSize: true, size: 100, valType: 'number', readonly: true },
-    { prop: 'coordinator_business_name', name: 'Razon Coord', autoSize: true,size: 250, valType: 'string', readonly: true },
-    { prop: 'cuit', name: 'CUIT', valType: 'string',size: 220, readonly: true },
+    { prop: 'coordinator_business_name', name: 'Razon Coord', autoSize: true, size: 250, valType: 'string', readonly: true },
+    { prop: 'cuit', name: 'CUIT', valType: 'string', size: 220, readonly: true },
     { prop: 'business_name', name: 'Razon Social', editor: 'text', size: 220, valType: 'string', readonly: true },
     { prop: 'business_location', name: 'Locaclidad', size: 250, valType: 'string', readonly: true, filter: 'string', readonly: true },
     { prop: 'sancor_zone', name: 'Zona Sancor', size: 250, valType: 'string', readonly: true },
     { prop: 'priority', name: 'Prioridad', cellTemplate: VGridVueTemplate(DataTableWarnText), size: 150, valType: 'text', readonly: true },
     { prop: 'part_g_salud', name: 'Particularidad G_salud', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'text', readonly: true },
     { prop: 'part_prevencion', name: 'Particularidad Prevencion', cellTemplate: VGridVueTemplate(DataTableExists), size: 100, valType: 'text', readonly: true },
-    { prop: 'info', name: 'Acciones', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true,pin: 'colPinEnd' ,size: 100},
+    { prop: 'info', name: 'Acciones', cellTemplate: VGridVueTemplate(DataTableInfo), readonly: true, pin: 'colPinEnd', size: 100 },
 ]
 
 const notiStore = notificationsStore()

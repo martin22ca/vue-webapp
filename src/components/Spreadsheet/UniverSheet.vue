@@ -5,7 +5,7 @@
     <TableFilters v-if="filtersDialog" :selected-cols="selectedCols" :applied-filters="appliedFilters"
       :filters="availableFilters" :toggle-modal="() => { filtersDialog = false }"
       @updateFilters="handleUpdateFilters" />
-    <div class="table-wrapper h-full flex flex-col">
+    <div class="table-wrapper h-full flex flex-col p-0">
       <div class="flex flex-row p-4 gap-2 bg-base-100 top-0 h-20">
         <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="downloadExcel">
           <Icon icon="mdi:file-export" class="text-xl" />

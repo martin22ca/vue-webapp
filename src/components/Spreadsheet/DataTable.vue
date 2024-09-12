@@ -5,8 +5,8 @@
     <TableFilters v-if="filtersDialog" :selected-cols="selectedCols" :applied-filters="appliedFilters"
       :filters="availableFilters" :toggle-modal="() => { filtersDialog = false }"
       @updateFilters="handleUpdateFilters" />
-    <div class="table-wrapper h-full flex flex-col">
-      <div class="flex flex-row p-4 gap-2 bg-base-100 top-0 h-20">
+    <div class="table-wrapper h-full flex flex-col p-0">
+      <div class="flex flex-row p-4 gap-2 bg-base-100 top-0 h-20 rounded-t-xl">
         <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="downloadExcel">
           <Icon icon="mdi:file-export" class="text-xl" />
         </button>
@@ -24,7 +24,7 @@
       </div>
       <div v-if="!props.loading && refresh && props.rows.length > 0" class=" flex flex-1">
         <v-grid id="datagrid" theme="compact" :source="props.rows" :columns="selectedCols"
-          class="MCGrid w-full  rounded-xl" resize="true" editors="text" range="true" autoSizeColumn="true"
+          class="MCGrid w-full rounded-b-xl" resize="true" editors="text" range="true" autoSizeColumn="true"
           :row-size="props.rowSize" :columnTypes='props.columnTypes' @beforeedit="gridAfterEdit" />
       </div>
       <div v-else class="flex flex-1 justify-center mt-20 ">
@@ -151,13 +151,11 @@ onMounted(async () => {
 
 <style>
 .table-wrapper {
+  background-color: transparent;
+  padding-inline: 10px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   overflow-x: auto;
-  padding-left: 10px;
-  padding-right: 20px;
-  padding-bottom: 10px;
   overflow-y: auto;
-  border-radius: 10px;
 }
 
 

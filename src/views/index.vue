@@ -1,6 +1,7 @@
 <template>
-    <defaultLayout>
-        <div class="grid grid-cols-3 grid-rows-6 gap-4 h-full p-2" >
+    <defaultLayout class="flex flex-col ">
+        <Header title="Home"/>
+        <div class="grid grid-cols-3 grid-rows-6 gap-4 p-2 flex-1" >
             <div class="bg-base-200 p-4 shadow-sm">1: Statistics</div>
             <div class="col-start-1 row-start-2 bg-base-200 p-4 shadow-sm">2: User Info</div>
             <div class="col-start-2 row-start-1 bg-base-200 p-4 shadow-sm">
@@ -12,7 +13,7 @@
                 </h3>
             </div>
             <div class="col-start-2 row-start-2 bg-base-200 p-4 shadow-sm">
-                <Countdown :targetDate="'2024-07-02'" />
+                <Countdown :targetDate="'2025-01-01'" />
             </div>
             <div class="row-span-2 col-start-1 row-start-5 bg-base-200 p-4 shadow-sm">
                 7: Recent Activities
@@ -33,6 +34,7 @@
 </template>
 
 <script setup>
+import Header from '@/components/Header.vue';
 import Countdown from '@/components/Countdown.vue'
 import PieChart from '@/components/Graphs/PieChart.vue'
 import BarChart from '@/components/Graphs/BarChart.vue'

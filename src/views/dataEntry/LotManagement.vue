@@ -11,7 +11,7 @@
                 </button>
             </div>
         </MCModal>
-        <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2">Lotes</h3>
+        <Header title="Lotes"/>
         <div class="flex gap-2 mx-2 max-w-full h-full">
             <DataTable v-if="currentLot == null" class="fadeRight w-full" :btnCols="false" :btnExport="false"
                 :rows="lots" :cols="headerLots" :loading="loading" @update-filters="updateFiltersLot">
@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+import Header from '@/components/Header.vue';
 import { Icon } from '@iconify/vue';
 import MCModal from '@/components/Modals/MCModal.vue';
 import lotEdit from './LotEdit.vue';

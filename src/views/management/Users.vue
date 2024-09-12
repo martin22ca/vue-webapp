@@ -15,21 +15,20 @@
             :toggle-toast="() => { toastVal = !toastVal }"></Toast>
         <modalUser v-if="userModal" :modal-open="userModal" :user="userData"
             :toggleModal="() => { userModal = !userModal; fetchResources() }" />
-        <div class="h-auto">
-            <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2"> Usuarios</h3>
-            <DataTable rowSize="50" :rows="users" :cols="headers" :loading="loading" @updateFilters="updateFilters">
-                <template #table_options>
-                    <button class="btn btn-secondary mx-2" @click="addUser()">
-                        <Icon icon="material-symbols:add" class="text-xl text-neutral" /> User
-                    </button>
-                </template>
-            </DataTable>
-        </div>
+        <Header title="Usuarios" />
+        <DataTable rowSize="50" :rows="users" :cols="headers" :loading="loading" @updateFilters="updateFilters">
+            <template #table_options>
+                <button class="btn btn-secondary mx-2" @click="addUser()">
+                    <Icon icon="material-symbols:add" class="text-xl text-neutral" /> User
+                </button>
+            </template>
+        </DataTable>
     </defaultLayout>
 </template>
 
 
 <script setup>
+import Header from "@/components/Header.vue";
 import MCModal from "@/components/Modals/MCModal.vue";
 import Toast from "@/components/Toast.vue";
 import { VGridVueTemplate } from "@revolist/vue3-datagrid";

@@ -1,10 +1,8 @@
 <template>
     <defaultLayout>
-
         <modalFeedback v-if="feedbackModal" :feedback="feedback" :clearProp="toggleModal" />
-        <h2 class="p-2">Informacion de reportes</h2>
-        <DataTable :rows="reports" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
-            class="mr-2" :rowSize="50">
+        <Header title="Informacion de Reportes" />
+        <DataTable :rows="reports" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters" :rowSize="50">
         </DataTable>
 
     </defaultLayout>
@@ -12,7 +10,7 @@
 
 <script setup>
 import { watch } from 'vue';
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import Header from '@/components/Header.vue';
 import { VGridVueTemplate } from '@revolist/vue3-datagrid';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { onMounted, ref } from 'vue';

@@ -1,6 +1,6 @@
 <template>
     <defaultLayout>
-        <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2">Reportes disponibles</h3>
+        <Header title="Reportes" />
         <h2 class="p-2" v-if="currentReport == null"></h2>
         <div v-if="currentReport === null" class="fadeRight h-full">
             <div class="flex justify-center items-center ">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div v-else class="fadeRight flex flex-row h-full">
-            <div class="h-full bg-base-200 pb-2 py-2 px-4 rounded-xl mx-1 shadow w-1/6">
+            <div class="h-full bg-base-200 px-4 rounded-xl mx-1 shadow w-1/6">
                 <h3 class="card-title py-4 flex flex-row">
                     <div class="badge badge-lg badge-primary h-24">{{ currentReport.title }}</div>
                     <span class="grow"></span>
@@ -44,7 +44,7 @@
 
 <script setup>
 import { watch, computed, readonly } from 'vue';
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import Header from '@/components/Header.vue';
 import { Icon } from '@iconify/vue';
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { onMounted, ref } from 'vue';

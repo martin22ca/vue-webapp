@@ -14,11 +14,11 @@
         <Toast :toast-open="toastVal" :toast-text="toastText" :toast-success="toastSuccess"
             :toggle-toast="() => { toastVal = !toastVal }"></Toast>
 
-        <Breadcrumbs />
-        <h2 class="p-2" v-if="currentRole == null">Selecionar Rol</h2>
-        <div v-if="currentRole === null" class="fadeRight">
-            <div class="flex justify-center items-center ">
-                <div class="max-w-3xl w-full p-8 bg-base-200 rounded-lg shadow">
+        <Header title="Roles"/>
+        <div v-if="currentRole === null" class="fadeRight h-full">
+            <section class="flex justify-center items-center mt-auto h-full">
+                <div class="max-w-4xl w-full p-8 bg-base-200 rounded-lg shadow">
+                    <h2 class="bg-base-100 my-2 py-2 rounded">Roles Disponibles</h2>
                     <ul>
                         <li v-for="role in sortedRoles" :key="role.id"
                             class="py-2 px-4 mb-2 rounded-md bg-neutral text-white flex justify-between items-center">
@@ -30,7 +30,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </section>
         </div>
         <div v-else class="fadeLeft flex flex-row" style="height: 93vh; max-height: 93vh">
             <RoleEdit v-if="currentRole != null" ref="childComponentRef" class="basis-5/12 h-full"
@@ -85,7 +85,7 @@
 
 <script setup>
 import { computed, readonly } from 'vue';
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import Header from '@/components/Header.vue';
 import MCModal from "@/components/Modals/MCModal.vue";
 import Autocomplete from '@/components/Autocomplete.vue';
 import RoleEdit from '@/components/CRUDs/RoleEdit.vue';

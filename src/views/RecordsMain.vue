@@ -1,6 +1,6 @@
 <template>
     <defaultLayout>
-        <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2">Expedientes Asignados</h3>
+        <Header title="Expedientes Asignados"/>
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
             class="w-full" :rowSize="60">
         </DataTable>
@@ -16,6 +16,7 @@ import DataTable from '@/components/Spreadsheet/DataTable.vue';
 import DataTableProgres from '@/components/DataTableUI/DataTableProgres.vue';
 import DataTableGroup from '@/components/DataTableUI/DataTableGroup.vue'
 import DataTableCheckbox from '@/components/DataTableUI/DataTableCheckbox.vue'
+import Header from '@/components/Header.vue';
 
 const headers = [
     { prop: 'record_key', name: 'ID Expediente', pin: 'colPinStart', valType: 'text' },

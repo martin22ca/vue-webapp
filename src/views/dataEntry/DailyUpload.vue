@@ -1,7 +1,7 @@
 <template>
     <defaultLayout>
         <div class="flex flex-col h-full">
-            <h3 class="m-2 bg-neutral text-neutral-content rounded-xl px-2"> Carga Exel</h3>
+            <Header title="Carga Exel Diaria"/>
             <div class="card bg-base-100 shadow-md m-2">
                 <h2 class="card-title m-4 underline">
                     Carga de datos
@@ -60,6 +60,7 @@
 
 
 <script setup>
+import Header from '@/components/Header.vue';
 import defaultLayout from '@/layouts/defaultLayout.vue'
 import Fileuploader from '@/views/dataEntry/FileUploader.vue'
 import { ref, onMounted } from 'vue';

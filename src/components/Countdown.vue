@@ -2,7 +2,7 @@
     <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
       <div class="flex flex-col">
         <span class="countdown font-mono text-5xl">
-          <span :style="{ '--value':  days}"></span>
+          {{days}}
         </span>
         days
       </div>

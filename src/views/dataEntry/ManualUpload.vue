@@ -11,7 +11,7 @@
                 </button>
             </div>
         </MCModal>
-        <h3 class="m-2 bg-base-100 rounded-xl px-2"> Carga Manual</h3>
+        <Header title="Carga Manual"/>
         <UniverSheet class="h-full" :rows="mergedRows" :cols="headers" :loading="loading" @updateFilters="updateFilters"
             @update-a-p-i="updateAPI" @update-cols-reference="updateColsReference">
             <template #table_options>
@@ -32,7 +32,7 @@
 
 
 <script setup lang="ts">
-import Breadcrumbs from "@/components/Breadcrumbs.vue";
+import Header from "@/components/Header.vue";
 import MCModal from "@/components/Modals/MCModal.vue";
 import { Icon } from '@iconify/vue';
 import { userDataStore } from '@/store/userStore';

@@ -1,41 +1,35 @@
 <template>
     <defaultLayout>
-        <div class="h-auto">
-            <Breadcrumbs />
-            <h2 class="p-2">Auditor</h2>
-            <UniverSheet id="sheet" table-name="Expedientes" :loading="loading" ref="univerRef" :cols="headers"
-                :rows="records" @updateFilters="updateFilters">
-            </UniverSheet>
-        </div>
+        <Header title="Auditor"/>
+        <UniverSheet id="sheet" table-name="Expedientes" :loading="loading" ref="univerRef" :cols="headers"
+            :rows="records" @updateFilters="updateFilters" class="h-full">
+        </UniverSheet>
     </defaultLayout>
 </template>
 
 <script setup>
 import { Icon } from "@iconify/vue";
-import Breadcrumbs from "@/components/Breadcrumbs.vue";
+import Header from "@/components/Header.vue";
 import { notificationsStore } from "@/store/notificationsStore";
-import { VGridVueTemplate } from "@revolist/vue3-datagrid";
 import { ref, onMounted, watch } from 'vue';
 import UniverSheet from '@/components/Spreadsheet/UniverSheet.vue'
-import DataTableInfo from "@/components/DataTableUI/DataTableInfo.vue";
-import DataTableExists from '@/components/DataTableUI/DataTableExists.vue'
 import defaultLayout from '@/layouts/defaultLayout.vue';
 import { getRecordsAudit } from '@/services/records'
 import { userDataStore } from '@/store/userStore';
 import { usetableStore } from "@/store/tableStore";
 
 const headers = [
-    { prop: 'id_record', name: 'ID Expediente', valType: 'number'},
+    { prop: 'id_record', name: 'ID Expediente', valType: 'number' },
     { prop: 'part_g_salud', name: 'Part. G salud', size: 150, valType: 'string' },
     { prop: 'part_prevencion', name: 'Part. prevencion', size: 150, valType: 'string' },
     { prop: 'priority_status', name: 'Prioridad', size: 150, valType: 'string' },
-    { prop: 'id_provider_key', name: 'ID Prestador', valType: 'number'},
+    { prop: 'id_provider_key', name: 'ID Prestador', valType: 'number' },
     { prop: 'lot_key', name: 'ID Lote', valType: 'string' },
     { prop: 'business_name', name: 'Razon Social', editor: 'text', size: 200, valType: 'string', editable: false },
     { prop: 'business_location', name: 'Locaclidad', size: 200, valType: 'string' },
-    { prop: 'id_coordinator', name: 'ID Coordinador', size: 200, valType: 'number'},
-    { prop: 'record_total', name: 'Monto', size: 200, valType: 'number'},
-    { prop: 'date_asignment', name: 'Fecha Asignacion', size: 200, valType: 'date'},
+    { prop: 'id_coordinator', name: 'ID Coordinador', size: 200, valType: 'number' },
+    { prop: 'record_total', name: 'Monto', size: 200, valType: 'number' },
+    { prop: 'date_asignment', name: 'Fecha Asignacion', size: 200, valType: 'date' },
     { prop: 'observation', name: 'Observacion', size: 200, valType: 'string' },
 ]
 
@@ -57,7 +51,7 @@ const loading = ref(true)
 
 const fetchResources = async () => {
     loading.value = true
-    const { data } = await getRecordsAudit (userStore.token, filters)
+    const { data } = await getRecordsAudit(userStore.token, filters)
     setTimeout(() => {
         loading.value = false
         records.value = data.data
