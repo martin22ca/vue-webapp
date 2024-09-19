@@ -11,7 +11,6 @@
                 </button>
             </div>
         </MCModal>
-        <Header title="Lotes"/>
         <div class="flex gap-2 mx-2 max-w-full h-full">
             <DataTable v-if="currentLot == null" class="fadeRight w-full" :btnCols="false" :btnExport="false"
                 :rows="lots" :cols="headerLots" :loading="loading" @update-filters="updateFiltersLot">
@@ -38,7 +37,6 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@/components/Header.vue';
 import { Icon } from '@iconify/vue';
 import MCModal from '@/components/Modals/MCModal.vue';
 import lotEdit from './LotEdit.vue';
@@ -70,10 +68,10 @@ const currentLot = ref(null)
 const recordsFromLot = ref(null)
 let filtersLot = []
 let filtersLotRecords = []
+let univerAPI = <FUniver> null;
+let activeSheet = <FWorksheet> null;
 
 const auditors = ref([])
-const univerAPI = ref<FUniver>(null);
-const activeSheet = ref<FWorksheet>(null);
 const editedRecords = ref({})
 const colsReference = ref({})
 
@@ -124,31 +122,31 @@ const updateColsReference = (reference) => {
 }
 
 const updateAPI = (UniverAPI: FUniver) => {
-    univerAPI.value = UniverAPI
-    activeSheet.value = univerAPI.value.getActiveWorkbook().getActiveSheet() as FWorksheet;
+    univerAPI = UniverAPI
+    activeSheet = univerAPI.getActiveWorkbook().getActiveSheet() as FWorksheet;
 
-    univerAPI.value.onBeforeCommandExecute(async (command) => {
+    univerAPI.onBeforeCommandExecute(async (command) => {
         // PRESSED DELETE ON RANGE
         if (command.id === 'sheet.command.clear-selection-content') {
-            activeSheet.value.getSelection().getActiveRange().forEach((row: number, col: number, cell: ICellData) => {
+            activeSheet.getSelection().getActiveRange().forEach((row: number, col: number, cell: ICellData) => {
                 if (cell.v == undefined || cell.v == '') return
                 holdTableChanges(col, row, null)
             })
         }
     })
-    univerAPI.value.onCommandExecuted(async (command: ICommandInfo) => {
+    univerAPI.onCommandExecuted(async (command: ICommandInfo) => {
         // EXIT EDIT ON CELL
         if (command.id === 'sheet.command.set-range-values') {
             const sr = command.params['range']['startRow']
             const sc = command.params['range']['startColumn']
             const er = command.params['range']['endRow']
             const ec = command.params['range']['endColumn']
-            activeSheet.value.getRange(sr, sc, ec - sc + 1, er - sr + 1).forEach(async (row: number, col: number, cell: ICellData) => {
+            activeSheet.getRange(sr, sc, ec - sc + 1, er - sr + 1).forEach(async (row: number, col: number, cell: ICellData) => {
                 holdTableChanges(col, row, cell.v)
             })
         }
         if (command.id === 'sheet.command.paste-bu-short-key') {
-            activeSheet.value.getSelection().getActiveRange().forEach(async (row: number, col: number, cell: ICellData) => {
+            activeSheet.getSelection().getActiveRange().forEach(async (row: number, col: number, cell: ICellData) => {
                 holdTableChanges(col, row, cell.v)
             })
         }
@@ -159,10 +157,10 @@ const holdTableChanges = (col: number, row: number, newCellVal: any) => {
     const index = colsReference.value[col]
     const header = headersRecords.find((element) => element.prop == index);
     if (header.readonly) {
-        univerAPI.value.executeCommand('univer.command.undo')
+        univerAPI.executeCommand('univer.command.undo')
         return true
     }
-    const fullRow = getRow(activeSheet.value, row, colsReference.value)
+    const fullRow = getRow(activeSheet, row, colsReference.value)
     let record_key = fullRow['record_key']
     if (record_key == undefined) return true
     record_key = String(record_key)

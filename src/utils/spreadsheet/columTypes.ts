@@ -21,7 +21,7 @@ export const createDropdown = (univerAPI: FUniver, items: Array<String>, rowLeng
             operator: undefined,
             ranges: [{
                 startRow: 1,
-                endRow: rowLength ,
+                endRow: rowLength,
                 startColumn: column,
                 endColumn: column,
             }],

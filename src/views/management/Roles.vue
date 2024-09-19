@@ -13,8 +13,6 @@
         </MCModal>
         <Toast :toast-open="toastVal" :toast-text="toastText" :toast-success="toastSuccess"
             :toggle-toast="() => { toastVal = !toastVal }"></Toast>
-
-        <Header title="Roles"/>
         <div v-if="currentRole === null" class="fadeRight h-full">
             <section class="flex justify-center items-center mt-auto h-full">
                 <div class="max-w-4xl w-full p-8 bg-base-200 rounded-lg shadow">
@@ -108,7 +106,7 @@ const loading = ref(true)
 const roles = ref([])
 const currentRole = ref(null)
 const childComponentRef = ref(null)
-const notifications = notificationsStore() 
+const notifications = notificationsStore()
 
 const allUsers = ref([])
 const selectedItems = ref([])
@@ -169,14 +167,14 @@ const availableUsers = computed(() => {
 const saveChange = async () => {
     if (childComponentRef.value) {
         const values = await childComponentRef.value.getValues()
-        values['id_users'] = selectedItems.value.map(e => e.id) 
+        values['id_users'] = selectedItems.value.map(e => e.id)
         console.log('Values from child component:', values)
         const { data } = await updateRole(values)
-        if(data.success){
+        if (data.success) {
             currentRole.value = null
         }
-        else{
-            notifications.newMessage(data.error,false)
+        else {
+            notifications.newMessage(data.error, false)
         }
     }
 }

@@ -16,16 +16,9 @@
             </div>
           </div>
           <div class="bottom mt-auto p-4">
-            <ThemePicker class="mb-4" />
             <div class="flex flex-row gap-2 justify-between">
-              <RouterLink class="btn btn-primary" to="/reportFeedback">
-                <Icon icon="mdi:cog" class="text-2xl" />
-              </RouterLink>
-              <button class="btn btn-primary grow shadow ">
-                {{ initial }}
-                <Icon icon="mdi:user" class="text-2xl" />
-              </button>
-              <button class="btn btn-error " @click="logOut">
+              <ThemePicker class="mb-4" />
+              <button class="btn btn-error grow" @click="logOut">
                 <Icon icon="mdi:exit-to-app" class="text-2xl" />
               </button>
             </div>
@@ -75,7 +68,7 @@ const fetchRole = async () => {
 }
 onMounted(async () => {
   fetchRole()
-  initial.value = String(userStore.name.slice(0, 2)).toUpperCase() 
+  initial.value = String(userStore.name.slice(0, 2)).toUpperCase()
 })
 
 </script>

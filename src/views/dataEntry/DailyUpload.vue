@@ -1,7 +1,6 @@
 <template>
     <defaultLayout>
         <div class="flex flex-col h-full">
-            <Header title="Carga Exel Diaria"/>
             <div class="card bg-base-100 shadow-md m-2">
                 <h2 class="card-title m-4 underline">
                     Carga de datos

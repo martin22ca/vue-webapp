@@ -1,6 +1,5 @@
 <template>
     <defaultLayout>
-        <Header title="DB Prevencion" />
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
             :rowSize="60">
         </DataTable>

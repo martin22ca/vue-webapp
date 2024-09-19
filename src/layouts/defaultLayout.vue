@@ -4,6 +4,7 @@
         <div class="hover-area" @mouseenter="openDrawer" @mouseleave="closeDrawerIfNotHovered" />
         <Drawer :is-open="isDrawerOpen" @mouseleave="closeDrawerIfNotHovered" @mouseenter="keepDrawerOpen" />
         <main class="bg-base-300 flex-1 flex flex-col overflow-y-scroll">
+            <Header />
             <slot></slot>
         </main>
         <Toast :toast-open="notifications.open" :duration="notifications.duration" :state="notifications.state"
@@ -12,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import Header from '@/components/Header.vue';
 import Drawer from '@/components/Drawer/Drawer.vue'
 import { notificationsStore } from "@/store/notificationsStore";
 import { ref, watch } from 'vue';

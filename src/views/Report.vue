@@ -1,6 +1,5 @@
 <template>
     <defaultLayout>
-        <Header title="Reportes" />
         <h2 class="p-2" v-if="currentReport == null"></h2>
         <div v-if="currentReport === null" class="fadeRight h-full">
             <div class="flex justify-center items-center ">

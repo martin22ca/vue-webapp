@@ -1,10 +1,9 @@
 <template>
     <defaultLayout>
         <modalFeedback v-if="feedbackModal" :feedback="feedback" :clearProp="toggleModal" />
-        <Header title="Informacion de Reportes" />
-        <DataTable :rows="reports" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters" :rowSize="50">
+        <DataTable :rows="reports" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
+            :rowSize="50">
         </DataTable>
-
     </defaultLayout>
 </template>
 

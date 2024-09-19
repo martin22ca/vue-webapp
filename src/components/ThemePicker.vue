@@ -1,7 +1,8 @@
 <template>
     <div class="dropdown dropdown-top">
-        <div tabindex="0" role="button" class="btn btn-block my-2">Cambiar Tema
-            <Icon icon="material-symbols:arrow-drop-down" class="text-xl text-accent rounded-xl cursor-pointer" />
+        <div tabindex="0" role="button" class="btn btn-block">
+            Tema
+            <Icon icon="mdi:brightness" class="text-xl text-accent rounded-xl cursor-pointer" />
         </div>
         <ul tabindex="0" class="dropdown-content show z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52 h-64 overflow-auto">
             <li v-for="theme in themes">

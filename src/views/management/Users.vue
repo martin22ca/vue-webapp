@@ -15,7 +15,6 @@
             :toggle-toast="() => { toastVal = !toastVal }"></Toast>
         <modalUser v-if="userModal" :modal-open="userModal" :user="userData"
             :toggleModal="() => { userModal = !userModal; fetchResources() }" />
-        <Header title="Usuarios" />
         <DataTable rowSize="50" :rows="users" :cols="headers" :loading="loading" @updateFilters="updateFilters">
             <template #table_options>
                 <button class="btn btn-secondary mx-2" @click="addUser()">

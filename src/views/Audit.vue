@@ -1,6 +1,5 @@
 <template>
     <defaultLayout>
-        <Header title="Auditor"/>
         <UniverSheet id="sheet" table-name="Expedientes" :loading="loading" ref="univerRef" :cols="headers"
             :rows="records" @updateFilters="updateFilters" class="h-full">
         </UniverSheet>
@@ -8,7 +7,6 @@
 </template>
 
 <script setup>
-import { Icon } from "@iconify/vue";
 import Header from "@/components/Header.vue";
 import { notificationsStore } from "@/store/notificationsStore";
 import { ref, onMounted, watch } from 'vue';

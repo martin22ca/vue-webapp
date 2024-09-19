@@ -1,27 +1,19 @@
 <template>
-    <div>
-        <div class="">
-            <button class="btn btn-primary mx-2" @click="sendColsConfig(initiAsignaciones, 4)">
-                Asignaciones
-            </button>
-            <button class="btn btn-primary mx-2" @click="sendColsConfig(initDB, 3)">
-                DB
-            </button>
-            <button class="btn btn-primary mx-2" @click="sendColsConfig(initLots, 5)">
-                LOTE
-            </button>
-            <button class="btn btn-secondary">
-                Reset
-            </button>
-        </div>
-        <div>
-            <button @click="getData" title="print current workbook data to console">Get Data</button>
-        </div>
+    <div class="w-full bg-blue-500 text-center" style="height: 80vh;">
+        <button class="btn m-2" @click="alert">
+            Saira
+        </button>
+        <p class="bg-red-200 m-64cd rounded" style="font-family: Arial, Helvetica, sans-serif;">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid fugit amet magnam sint id! Iste, aliquid
+            sapiente, sint rerum mollitia dicta corrupti quos sequi quam eum neque animi. Consequatur, eaque?
+        </p>
+        <Icon icon="mdi:home"></Icon>
     </div>
 </template>
 
 
 <script setup>
+import { Icon } from '@iconify/vue';
 import { setCols, getConfigId } from '@/services/config';
 import { onBeforeMount, ref } from 'vue';
 

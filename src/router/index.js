@@ -16,26 +16,26 @@ const routes = [
   },
   {
     path: '/providers',
-    name: 'Providers',
+    name: 'Provedores',
     component: () => import('@/views/Providers.vue'),
   },
   {
     path: '/RecordsDB',
-    name: 'RecordsDB',
+    name: 'Expedientes DB',
     component: () => import('@/views/RecordsDatabase.vue'),
   },
   {
     path: '/RecordsMain',
-    name: 'RecordsMain',
+    name: 'Expediente Asignados',
     component: () => import('@/views/RecordsMain.vue'),
   }, {
     path: '/management/users',
-    name: 'Users',
+    name: 'Usuarios',
     component: () => import('@/views/management/Users.vue'),
   },
   {
     path: '/management/setroles',
-    name: 'SetRoles',
+    name: 'Asignacion Roles',
     component: () => import('@/views/management/Roles.vue'),
   },
   {
@@ -45,31 +45,31 @@ const routes = [
   },
   {
     path: '/input',
-    name: 'UploadDB',
+    name: 'Carga Exel',
     component: () => import('@/views/dataEntry/DailyUpload.vue'),
   },
   {
     path: '/input/manual',
-    name: 'UploadData',
+    name: 'Carga Manual',
     component: () => import('@/views/dataEntry/ManualUpload.vue'),
   },
   {
     path: '/input/lots',
-    name: 'lots',
+    name: 'Lotes',
     component: () => import('@/views/dataEntry/LotManagement.vue'),
   },
   {
     path: '/reportFeedback',
-    name: 'reportFeeback',
+    name: 'Reportar Nuevo Feedback',
     component: () => import('@/views/ReportFeedback.vue'),
   },
   {
     path: '/feedback',
-    name: 'feedback',
+    name: 'Feedback',
     component: () => import('@/views/Feedback.vue'),
   },  {
     path: '/report',
-    name: 'report',
+    name: 'Reportes',
     component: () => import('@/views/Report.vue'),
   },
   {
@@ -79,7 +79,7 @@ const routes = [
   },
   {
     path: '/audit',
-    name: 'AuditView',
+    name: 'Vista Auditor',
     component: () => import('@/views/Audit.vue'),
   },
 ]
@@ -120,7 +120,7 @@ router.beforeEach(async (to, from) => {
       }
     }
   } catch (e) {
-    console.log('Error', e)
+    console.error('Error', e)
     if (to.name == 'Login') {
       window.alert(
         'API no habilitada'

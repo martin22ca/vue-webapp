@@ -1,6 +1,5 @@
 <template>
     <defaultLayout>
-        <Header title="Prestadores" />
         <modalProvider v-if="providerModal" :modal-open="providerModal" :provider="providerData"
             :toggleModal="closeModal" />
         <DataTable :rows="providers" :cols="headers" :loading="loading" @updateFilters="updateFilters">

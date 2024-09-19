@@ -11,7 +11,6 @@
                 </button>
             </div>
         </MCModal>
-        <Header title="Carga Manual"/>
         <UniverSheet class="h-full" :rows="mergedRows" :cols="headers" :loading="loading" @updateFilters="updateFilters"
             @update-a-p-i="updateAPI" @update-cols-reference="updateColsReference">
             <template #table_options>
@@ -32,11 +31,9 @@
 
 
 <script setup lang="ts">
-import Header from "@/components/Header.vue";
 import MCModal from "@/components/Modals/MCModal.vue";
 import { Icon } from '@iconify/vue';
 import { userDataStore } from '@/store/userStore';
-import { usetableStore } from '@/store/tableStore';
 import { useUserRecords } from '@/store/userRecordsStore';
 import { FUniver, FWorksheet } from "@univerjs/facade";
 import { ICommandInfo, ICellData, ColorType } from '@univerjs/core'
@@ -81,8 +78,8 @@ const colsReference = ref({})
 const dbRecords = ref([])
 const mergedRows = ref([])
 
-const univerAPI = ref<FUniver>(null);
-const activeSheet = ref<FWorksheet>(null);
+let univerAPI = <FUniver>null;
+let activeSheet = <FWorksheet>null;
 
 let filters = []
 
@@ -129,16 +126,16 @@ const updateColsReference = (reference) => {
 }
 
 const updateAPI = (UniverAPI: FUniver) => {
-    univerAPI.value = UniverAPI
-    activeSheet.value = univerAPI.value.getActiveWorkbook().getActiveSheet() as FWorksheet;
+    univerAPI = UniverAPI
+    activeSheet = univerAPI.getActiveWorkbook().getActiveSheet() as FWorksheet;
     let beforeRange = {}
 
-    univerAPI.value.onBeforeCommandExecute(async (command) => {
+    univerAPI.onBeforeCommandExecute(async (command) => {
         // PRESSED DELETE ON RANGE
         if (command.id === 'sheet.command.clear-selection-content') {
             let result = true
             const toDelete = []
-            activeSheet.value.getSelection().getActiveRange().forEach((row: number, col: number, cell: ICellData) => {
+            activeSheet.getSelection().getActiveRange().forEach((row: number, col: number, cell: ICellData) => {
                 if (cell.v == undefined || cell.v == '') return
                 if (col != colsReference.value['record_key']) { holdTableChanges(col, row, cell.v) }
                 else { toDelete.push({ 'value': cell.v, 'row': row }) }
@@ -146,7 +143,7 @@ const updateAPI = (UniverAPI: FUniver) => {
             if (toDelete.length > 0) result = await deleteRecords(toDelete)
             if (!result) {
                 notifications.newMessage('error de servidor', false)
-                univerAPI.value.executeCommand('univer.command.undo')
+                univerAPI.executeCommand('univer.command.undo')
             }
         }
         if (command.id === 'sheet.command.set-range-values') {
@@ -154,19 +151,19 @@ const updateAPI = (UniverAPI: FUniver) => {
             const sc = command.params['range']['startColumn']
             const er = command.params['range']['endRow']
             const ec = command.params['range']['endColumn']
-            activeSheet.value.getRange(sr, sc, ec - sc + 1, er - sr + 1).forEach((row: number, col: number, cell: ICellData) => {
+            activeSheet.getRange(sr, sc, ec - sc + 1, er - sr + 1).forEach((row: number, col: number, cell: ICellData) => {
                 let key = `row${row}_col${col}`;
                 beforeRange[key] = cell.v
             })
         }
         if (command.id === 'sheet.command.paste-bu-short-key') {
-            activeSheet.value.getSelection().getActiveRange().forEach((row: number, col: number, cell: ICellData) => {
+            activeSheet.getSelection().getActiveRange().forEach((row: number, col: number, cell: ICellData) => {
                 let key = `row${row}_col${col}`;
                 beforeRange[key] = cell.v
             })
         }
     })
-    univerAPI.value.onCommandExecuted(async (command: ICommandInfo) => {
+    univerAPI.onCommandExecuted(async (command: ICommandInfo) => {
         // EXIT EDIT ON CELL
         if (command.id === 'sheet.command.set-range-values' && working.value === false) {
             const edits = []
@@ -174,7 +171,7 @@ const updateAPI = (UniverAPI: FUniver) => {
             const sc = command.params['range']['startColumn']
             const er = command.params['range']['endRow']
             const ec = command.params['range']['endColumn']
-            activeSheet.value.getRange(sr, sc, ec - sc + 1, er - sr + 1).forEach(async (row: number, col: number, cell: ICellData) => {
+            activeSheet.getRange(sr, sc, ec - sc + 1, er - sr + 1).forEach(async (row: number, col: number, cell: ICellData) => {
                 return manageRows(row, col, cell.v, edits, beforeRange)
             })
             manageEdit(edits)
@@ -182,7 +179,7 @@ const updateAPI = (UniverAPI: FUniver) => {
         }
         if (command.id === 'sheet.command.paste-bu-short-key' && working.value === false) {
             const edits = []
-            activeSheet.value.getSelection().getActiveRange().forEach(async (row: number, col: number, cell: ICellData) => {
+            activeSheet.getSelection().getActiveRange().forEach(async (row: number, col: number, cell: ICellData) => {
                 return manageRows(row, col, cell.v, edits, beforeRange)
             })
             manageEdit(edits)
@@ -239,10 +236,10 @@ const holdTableChanges = (col: number, row: number, newCellVal: any) => {
     const index = colsReference.value[col]
     const header = headers.find((element) => element.prop == index);
     if (header.readonly) {
-        univerAPI.value.executeCommand('univer.command.undo')
+        univerAPI.executeCommand('univer.command.undo')
         return true
     }
-    const fullRow = getRow(activeSheet.value, row, colsReference.value)
+    const fullRow = getRow(activeSheet, row, colsReference.value)
     let record_key = fullRow['record_key']
     if (record_key == undefined) return true
     record_key = String(record_key)
@@ -264,7 +261,7 @@ const deleteRecords = async (prevCellVals: Array<Object>) => {
     const { data } = await removeRecordUser(celldata)
     if (data.success) {
         prevCellVals.forEach(element => {
-            removeRow(activeSheet.value, element['row'], colsReference.value)
+            removeRow(activeSheet, element['row'], colsReference.value)
             delete editedRecords.value[element['value']]
         });
         return true
@@ -283,7 +280,7 @@ const addRecords = async (newCellVals: Array<Object>) => {
         data.added_records.forEach((element: Object) => {
             const idx = newCellVals.findIndex((e) => e['value'] === element['record_key'])
             if (idx != -1) {
-                insertRow(activeSheet.value, newCellVals[idx]['row'], element, colsReference.value, headers);
+                insertRow(activeSheet, newCellVals[idx]['row'], element, colsReference.value, headers);
                 newCellVals.splice(idx, 1)
             }
         })
@@ -292,7 +289,7 @@ const addRecords = async (newCellVals: Array<Object>) => {
             data.errors.forEach((element: Number) => {
                 const idx = newCellVals.findIndex((e) => e['value'] === element)
                 if (idx != -1) {
-                    returnPrev(activeSheet.value, newCellVals[idx]['row'], colsReference.value['record_key'], null)
+                    returnPrev(activeSheet, newCellVals[idx]['row'], colsReference.value['record_key'], null)
                     newCellVals.splice(idx, 1)
                 }
             })
@@ -313,7 +310,7 @@ const changeRecords = async (changeCellVals: Array<Object>) => {
         mergedRows.value = mergedRows.value.concat(data.changeCellVals)
         data.modified_records.forEach((element: Object) => {
             const idx = changeCellVals.findIndex((e) => e['new_record_key'] === element['record_key'])
-            if (idx != -1) insertRow(activeSheet.value, changeCellVals[idx]['row'], element, colsReference.value, headers)
+            if (idx != -1) insertRow(activeSheet, changeCellVals[idx]['row'], element, colsReference.value, headers)
             changeCellVals.splice(idx, 1)
         })
         if (data.errors.length > 0) {
@@ -321,7 +318,7 @@ const changeRecords = async (changeCellVals: Array<Object>) => {
             data.errors.forEach((element: Number) => {
                 const idx = changeCellVals.findIndex((e) => e['new_record_key'] === element)
                 if (idx != -1) {
-                    returnPrev(activeSheet.value, changeCellVals[idx]['row'], colsReference.value['record_key'], changeCellVals[idx]['old_record_key'])
+                    returnPrev(activeSheet, changeCellVals[idx]['row'], colsReference.value['record_key'], changeCellVals[idx]['old_record_key'])
                     changeCellVals.splice(idx, 1)
                 }
             })

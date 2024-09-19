@@ -1,13 +1,13 @@
 <template>
-  <div class="bg-base-200 rounded-lg fade px-2">
+  <div class=" rounded-lg fade px-2">
     <ColsSelector v-if="columnDialog" :base-cols="baseCols" :selected-cols="selectedCols"
       @update:selectedCols="handleSelectedColsUpdate" :toggle-modal="() => { columnDialog = false }" />
     <TableFilters v-if="filtersDialog" :selected-cols="selectedCols" :applied-filters="appliedFilters"
       :filters="availableFilters" :toggle-modal="() => { filtersDialog = false }"
       @updateFilters="handleUpdateFilters" />
-    <div class="table-wrapper h-full flex flex-col p-0">
-      <div class="flex flex-row p-4 gap-2 bg-base-100 top-0 h-20">
-        <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="downloadExcel">
+    <div class="table-wrapper h-full flex flex-col p-0 ">
+      <div class="flex flex-row p-4 gap-2 top-0 h-20">
+        <button v-if="props.btnExport" class="btn btn-secondary mx-1" @click="exportRows">
           <Icon icon="mdi:file-export" class="text-xl" />
         </button>
         <button v-if="props.btnCols" class="btn btn-primary mx-1" @click="columnDialog = true">
@@ -73,7 +73,7 @@ const rowLength = ref(0);
 const univerRef = ref<Univer | null>(null);
 const workbook = ref<Workbook | null>(null);
 const container = ref<HTMLElement | null>(null);
-const univerAPI = ref<FUniver>(null);
+let univerAPI = <FUniver>null;
 
 const emits = defineEmits(['updateFilters', 'updateAPI', 'updateColsReference'])
 
@@ -95,8 +95,8 @@ const constructCellData = (cols: Column[], rows: RowValue[]): CellData => {
   colsReference.value = {}
   selectedCols.value.forEach((header, index) => {
     cellData[0][index] = { v: header.name, s: 'header' };
+    colsReference.value[String(header['prop'])] = index
     colsReference.value[index] = header.prop
-    colsReference.value[header['prop']] = index
   });
   emits('updateColsReference', colsReference.value)
 
@@ -138,13 +138,14 @@ const setupCols = () => {
 
 const manageCols = () => {
   rowLength.value = props.rows.length
-  const mainSheet = univerAPI.value.getActiveWorkbook().getActiveSheet()
+  const mainSheet = univerAPI.getActiveWorkbook().getActiveSheet()
   for (let i = 0; i < selectedCols.value.length; i++) {
     const element = selectedCols.value[i];
     mainSheet.setColumnWidths(i, 1, element.size ? element.size : 100)
     if ('colType' in element) {
-      if (element['colType'] == 'checkBox') { createCheckBox(univerAPI.value, rowLength.value, i) }
-      if (element['colType'] == 'dropdown') { createDropdown(univerAPI.value, element['colTypeValues'], rowLength.value, i) }
+
+      if (element['colType'] == 'checkBox') { createCheckBox(univerAPI, rowLength.value, i) }
+      if (element['colType'] == 'dropdown') { createDropdown(univerAPI, element['colTypeValues'], rowLength.value, i) }
     }
   }
 }
@@ -169,7 +170,7 @@ const handleUpdateFilters = (newFilters) => {
 }
 
 const exportRows = () => {
-  const { cellData } = univerAPI.value.getActiveWorkbook().getSnapshot().sheets['sheet-01'];
+  const { cellData } = univerAPI.getActiveWorkbook().getSnapshot().sheets['sheet-01'];
 
   const excelElements = Object.values(cellData).map(row =>
     Object.values(row).map(cell => cell['v'])
@@ -265,8 +266,8 @@ const init = (data = {}) => {
 
   // create workbook instance
   univer.createUnit(UniverInstanceType.UNIVER_SHEET, data)
-  univerAPI.value = FUniver.newAPI(univer);
-  emits('updateAPI', univerAPI.value)
+  univerAPI = FUniver.newAPI(univer);
+  emits('updateAPI', univerAPI)
   manageCols()
 };
 </script>

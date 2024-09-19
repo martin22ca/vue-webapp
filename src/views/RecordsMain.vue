@@ -1,6 +1,5 @@
 <template>
     <defaultLayout>
-        <Header title="Expedientes Asignados"/>
         <DataTable :rows="records" :cols="headers" :btnFilters="true" :loading="loading" @updateFilters="updateFilters"
             class="w-full" :rowSize="60">
         </DataTable>
@@ -49,7 +48,7 @@ const headers = [
     { prop: 'cuenta', name: 'Cuenta', valType: 'text' },
     { prop: 'ambu_total', name: 'Ambu total', valType: 'text' },
     { prop: 'inter_total', name: 'Inter total', valType: 'text' },
-    { prop: 'audit_group', name: 'Grupo Auditor',cellTemplate: VGridVueTemplate(DataTableGroup), valType: 'text' },
+    { prop: 'audit_group', name: 'Grupo Auditor', cellTemplate: VGridVueTemplate(DataTableGroup), valType: 'text' },
     { prop: 'lot_key', name: 'LOTE', valType: 'text' },
     { prop: 'date_vto_carga', name: 'Fecha vto carga', valType: 'text' },
     { prop: 'date_assignment_case', name: 'Fecha asignamiento caso ', valType: 'text' },
